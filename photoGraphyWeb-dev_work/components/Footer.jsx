@@ -89,7 +89,8 @@ export default function Footer() {
             >
               Terms & Conditions
             </Link>
-               <Link
+             <span className="text-gray-600">|</span>
+            <Link
               href="/faqs"
               className="hover:text-gold transition-colors duration-300"
             >
