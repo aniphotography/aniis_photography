@@ -238,7 +238,7 @@ export default function VideoProductionPage() {
       </section>
 
       {/* Packages Section */}
-      <section className="py-20 px-6 bg-black">
+      {/* <section className="py-20 px-6 bg-black">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-display text-center mb-4">
             Video <span className="text-gold">Packages</span>
@@ -288,7 +288,7 @@ export default function VideoProductionPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
 
       <Footer />
     </main>

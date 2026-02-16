@@ -2,64 +2,35 @@
 
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import Link from 'next/link'
 import { useState } from 'react'
 
 export default function AlbumsPage() {
-  const [activeReview, setActiveReview] = useState(0)
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const albums = [
     {
       id: 1,
       title: 'Sarah & John Wedding',
       date: '2024',
-      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=500&q=80',
-      photos: 500,
+      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80',
     },
     {
       id: 2,
       title: 'Emma & Alex Engagement',
       date: '2024',
-      image: 'https://images.unsplash.com/photo-1512888286885-9a6c4d8e9e9e?w=500&q=80',
-      photos: 200,
+      image: 'https://images.unsplash.com/photo-1512888286885-9a6c4d8e9e9e?w=800&q=80',
     },
     {
       id: 3,
       title: 'Rachel & David Wedding',
       date: '2023',
-      image: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&q=80',
-      photos: 450,
+      image: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=800&q=80',
     },
     {
       id: 4,
       title: 'Jessica & Mark Celebration',
       date: '2023',
-      image: 'https://images.unsplash.com/photo-1544078751-58fee2d8a03b?w=500&q=80',
-      photos: 350,
-    },
-  ]
-
-  const reviews = [
-    {
-      id: 1,
-      name: 'Sarah Williams',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah',
-      text: 'LUXE captured our wedding day beautifully. The photographer was professional, attentive, and delivered stunning photos that we will treasure forever.',
-      rating: 5,
-    },
-    {
-      id: 2,
-      name: 'Emma Johnson',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Emma',
-      text: 'Outstanding service from start to finish. The pre-wedding shoot was absolutely magical, and the final images exceeded our expectations.',
-      rating: 5,
-    },
-    {
-      id: 3,
-      name: 'Rachel Brown',
-      image: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Rachel',
-      text: 'The attention to detail and creativity is unmatched. LUXE truly understands how to capture the emotion and elegance of special moments.',
-      rating: 5,
+      image: 'https://images.unsplash.com/photo-1544078751-58fee2d8a03b?w=800&q=80',
     },
   ]
 
@@ -67,110 +38,118 @@ export default function AlbumsPage() {
     <main className="min-h-screen bg-[#1a1a1a] text-white">
       <Navbar />
 
-      {/* Page Header */}
-      <section className="pt-32 pb-16 px-6 text-center">
-        <h1 className="text-6xl md:text-7xl font-display mb-4">
-          <span className="text-gold">Photo</span> Albums
+      <section className="pt-40 pb-16 px-6 text-center">
+        <h1 className="text-6xl md:text-8xl font-display mb-6 tracking-tight">
+          <span className="text-[#d4af37]">Photo</span> Albums
         </h1>
-        <p className="text-gray-400 font-lato max-w-2xl mx-auto text-lg">
-          Complete collections of memorable moments organized by events
+        <p className="text-gray-400 font-lato max-w-2xl mx-auto text-sm tracking-[0.3em] uppercase">
+          Click any album to view in full cinematic detail
         </p>
       </section>
 
-      {/* Albums Grid */}
+      {/* Albums Cinematic Masonry */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {albums.map((album) => (
-              <div
-                key={album.id}
-                className="group cursor-pointer border border-white/10 overflow-hidden hover:border-gold transition-colors duration-300"
-              >
-                <div className="relative overflow-hidden h-64 md:h-80">
-                  <img
-                    src={album.image || "/placeholder.svg"}
-                    alt={album.title}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300" />
-                </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[300px] gap-6">
+            {albums.map((album, index) => {
+              const isLarge = index % 5 === 0
+              const isWide = index % 5 === 3
 
-                <div className="p-8 bg-black/50">
-                  <p className="text-gold text-xs uppercase tracking-widest mb-2">{album.date}</p>
-                  <h3 className="text-2xl font-display text-white mb-4">{album.title}</h3>
-                  <p className="text-gray-400 font-lato text-sm mb-6">{album.photos} Photos</p>
-
-                  <Link
-                    href={`/albums/${album.id}`}
-                    className="inline-block px-6 py-2 border border-gold text-gold hover:bg-gold hover:text-black transition-all duration-300 text-sm font-bold"
-                  >
-                    View Gallery
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Reviews Section */}
-      <section className="py-20 px-6 bg-black">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-display text-center mb-4">
-            Client <span className="text-gold">Reviews</span>
-          </h2>
-          <div className="w-12 h-1 bg-gold mx-auto mb-12" />
-
-          <div className="relative">
-            {/* Review Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {reviews.map((review, idx) => (
-                <div
-                  key={review.id}
-                  className={`p-8 border transition-all duration-300 transform ${
-                    idx === activeReview
-                      ? 'border-gold bg-black/80 md:col-span-1'
-                      : 'border-white/10 bg-black/40 md:scale-95'
-                  }`}
+              return (
+                <div 
+                  key={album.id}
+                  onClick={() => setSelectedImage(album)} // Simple click to open
+                  className={`relative group overflow-hidden cursor-pointer border border-white/5 
+                    ${isLarge ? 'md:row-span-2' : ''} 
+                    ${isWide ? 'md:col-span-2' : ''}`}
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <img
-                      src={review.image || "/placeholder.svg"}
-                      alt={review.name}
-                      className="w-12 h-12 rounded-full"
-                    />
-                    <div>
-                      <h4 className="text-white font-display">{review.name}</h4>
-                      <div className="flex gap-1">
-                        {[...Array(review.rating)].map((_, i) => (
-                          <span key={i} className="text-gold">
-                            ★
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-300 font-lato text-sm italic">"{review.text}"</p>
-                </div>
-              ))}
-            </div>
+                  <img
+                    src={album.image}
+                    alt={album.title}
+                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  
+                  {/* Overlay */}
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition duration-500" />
 
-            {/* Review Navigation */}
-            <div className="flex justify-center gap-4 mt-12">
-              {reviews.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveReview(idx)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    idx === activeReview ? 'bg-gold w-8' : 'bg-white/30 hover:bg-white/50'
-                  }`}
-                  aria-label={`Review ${idx + 1}`}
-                />
-              ))}
-            </div>
+                  {/* Content */}
+                  <div className="absolute inset-0 p-8 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-4 group-hover:translate-y-0">
+                    <p className="text-[#d4af37] text-[10px] tracking-widest uppercase mb-2">{album.date}</p>
+                    <h3 className="text-2xl font-display text-white">{album.title}</h3>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
       </section>
+
+      {/* --- CINEMATIC LIGHTBOX --- */}
+      {selectedImage && (
+        <div
+          className="fixed inset-0 bg-black/98 backdrop-blur-md z-[200] flex flex-col transition-all duration-300"
+          onClick={() => setSelectedImage(null)}
+        >
+          {/* Top Bar for Close Button */}
+          <div className="w-full h-24 flex items-center justify-end px-8 md:px-16 shrink-0">
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="text-[#d4af37] hover:text-white transition-colors"
+            >
+              <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="flex-grow relative flex items-center justify-center p-6 pt-0">
+            {/* Nav Arrows */}
+            <div className="absolute inset-0 flex items-center justify-between px-4 md:px-16 pointer-events-none">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const currentIndex = albums.findIndex(img => img.id === selectedImage.id);
+                  const prevIndex = (currentIndex - 1 + albums.length) % albums.length;
+                  setSelectedImage(albums[prevIndex]);
+                }}
+                className="pointer-events-auto w-14 h-14 flex items-center justify-center rounded-full border border-[#d4af37]/20 bg-black/40 text-[#d4af37] hover:text-white transition-all"
+              >
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  const currentIndex = albums.findIndex(img => img.id === selectedImage.id);
+                  const nextIndex = (currentIndex + 1) % albums.length;
+                  setSelectedImage(albums[nextIndex]);
+                }}
+                className="pointer-events-auto w-14 h-14 flex items-center justify-center rounded-full border border-[#d4af37]/20 bg-black/40 text-[#d4af37] hover:text-white transition-all"
+              >
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Photo Wrapper */}
+            <div className="relative max-w-5xl w-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
+              <img
+                src={selectedImage.image}
+                alt={selectedImage.title}
+                className="w-full max-h-[65vh] md:max-h-[75vh] object-contain shadow-2xl"
+              />
+              <div className="mt-8 text-center">
+                <p className="text-[#d4af37] tracking-[0.4em] uppercase text-xs font-medium">
+                  {selectedImage.title}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </main>
