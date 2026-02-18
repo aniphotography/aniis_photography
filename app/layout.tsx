@@ -1,5 +1,6 @@
 import { Playfair_Display, Lato } from 'next/font/google'
 import './globals.css'
+import BookSessionModal from '@/components/BookSessionModal'
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
@@ -19,10 +20,17 @@ export const metadata = {
   generator: 'v0.app',
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en" className={`${playfair.variable} ${lato.variable}`}>
-      <body className="font-sans antialiased bg-[#1a1a1a] text-white">{children}</body>
+      <body className="font-sans antialiased bg-[#1a1a1a] text-white">
+        {children}
+        <BookSessionModal />
+      </body>
     </html>
   )
 }
