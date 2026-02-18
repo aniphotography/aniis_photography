@@ -103,48 +103,6 @@ export default function WeddingPage() {
           {/* </div>
         </div> 
       </section> */}
-{/* Category Filter Section */}
-{/* Category Filter Section */}
-<section className="py-12 bg-black">
-  <div className="max-w-6xl mx-auto px-6">
-    <div className="flex flex-wrap justify-center gap-4">
-
-      {/* Active Button */}
-      <button className="px-6 py-2 rounded-full bg-[#D4AF37] text-black text-sm font-medium">
-        All
-      </button>
-
-      {/* Outline Buttons */}
-      {[
-        "Marwari Wedding",
-        "Bengali Wedding",
-        "Destination Wedding",
-        "Destination Prewedding",
-        "Bihari Wedding",
-        "Muslim Wedding",
-        "Christian Wedding",
-        "Mehendi & Sangeet",
-        "Engagement",
-        "Sikh & Punjabi Wedding",
-        "Marathi Wedding",
-        "Tamil Wedding",
-        "South Indian Wedding",
-        "North Indian Wedding",
-        "Prewedding In Kolkata",
-        "Anniversary"
-      ].map((item, index) => (
-        <button
-          key={index}
-          className="px-6 py-2 rounded-full border-2 border-[#D4AF37] text-[#D4AF37] text-sm font-medium bg-transparent hover:bg-[#D4AF37] hover:text-black transition-all duration-300"
-        >
-          {item}
-        </button>
-      ))}
-
-    </div>
-  </div>
-</section>
-
       {/* Gallery Section */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">

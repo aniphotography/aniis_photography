@@ -8,13 +8,21 @@ export default function BookSessionModal() {
   const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    setOpen(false)
+    // Only allow popup on home and wedding page
+    const allowedPages = ['/', '/wedding']
+
+    if (!allowedPages.includes(pathname)) return
+
+    // If already shown once in this session, do not show again
+    if (sessionStorage.getItem('bookPopupShown')) return
 
     const timer = setTimeout(() => {
       setOpen(true)
+      sessionStorage.setItem('bookPopupShown', 'true')
     }, 1500)
 
     return () => clearTimeout(timer)
+
   }, [pathname])
 
   if (!open) return null
@@ -25,19 +33,16 @@ export default function BookSessionModal() {
       onClick={() => setOpen(false)}
     >
       <div
-        className="bg-[#111] border border-gold/40 rounded-sm w-full max-w-sm p-4 relative shadow-2xl"
+        className="bg-[#111] border border-gold/40 rounded-lg w-full max-w-lg p-8 relative shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Heading */}
-        <h2 className="text-4xl font-display text-gold mb-8 text-center">
+        <h2 className="text-3xl font-display text-gold mb-6 text-center">
           Book Your Session
         </h2>
 
-        <form className="space-y-6">
-
-          {/* Name */}
+        <form className="space-y-5">
           <div>
-            <label className="block text-gold font-lato text-sm mb-2">
+            <label className="block text-gold text-sm mb-2">
               Name
             </label>
             <input
@@ -47,9 +52,8 @@ export default function BookSessionModal() {
             />
           </div>
 
-          {/* Email */}
           <div>
-            <label className="block text-gold font-lato text-sm mb-2">
+            <label className="block text-gold text-sm mb-2">
               Email
             </label>
             <input
@@ -59,9 +63,8 @@ export default function BookSessionModal() {
             />
           </div>
 
-          {/* Event Type */}
           <div>
-            <label className="block text-gold font-lato text-sm mb-2">
+            <label className="block text-gold text-sm mb-2">
               Event Type
             </label>
             <select
@@ -75,9 +78,8 @@ export default function BookSessionModal() {
             </select>
           </div>
 
-          {/* Message */}
           <div>
-            <label className="block text-gold font-lato text-sm mb-2">
+            <label className="block text-gold text-sm mb-2">
               Message
             </label>
             <textarea
@@ -87,7 +89,6 @@ export default function BookSessionModal() {
             />
           </div>
 
-          {/* Submit */}
           <button
             type="submit"
             className="w-full bg-gold text-black py-3 rounded-md font-bold hover:bg-yellow-400 transition-all duration-300"
@@ -96,10 +97,9 @@ export default function BookSessionModal() {
           </button>
         </form>
 
-        {/* Close Button */}
         <button
           onClick={() => setOpen(false)}
-          className="absolute top-5 right-5 text-gold text-xl hover:text-white transition"
+          className="absolute top-4 right-4 text-gold text-xl hover:text-white transition"
         >
           ✕
         </button>
