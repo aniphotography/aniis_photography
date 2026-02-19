@@ -289,6 +289,37 @@ export default function VideoProductionPage() {
           </div>
         </div>
       </section> */}
+{/* ================= OUR RECENT WORKS ================= */}
+<section className="py-24 px-6 bg-black/40">
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-4xl font-display text-center mb-16">
+      Our <span className="text-gold">Recent Works</span>
+    </h2>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
+      {slideshow.slice(0, 6).map((work) => (
+        <div
+          key={`recent-${work.id}`}
+          className="group cursor-pointer"
+        >
+          <div className="relative overflow-hidden h-72 rounded-xl border border-white/10">
+            <img
+              src={work.image}
+              alt={work.title}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-black/50 group-hover:bg-black/70 transition-all duration-300" />
+            <div className="absolute bottom-6 left-6">
+              <h3 className="text-xl font-display text-gold">
+                {work.title}
+              </h3>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 
       <Footer />
     </main>
