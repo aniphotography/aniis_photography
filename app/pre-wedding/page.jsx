@@ -1,9 +1,12 @@
+'use client'
+
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 
 export default function PreWeddingPage() {
-  const couples = [
+
+  const featuredCouples = [
     {
       id: 1,
       names: 'Sarah & Michael',
@@ -14,6 +17,9 @@ export default function PreWeddingPage() {
       names: 'Emma & James',
       image: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=500&q=80',
     },
+  ]
+
+  const recentCouples = [
     {
       id: 3,
       names: 'Olivia & David',
@@ -54,20 +60,18 @@ export default function PreWeddingPage() {
         </div>
       </section>
 
-      {/* Couple Showcase Section */}
+      {/* ================= FEATURED LOVE STORIES ================= */}
       <section className="py-20 px-6">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-display text-center mb-12">
             Featured <span className="text-gold">Love Stories</span>
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 md:gap-8">
-            {couples.map((couple) => (
-              <Link
-                key={couple.id}
-                href={`/pre-wedding/${couple.id}`}
-              >
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            {featuredCouples.map((couple) => (
+              <Link key={couple.id} href={`/pre-wedding/${couple.id}`}>
                 <div className="group cursor-pointer">
-                  <div className="relative overflow-hidden h-64 sm:h-72 md:h-80 mb-4 border-4 border-gold">
+                  <div className="relative overflow-hidden h-72 md:h-80 mb-4 border-4 border-gold">
                     <img
                       src={couple.image}
                       alt={couple.names}
@@ -75,8 +79,47 @@ export default function PreWeddingPage() {
                     />
                     <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-300 flex items-center justify-center">
                       <div className="text-center px-4">
-                        <p className="text-white font-display text-2xl sm:text-2xl md:text-3xl mb-2">{couple.names}</p>
-                        <p className="text-gold text-xs sm:text-sm uppercase tracking-widest">View Their Story</p>
+                        <p className="text-white font-display text-3xl mb-2">
+                          {couple.names}
+                        </p>
+                        <p className="text-gold text-sm uppercase tracking-widest">
+                          View Their Story
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= OUR RECENT WORKS ================= */}
+      <section className="py-20 px-6 bg-black/40">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-display text-center mb-12">
+            Our <span className="text-gold">Recent Works</span>
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+            {recentCouples.map((couple) => (
+              <Link key={couple.id} href={`/pre-wedding/${couple.id}`}>
+                <div className="group cursor-pointer">
+                  <div className="relative overflow-hidden h-64 md:h-72 mb-4 border border-white/10">
+                    <img
+                      src={couple.image}
+                      alt={couple.names}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-black/50 group-hover:bg-black/70 transition-colors duration-300 flex items-center justify-center">
+                      <div className="text-center px-4">
+                        <p className="text-white font-display text-2xl mb-2">
+                          {couple.names}
+                        </p>
+                        <p className="text-gold text-xs uppercase tracking-widest">
+                          View Story
+                        </p>
                       </div>
                     </div>
                   </div>
