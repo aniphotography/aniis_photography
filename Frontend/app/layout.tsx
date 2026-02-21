@@ -1,6 +1,6 @@
 import { Playfair_Display, Lato } from 'next/font/google'
 import './globals.css'
-import BookSessionModal from '@/Frontend/components/BookSessionModal'
+import BookSessionModal from '@/components/BookSessionModal'
 
 const playfair = Playfair_Display({ 
   subsets: ['latin'],
