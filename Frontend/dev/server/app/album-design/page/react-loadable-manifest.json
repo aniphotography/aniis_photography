@@ -1,0 +1,9 @@
+{
+  "[project]/node_modules/react-pageflip/build/index.es.js [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/node_modules/react-pageflip/build/index.es.js [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_1216069d._.js",
+      "static/chunks/node_modules_react-pageflip_build_index_es_a1db69ae.js"
+    ]
+  }
+}
