@@ -13,177 +13,160 @@ export default function ContactPage() {
   })
 
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    // Simulate form submission
-    console.log('Form submitted:', formData)
-    setSubmitted(true)
-    setTimeout(() => {
-      setFormData({ name: '', email: '', eventType: '', message: '' })
-      setSubmitted(false)
-    }, 3000)
+    setLoading(true)
+    setError('')
+
+    try {
+      const response = await fetch('http://localhost:5000/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: `${formData.eventType} - ${formData.message}`,
+        }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Something went wrong')
+      }
+
+      console.log('✅ Saved to DB:', data)
+
+      setSubmitted(true)
+      setFormData({
+        name: '',
+        email: '',
+        eventType: '',
+        message: '',
+      })
+
+      setTimeout(() => {
+        setSubmitted(false)
+      }, 3000)
+
+    } catch (err) {
+      console.error('❌ Error submitting form:', err)
+      setError('Failed to send enquiry. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
       <Navbar />
 
-      {/* Page Header */}
+      {/* Header */}
       <section className="pt-32 pb-16 px-6 text-center">
         <h1 className="text-6xl md:text-7xl font-display mb-4">
           Get in <span className="text-gold">Touch</span>
         </h1>
         <p className="text-gray-400 font-lato max-w-2xl mx-auto text-lg">
-          Ready to capture your special moments? Contact us today
+          Ready to capture your special moments? Contact us today.
         </p>
       </section>
 
       {/* Contact Section */}
       <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-            {/* Contact Information */}
-            <div>
-              <h2 className="text-3xl font-display text-white mb-8">Contact Information</h2>
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
 
-              <div className="space-y-8">
-                <div>
-                  <h3 className="text-gold font-display mb-2 text-lg">Email</h3>
-                  <a
-                    href="mailto:hello@luxephotography.com"
-                    className="text-gray-300 hover-gold-text font-lato"
-                  >
-                    hello@luxephotography.com
-                  </a>
-                </div>
+          {/* Contact Info */}
+          <div>
+            <h2 className="text-3xl font-display mb-8">Contact Information</h2>
+            <p className="text-gray-300 font-lato mb-4">
+              Email: hello@luxephotography.com
+            </p>
+            <p className="text-gray-300 font-lato mb-4">
+              Phone: +1 (555) 123-4567
+            </p>
+          </div>
 
-                <div>
-                  <h3 className="text-gold font-display mb-2 text-lg">Phone</h3>
-                  <a href="tel:+15551234567" className="text-gray-300 hover-gold-text font-lato">
-                    +1 (555) 123-4567
-                  </a>
-                </div>
+          {/* Contact Form */}
+          <div>
+            <h2 className="text-3xl font-display mb-8">Send us a Message</h2>
 
-                <div>
-                  <h3 className="text-gold font-display mb-2 text-lg">Location</h3>
-                  <p className="text-gray-300 font-lato">
-                    123 Photography Lane
-                    <br />
-                    New York, NY 10001
-                    <br />
-                    United States
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-gold font-display mb-2 text-lg">Hours</h3>
-                  <p className="text-gray-300 font-lato">
-                    Monday - Friday: 9 AM - 6 PM
-                    <br />
-                    Saturday: 10 AM - 4 PM
-                    <br />
-                    Sunday: By Appointment
-                  </p>
-                </div>
+            {submitted && (
+              <div className="mb-6 p-6 border border-green-500 bg-green-900/20 text-green-400 text-center">
+                ✅ Your enquiry has been submitted successfully!
               </div>
-            </div>
+            )}
 
-            {/* Contact Form */}
-            <div>
-              <h2 className="text-3xl font-display text-white mb-8">Send us a Message</h2>
+            {error && (
+              <div className="mb-6 p-6 border border-red-500 bg-red-900/20 text-red-400 text-center">
+                ❌ {error}
+              </div>
+            )}
 
-              {submitted ? (
-                <div className="p-8 border-2 border-gold bg-black/50 text-center">
-                  <p className="text-gold font-display text-xl mb-2">Thank You!</p>
-                  <p className="text-gray-300 font-lato">
-                    We've received your inquiry and will get back to you soon.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-lato text-gold mb-2">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full bg-black/50 border border-white/20 px-4 py-3 font-lato text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-colors"
-                      placeholder="Your name"
-                    />
-                  </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
 
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-lato text-gold mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full bg-black/50 border border-white/20 px-4 py-3 font-lato text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-colors"
-                      placeholder="your@email.com"
-                    />
-                  </div>
+              <input
+                type="text"
+                name="name"
+                placeholder="Your Name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+                className="w-full bg-black/50 border border-white/20 px-4 py-3 text-white"
+              />
 
-                  <div>
-                    <label htmlFor="eventType" className="block text-sm font-lato text-gold mb-2">
-                      Event Type
-                    </label>
-                    <select
-                      id="eventType"
-                      name="eventType"
-                      value={formData.eventType}
-                      onChange={handleChange}
-                      required
-                      className="w-full bg-black/50 border border-white/20 px-4 py-3 font-lato text-white focus:border-gold focus:outline-none transition-colors"
-                    >
-                      <option value="">Select an event type</option>
-                      <option value="wedding">Wedding</option>
-                      <option value="pre-wedding">Pre-Wedding</option>
-                      <option value="commercial">Commercial</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </div>
+              <input
+                type="email"
+                name="email"
+                placeholder="Your Email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="w-full bg-black/50 border border-white/20 px-4 py-3 text-white"
+              />
 
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-lato text-gold mb-2">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                      rows={5}
-                      className="w-full bg-black/50 border border-white/20 px-4 py-3 font-lato text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-colors resize-none"
-                      placeholder="Tell us about your event..."
-                    />
-                  </div>
+              <select
+                name="eventType"
+                value={formData.eventType}
+                onChange={handleChange}
+                required
+                className="w-full bg-black/50 border border-white/20 px-4 py-3 text-white"
+              >
+                <option value="">Select Event Type</option>
+                <option value="Wedding">Wedding</option>
+                <option value="Pre-Wedding">Pre-Wedding</option>
+                <option value="Commercial">Commercial</option>
+                <option value="Other">Other</option>
+              </select>
 
-                  <button
-                    type="submit"
-                    className="w-full py-3 bg-gold text-black font-bold hover:bg-yellow-400 transition-colors duration-300"
-                  >
-                    Send Inquiry
-                  </button>
-                </form>
-              )}
-            </div>
+              <textarea
+                name="message"
+                placeholder="Tell us about your event..."
+                value={formData.message}
+                onChange={handleChange}
+                required
+                rows={5}
+                className="w-full bg-black/50 border border-white/20 px-4 py-3 text-white"
+              />
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full py-3 bg-gold text-black font-bold hover:bg-yellow-400 transition-colors duration-300"
+              >
+                {loading ? 'Sending...' : 'Send Inquiry'}
+              </button>
+
+            </form>
           </div>
         </div>
       </section>
