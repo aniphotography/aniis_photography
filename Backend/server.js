@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes')
 const mediaRoutes = require('./routes/mediaRoutes')
 const blogRoutes = require('./routes/blogRoutes')
 const contactRoutes = require('./routes/contactRoutes')
+const collectionRoutes = require('./routes/collectionRoutes')
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/media', mediaRoutes)
 app.use('/api/blogs', blogRoutes)
 app.use('/api/contact', contactRoutes)
+app.use('/api/collections', collectionRoutes)
 
 const PORT = process.env.PORT || 5000
 

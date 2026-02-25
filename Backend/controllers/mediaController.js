@@ -24,14 +24,14 @@ exports.getMedia = async (req, res) => {
 
 exports.createMedia = async (req, res) => {
   try {
-    const { title, description, category } = req.body
+    const { title, collection_id } = req.body
     const image_url = `/uploads/${req.file.filename}`
 
     const result = await pool.query(
-      `INSERT INTO media (title, description, category, image_url)
-       VALUES ($1,$2,$3,$4)
+      `INSERT INTO media (title, image_url, collection_id)
+       VALUES ($1, $2, $3)
        RETURNING *`,
-      [title, description, category, image_url]
+      [title, image_url, collection_id]
     )
 
     res.json(result.rows[0])
