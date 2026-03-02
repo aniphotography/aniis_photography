@@ -40,6 +40,27 @@ exports.createMedia = async (req, res) => {
   }
 }
 
+exports.uploadMultipleImages = async (req, res) => {
+  try {
+    const { collection_id } = req.body
+
+    const files = req.files
+
+    for (const file of files) {
+      await pool.query(
+        `INSERT INTO media (collection_id, image_url)
+         VALUES ($1, $2)`,
+        [collection_id, `/uploads/${file.filename}`]
+      )
+    }
+
+    res.json({ message: 'Images uploaded successfully' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Upload failed' })
+  }
+}
+
 exports.deleteMedia = async (req, res) => {
   try {
     const { id } = req.params

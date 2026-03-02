@@ -3,62 +3,43 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function WeddingPage() {
   const router = useRouter()
+  const [collections, setCollections] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const featuredCollections = [
-    {
-      id: 1,
-      title: 'Sourav × Stella',
-      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80',
-    },
-    {
-      id: 2,
-      title: 'Arjun × Meera',
-      image: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=900&q=80',
-    },
-  ]
+  useEffect(() => {
+    fetch('http://localhost:5000/api/collections?category=wedding')
+      .then(res => res.json())
+      .then(data => {
+        setCollections(data)
+        setLoading(false)
+      })
+      .catch(() => setLoading(false))
+  }, [])
 
-  const recentWorks = [
-    {
-      id: 3,
-      title: 'Rahul × Ananya',
-      image: 'https://images.unsplash.com/photo-1512888286885-9a6c4d8e9e9e?w=900&q=80',
-    },
-    {
-      id: 4,
-      title: 'Vikram × Riya',
-      image: 'https://images.unsplash.com/photo-1544078751-58fee2d8a03b?w=900&q=80',
-    },
-    {
-      id: 5,
-      title: 'Kabir × Isha',
-      image: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=900&q=80',
-    },
-  ]
+  const handleAddClick = () => {
+    const token = localStorage.getItem('adminToken')
+
+    if (!token) {
+      router.push('/admin/login')
+    } else {
+      router.push('/admin/dashboard?category=wedding')
+    }
+  }
+
+  const featuredCollections = collections.slice(0, 2)
+  const recentWorks = collections.slice(2)
 
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
       <Navbar />
 
-      {/* ===== HERO COLLAGE SECTION ===== */}
+      {/* ===== HERO SECTION (UNCHANGED) ===== */}
       <section className="relative h-[500px] overflow-hidden">
-
-        {/* Collage Grid */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-2">
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80" className="w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1512888286885-9a6c4d8e9e9e?w=800&q=80" className="w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=800&q=80" className="w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1544078751-58fee2d8a03b?w=800&q=80" className="w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80" className="w-full h-full object-cover" />
-          <img src="https://images.unsplash.com/photo-1512888286885-9a6c4d8e9e9e?w=800&q=80" className="w-full h-full object-cover" />
-        </div>
-
-        {/* Dark Overlay */}
         <div className="absolute inset-0 bg-black/70" />
-
-        {/* Text */}
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
           <h1 className="text-6xl md:text-7xl font-display mb-4">
             <span className="text-gold">Wedding</span> Photography
@@ -77,23 +58,33 @@ export default function WeddingPage() {
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12">
-            {featuredCollections.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => router.push('/wedding/gallery')}
-                className="group cursor-pointer"
-              >
-                <div className="overflow-hidden rounded-[2rem] border border-white/10">
-                  <img
-                    src={item.image}
-                    className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
-                  />
+            {featuredCollections.length > 0 ? (
+              featuredCollections.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => router.push(`/wedding/${item.id}`)}
+                  className="group cursor-pointer"
+                >
+                  <div className="overflow-hidden rounded-[2rem] border border-white/10">
+                    <img
+                      src={`http://localhost:5000${item.cover_image}`}
+                      className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
+                      alt={item.title}
+                    />
+                  </div>
+                  <h3 className="text-center text-2xl mt-6 text-gold">
+                    {item.title}
+                  </h3>
                 </div>
-                <h3 className="text-center text-2xl mt-6 text-gold">
-                  {item.title}
-                </h3>
+              ))
+            ) : (
+              <div
+                onClick={handleAddClick}
+                className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+              >
+                <span className="text-5xl text-gold">+</span>
               </div>
-            ))}
+            )}
           </div>
         </div>
       </section>
@@ -106,23 +97,35 @@ export default function WeddingPage() {
           </h2>
 
           <div className="grid md:grid-cols-3 gap-10">
-            {recentWorks.map((item) => (
-              <div
-                key={item.id}
-                onClick={() => router.push('/wedding/gallery')}
-                className="group cursor-pointer"
-              >
-                <div className="overflow-hidden rounded-xl border border-white/10">
-                  <img
-                    src={item.image}
-                    className="w-full h-[300px] object-cover group-hover:scale-110 transition duration-700"
-                  />
+            {recentWorks.length > 0 ? (
+              recentWorks.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => router.push(`/wedding/${item.id}`)}
+                  className="group cursor-pointer"
+                >
+                  <div className="overflow-hidden rounded-xl border border-white/10">
+                    <img
+                      src={`http://localhost:5000${item.cover_image}`}
+                      className="w-full h-[300px] object-cover group-hover:scale-110 transition duration-700"
+                      alt={item.title}
+                    />
+                  </div>
+                  <h3 className="text-center text-lg mt-4 text-gray-300">
+                    {item.title}
+                  </h3>
                 </div>
-                <h3 className="text-center text-lg mt-4 text-gray-300">
-                  {item.title}
-                </h3>
-              </div>
-            ))}
+              ))
+            ) : (
+              collections.length > 0 ? null : (
+                <div
+                  onClick={handleAddClick}
+                  className="flex items-center justify-center h-[300px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
+                >
+                  <span className="text-5xl text-gold">+</span>
+                </div>
+              )
+            )}
           </div>
         </div>
       </section>

@@ -1,9 +1,12 @@
 const jwt = require('jsonwebtoken')
 
 module.exports = (req, res, next) => {
+  console.log("AUTH HEADER RECEIVED:", req.headers.authorization)
+
   const authHeader = req.headers.authorization
 
   if (!authHeader) {
+    console.log("NO AUTH HEADER")
     return res.status(401).json({ message: 'No token provided' })
   }
 
@@ -14,6 +17,7 @@ module.exports = (req, res, next) => {
     req.admin = decoded
     next()
   } catch (err) {
+    console.log("JWT ERROR:", err.message)
     return res.status(401).json({ message: 'Invalid token' })
   }
 }

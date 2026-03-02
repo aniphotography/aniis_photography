@@ -1,117 +1,193 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function AdminDashboard() {
-  const [title, setTitle] = useState<string>('')
-  const [category, setCategory] = useState<string>('')
-  const [file, setFile] = useState<File | null>(null)
-  const [loading, setLoading] = useState<boolean>(false)
 
-  const handleUpload = async (e: React.FormEvent<HTMLFormElement>) => {
+  const [collections, setCollections] = useState<any[]>([])
+  const [selectedCollection, setSelectedCollection] = useState<string>('')
+
+  const [title, setTitle] = useState('')
+  const [category, setCategory] = useState('')
+  const [description, setDescription] = useState('')
+  const [date, setDate] = useState('')
+  const [cover, setCover] = useState<File | null>(null)
+  const [video, setVideo] = useState<File | null>(null)
+
+  const [images, setImages] = useState<FileList | null>(null)
+  const [loading, setLoading] = useState(false)
+
+  const token =
+    typeof window !== 'undefined'
+      ? localStorage.getItem('adminToken')
+      : null
+
+  // Load collections for image upload dropdown
+  useEffect(() => {
+    fetch('http://localhost:5000/api/collections?category=wedding')
+      .then(res => res.json())
+      .then(data => setCollections(data))
+  }, [])
+
+  // ================= CREATE COLLECTION =================
+  const handleCreateCollection = async (e: any) => {
     e.preventDefault()
 
-    if (!file) {
-      alert('Please select an image file')
-      return
+    if (!token) return alert('Not authenticated')
+
+    const formData = new FormData()
+    formData.append('title', title)
+    formData.append('category', category)
+    formData.append('description', description)
+    formData.append('date', date)
+
+    if (cover) formData.append('cover', cover)
+    if (video) formData.append('video', video)
+
+    setLoading(true)
+
+    const res = await fetch('http://localhost:5000/api/collections', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    })
+
+    setLoading(false)
+
+    if (res.ok) {
+      alert('Collection created!')
+      window.location.reload()
+    } else {
+      alert('Failed to create collection')
     }
+  }
 
-    if (!category) {
-      alert('Please select a category')
-      return
-    }
+  // ================= UPLOAD IMAGES =================
+  const handleUploadImages = async (e: any) => {
+    e.preventDefault()
 
-    try {
-      setLoading(true)
+    if (!token) return alert('Not authenticated')
+    if (!images || !selectedCollection)
+      return alert('Select collection & images')
 
-      const token = localStorage.getItem('adminToken')
+    const formData = new FormData()
+    formData.append('collection_id', selectedCollection)
 
-      if (!token) {
-        alert('Not authenticated')
-        return
-      }
+    Array.from(images).forEach((img) => {
+      formData.append('images', img)
+    })
 
-      const formData = new FormData()
-      formData.append('title', title)
-      formData.append('category', category)
-      formData.append('image', file)
+    setLoading(true)
 
-      const res = await fetch('http://localhost:5000/api/media', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      })
+    const res = await fetch('http://localhost:5000/api/media/multiple', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    })
 
-      if (res.ok) {
-        alert('Uploaded successfully')
-        setTitle('')
-        setCategory('')
-        setFile(null)
-      } else {
-        const data = await res.json()
-        alert(data.message || 'Upload failed')
-      }
+    setLoading(false)
 
-    } catch (error) {
-      console.error(error)
-      alert('Server error')
-    } finally {
-      setLoading(false)
+    if (res.ok) {
+      alert('Images uploaded!')
+    } else {
+      alert('Upload failed')
     }
   }
 
   return (
-    <div className="min-h-screen bg-black text-white p-10">
-      <h1 className="text-3xl text-gold mb-6">Admin Dashboard</h1>
+    <div className="min-h-screen bg-black text-white p-10 space-y-16">
 
-      <form onSubmit={handleUpload} className="space-y-4 max-w-md">
+      <h1 className="text-4xl text-gold mb-10">Admin CMS Dashboard</h1>
 
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          className="w-full p-2 bg-gray-800"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setTitle(e.target.value)
-          }
-        />
+      {/* ================= CREATE COLLECTION ================= */}
+      <div className="border border-gold/20 p-8 rounded-xl">
+        <h2 className="text-2xl text-gold mb-6">Create New Collection</h2>
 
-        <select
-          value={category}
-          className="w-full p-2 bg-gray-800"
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            setCategory(e.target.value)
-          }
-        >
-          <option value="">Select Category</option>
-          <option value="wedding">Wedding</option>
-          <option value="pre-wedding">Pre-Wedding</option>
-          <option value="commercial">Commercial</option>
-          <option value="fashion">Fashion</option>
-          <option value="video-production">Video Production</option>
-          <option value="album-design">Album Design</option>
-        </select>
+        <form onSubmit={handleCreateCollection} className="space-y-4">
 
-        <input
-          type="file"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            if (e.target.files && e.target.files.length > 0) {
-              setFile(e.target.files[0])
-            }
-          }}
-        />
+          <input
+            type="text"
+            placeholder="Title"
+            className="w-full p-2 bg-gray-800"
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-        <button
-          type="submit"
-          disabled={loading}
-          className="bg-gold text-black px-4 py-2"
-        >
-          {loading ? 'Uploading...' : 'Upload'}
-        </button>
+          <select
+            className="w-full p-2 bg-gray-800"
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="">Select Category</option>
+            <option value="wedding">Wedding</option>
+            <option value="pre-wedding">Pre-Wedding</option>
+            <option value="commercial">Commercial</option>
+            <option value="fashion">Fashion</option>
+            <option value="video-production">Video Production</option>
+            <option value="album-design">Album Design</option>
+          </select>
 
-      </form>
+          <textarea
+            placeholder="Description"
+            className="w-full p-2 bg-gray-800"
+            onChange={(e) => setDescription(e.target.value)}
+          />
+
+          <input
+            type="text"
+            placeholder="Year (e.g. 2024)"
+            className="w-full p-2 bg-gray-800"
+            onChange={(e) => setDate(e.target.value)}
+          />
+
+          <div>
+            <label>Cover Image</label>
+            <input type="file" onChange={(e: any) => setCover(e.target.files[0])} />
+          </div>
+
+          <div>
+            <label>Background Video</label>
+            <input type="file" onChange={(e: any) => setVideo(e.target.files[0])} />
+          </div>
+
+          <button className="bg-gold text-black px-6 py-2">
+            {loading ? 'Creating...' : 'Create Collection'}
+          </button>
+        </form>
+      </div>
+
+      {/* ================= UPLOAD IMAGES ================= */}
+      <div className="border border-gold/20 p-8 rounded-xl">
+        <h2 className="text-2xl text-gold mb-6">Upload Images To Collection</h2>
+
+        <form onSubmit={handleUploadImages} className="space-y-4">
+
+          <select
+            className="w-full p-2 bg-gray-800"
+            onChange={(e) => setSelectedCollection(e.target.value)}
+          >
+            <option value="">Select Collection</option>
+            {collections.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.title}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="file"
+            multiple
+            onChange={(e: any) => setImages(e.target.files)}
+          />
+
+          <button className="bg-gold text-black px-6 py-2">
+            {loading ? 'Uploading...' : 'Upload Images'}
+          </button>
+        </form>
+      </div>
+
     </div>
   )
 }

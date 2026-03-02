@@ -15,6 +15,12 @@ router.post(
   upload.single('image'),
   controller.createMedia
 )
+router.post(
+  '/multiple',
+  auth,
+  upload.array('images', 50),
+  controller.uploadMultipleImages
+)
 
 // Delete (Admin only)
 router.delete('/:id', auth, controller.deleteMedia)
