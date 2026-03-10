@@ -1,27 +1,48 @@
 const pool = require('../config/db')
 
 exports.getMedia = async (req, res) => {
-  try {
-    const { category } = req.query
 
-    if (category) {
+  try {
+
+    const { collection_id, type } = req.query
+
+    if (collection_id) {
+
       const result = await pool.query(
-        'SELECT * FROM media WHERE category=$1 ORDER BY created_at DESC',
-        [category]
+        `SELECT * FROM media 
+         WHERE collection_id=$1
+         ORDER BY created_at DESC`,
+        [collection_id]
       )
+
       return res.json(result.rows)
+
+    }
+
+    if (type) {
+
+      const result = await pool.query(
+        `SELECT * FROM media WHERE type=$1`,
+        [type]
+      )
+
+      return res.json(result.rows)
+
     }
 
     const result = await pool.query(
-      'SELECT * FROM media ORDER BY created_at DESC'
+      `SELECT * FROM media ORDER BY created_at DESC`
     )
 
     res.json(result.rows)
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' })
-  }
-}
 
+  } catch (err) {
+
+    res.status(500).json({ message: "Server error" })
+
+  }
+
+}
 exports.createMedia = async (req, res) => {
   try {
     const { title, collection_id } = req.body

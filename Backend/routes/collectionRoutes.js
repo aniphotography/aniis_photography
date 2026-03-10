@@ -43,5 +43,5 @@ router.post(
 // Public routes
 router.get('/', controller.getCollectionsByCategory)
 router.get('/:id', controller.getCollectionById)
-
+router.delete('/:id', auth, controller.deleteCollection)
 module.exports = router

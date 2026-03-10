@@ -236,59 +236,6 @@ export default function VideoProductionPage() {
           </div>
         </div>
       </section>
-
-      {/* Packages Section */}
-      {/* <section className="py-20 px-6 bg-black">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-display text-center mb-4">
-            Video <span className="text-gold">Packages</span>
-          </h2>
-          <div className="w-12 h-1 bg-gold mx-auto mb-12" />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {packages.map((pkg) => (
-              <div
-                key={pkg.id}
-                className={`p-8 border transition-all duration-300 cursor-pointer transform hover:scale-105 ${
-                  pkg.featured
-                    ? 'border-gold bg-black/80'
-                    : 'border-white/20 bg-black/40 hover:border-gold'
-                }`}
-              >
-                {pkg.featured && (
-                  <div className="text-gold text-xs font-bold uppercase tracking-widest mb-2">
-                    Most Popular
-                  </div>
-                )}
-                <h3 className="text-3xl font-display text-white mb-2">{pkg.name}</h3>
-                <p className="text-gold text-lg font-bold mb-6">{pkg.price}</p>
-
-                <div className="border-t border-white/10 pt-6 mb-6">
-                  <ul className="space-y-3">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="text-gray-300 text-sm font-lato flex items-start">
-                        <span className="text-gold mr-3 font-bold">✓</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <Link
-                  href="/contact"
-                  className={`w-full py-3 font-bold text-center transition-all duration-300 ${
-                    pkg.featured
-                      ? 'bg-gold text-black hover:bg-yellow-400'
-                      : 'border-2 border-gold text-gold hover:bg-gold hover:text-black'
-                  }`}
-                >
-                  Inquire Now
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section> */}
 {/* ================= OUR RECENT WORKS ================= */}
 <section className="py-24 px-6 bg-black/40">
   <div className="max-w-7xl mx-auto">
