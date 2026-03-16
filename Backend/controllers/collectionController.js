@@ -1,10 +1,10 @@
 const pool = require('../config/db')
 
 
-// ===============================
-// CREATE COLLECTION (ADMIN)
-// ===============================
+/* ================= CREATE COLLECTION ================= */
+
 exports.createCollection = async (req, res) => {
+
   try {
 
     const { title, category, description, date } = req.body
@@ -22,12 +22,26 @@ exports.createCollection = async (req, res) => {
       ? `/uploads/${req.files.video[0].filename}`
       : null
 
+    const cover_video = req.files?.coverVideo
+      ? `/uploads/${req.files.coverVideo[0].filename}`
+      : null
+
+
     const result = await pool.query(
-      `INSERT INTO collections 
-        (title, category, slug, description, date, cover_image, video_url)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING *`,
-      [title, category, slug, description, date, cover_image, video_url]
+      `INSERT INTO collections
+      (title, category, slug, description, date, cover_image, video_url, cover_video)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
+      RETURNING *`,
+      [
+        title,
+        category,
+        slug,
+        description,
+        date,
+        cover_image,
+        video_url,
+        cover_video
+      ]
     )
 
     res.status(201).json(result.rows[0])
@@ -35,16 +49,16 @@ exports.createCollection = async (req, res) => {
   } catch (err) {
 
     console.error("CREATE COLLECTION ERROR:", err)
-
     res.status(500).json({ message: err.message })
 
   }
+
 }
 
 
-// ===============================
-// GET COLLECTIONS BY CATEGORY
-// ===============================
+
+/* ================= GET COLLECTIONS ================= */
+
 exports.getCollectionsByCategory = async (req, res) => {
 
   try {
@@ -54,19 +68,18 @@ exports.getCollectionsByCategory = async (req, res) => {
     if (category) {
 
       const result = await pool.query(
-        `SELECT id, title, cover_image, date
+        `SELECT id,title,cover_image,cover_video,date
          FROM collections
-         WHERE category = $1
+         WHERE category=$1
          ORDER BY created_at DESC`,
         [category]
       )
 
       return res.json(result.rows)
-
     }
 
     const result = await pool.query(
-      `SELECT id, title, cover_image, date
+      `SELECT id,title,cover_image,cover_video,date
        FROM collections
        ORDER BY created_at DESC`
     )
@@ -76,7 +89,6 @@ exports.getCollectionsByCategory = async (req, res) => {
   } catch (err) {
 
     console.error("GET COLLECTIONS ERROR:", err)
-
     res.status(500).json({ message: err.message })
 
   }
@@ -84,9 +96,9 @@ exports.getCollectionsByCategory = async (req, res) => {
 }
 
 
-// ===============================
-// GET COLLECTION BY ID
-// ===============================
+
+/* ================= GET COLLECTION BY ID ================= */
+
 exports.getCollectionById = async (req, res) => {
 
   try {
@@ -94,20 +106,18 @@ exports.getCollectionById = async (req, res) => {
     const { id } = req.params
 
     const collectionResult = await pool.query(
-      `SELECT * FROM collections WHERE id = $1`,
+      `SELECT * FROM collections WHERE id=$1`,
       [id]
     )
 
     if (collectionResult.rows.length === 0) {
-
-      return res.status(404).json({ message: 'Collection not found' })
-
+      return res.status(404).json({ message: "Collection not found" })
     }
 
     const imagesResult = await pool.query(
-      `SELECT id, image_url, caption
+      `SELECT id,image_url,tag
        FROM media
-       WHERE collection_id = $1
+       WHERE collection_id=$1
        ORDER BY created_at ASC`,
       [id]
     )
@@ -120,7 +130,6 @@ exports.getCollectionById = async (req, res) => {
   } catch (err) {
 
     console.error("GET COLLECTION ERROR:", err)
-
     res.status(500).json({ message: err.message })
 
   }
@@ -128,9 +137,9 @@ exports.getCollectionById = async (req, res) => {
 }
 
 
-// ===============================
-// DELETE COLLECTION
-// ===============================
+
+/* ================= DELETE COLLECTION ================= */
+
 exports.deleteCollection = async (req, res) => {
 
   try {
@@ -138,12 +147,12 @@ exports.deleteCollection = async (req, res) => {
     const { id } = req.params
 
     await pool.query(
-      `DELETE FROM media WHERE collection_id = $1`,
+      `DELETE FROM media WHERE collection_id=$1`,
       [id]
     )
 
     await pool.query(
-      `DELETE FROM collections WHERE id = $1`,
+      `DELETE FROM collections WHERE id=$1`,
       [id]
     )
 
@@ -152,7 +161,6 @@ exports.deleteCollection = async (req, res) => {
   } catch (err) {
 
     console.error("DELETE COLLECTION ERROR:", err)
-
     res.status(500).json({ message: "Delete failed" })
 
   }

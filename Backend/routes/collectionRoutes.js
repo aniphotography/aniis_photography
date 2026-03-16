@@ -2,12 +2,14 @@ console.log("COLLECTION ROUTES LOADED")
 
 const express = require('express')
 const router = express.Router()
+
 const auth = require('../middleware/authMiddleware')
 const controller = require('../controllers/collectionController')
 const upload = require('../middleware/upload')
 
 router.post(
   '/',
+
   (req, res, next) => {
     console.log("STEP 1 → Route hit")
     next()
@@ -27,7 +29,8 @@ router.post(
 
   upload.fields([
     { name: 'cover', maxCount: 1 },
-    { name: 'video', maxCount: 1 }
+    { name: 'video', maxCount: 1 },
+    { name: 'coverVideo', maxCount: 1 }
   ]),
 
   (req, res, next) => {
@@ -40,8 +43,17 @@ router.post(
   controller.createCollection
 )
 
-// Public routes
+
+// ================= PUBLIC ROUTES =================
+
 router.get('/', controller.getCollectionsByCategory)
+
 router.get('/:id', controller.getCollectionById)
+
+
+// ================= DELETE COLLECTION =================
+
 router.delete('/:id', auth, controller.deleteCollection)
+
+
 module.exports = router

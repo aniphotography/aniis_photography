@@ -5,16 +5,18 @@ const auth = require('../middleware/authMiddleware')
 const upload = require('../middleware/upload')
 const controller = require('../controllers/mediaController')
 
-// Get all or category-based
+/* GET MEDIA */
 router.get('/', controller.getMedia)
 
-// Create (Admin only)
+/* SINGLE IMAGE UPLOAD */
 router.post(
   '/',
   auth,
   upload.single('image'),
   controller.createMedia
 )
+
+/* MULTIPLE IMAGE UPLOAD */
 router.post(
   '/multiple',
   auth,
@@ -22,7 +24,7 @@ router.post(
   controller.uploadMultipleImages
 )
 
-// Delete (Admin only)
+/* DELETE IMAGE */
 router.delete('/:id', auth, controller.deleteMedia)
 
 module.exports = router

@@ -1,357 +1,674 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState,useEffect } from 'react'
 
-export default function AdminDashboard() {
+export default function AdminDashboard(){
 
-  const [collections, setCollections] = useState([])
-  const [selectedCollection, setSelectedCollection] = useState('')
-  const [media, setMedia] = useState([])
-  const [loading, setLoading] = useState(false)
+const [collections,setCollections]=useState([])
+const [selectedCollection,setSelectedCollection]=useState('')
+const [media,setMedia]=useState([])
 
-  const [title, setTitle] = useState('')
-  const [category, setCategory] = useState('')
-  const [description, setDescription] = useState('')
-  const [date, setDate] = useState('')
-  const [cover, setCover] = useState(null)
-  const [video, setVideo] = useState(null)
+const [title,setTitle]=useState('')
+const [category,setCategory]=useState('')
+const [description,setDescription]=useState('')
+const [date,setDate]=useState('')
 
-  const [uploadFilterCategory, setUploadFilterCategory] = useState('')
-  const [images, setImages] = useState(null)
+const [cover,setCover]=useState(null)
+const [video,setVideo]=useState(null)
+const [coverVideo,setCoverVideo]=useState(null)
 
-  const token = typeof window !== 'undefined'
-    ? localStorage.getItem('adminToken')
-    : null
+const [images,setImages]=useState(null)
+const [tag,setTag]=useState('')
 
+/* FEATURED STATES */
 
-  // ================= LOAD COLLECTIONS =================
+const [featuredTitle,setFeaturedTitle]=useState('')
+const [featuredDescription,setFeaturedDescription]=useState('')
+const [featuredDate,setFeaturedDate]=useState('')
+const [featuredCover,setFeaturedCover]=useState(null)
+const [featuredVideo,setFeaturedVideo]=useState(null)
+const [featuredCoverVideo,setFeaturedCoverVideo]=useState(null)
 
-  useEffect(() => {
+/* RECENT STATES */
 
-    const url = uploadFilterCategory
-      ? `http://localhost:5000/api/collections?category=${uploadFilterCategory}`
-      : `http://localhost:5000/api/collections`
+const [recentTitle,setRecentTitle]=useState('')
+const [recentDescription,setRecentDescription]=useState('')
+const [recentDate,setRecentDate]=useState('')
+const [recentCover,setRecentCover]=useState(null)
+const [recentVideo,setRecentVideo]=useState(null)
+const [recentCoverVideo,setRecentCoverVideo]=useState(null)
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => setCollections(data))
-      .catch(() => {})
+const token =
+typeof window!=='undefined'
+?localStorage.getItem('adminToken')
+:null
 
-  }, [uploadFilterCategory])
 
+/* LOAD COLLECTIONS */
 
-  // ================= LOAD MEDIA =================
+useEffect(()=>{
 
-  useEffect(() => {
+if(!category) return
 
-    if (!selectedCollection) return
+if(category==="gallery"){
 
-    fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
-      .then(res => res.json())
-      .then(data => setMedia(data))
+fetch("http://localhost:5000/api/collections")
+.then(res=>res.json())
+.then(data=>{
 
-  }, [selectedCollection])
+const filtered=data.filter(
+c =>
+c.category==="wedding" ||
+c.category==="pre-wedding" ||
+c.category==="fashion"
+)
 
+setCollections(filtered)
 
-  // ================= CREATE COLLECTION =================
+})
 
-  const handleCreateCollection = async (e) => {
+return
+}
 
-    e.preventDefault()
+fetch(`http://localhost:5000/api/collections?category=${category}`)
+.then(res=>res.json())
+.then(data=>setCollections(data))
 
-    if (!token) return alert('Not authenticated')
+},[category])
 
-    const formData = new FormData()
 
-    formData.append('title', title)
-    formData.append('category', category)
-    formData.append('description', description)
-    formData.append('date', date)
+/* LOAD MEDIA */
 
-    if (cover) formData.append('cover', cover)
-    if (video) formData.append('video', video)
+useEffect(()=>{
 
-    setLoading(true)
+if(!selectedCollection) return
 
-    const res = await fetch(
-      'http://localhost:5000/api/collections',
-      {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      }
-    )
+fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
+.then(res=>res.json())
+.then(data=>setMedia(data))
 
-    if (res.ok) {
+},[selectedCollection])
 
-      alert('Collection created')
 
-      window.location.reload()
+/* CREATE COLLECTION */
 
-    } else {
+const createCollection=async(e)=>{
 
-      alert('Failed to create collection')
+e.preventDefault()
 
-    }
+const formData=new FormData()
 
-    setLoading(false)
+formData.append("title",title)
+formData.append("category",category)
+formData.append("description",description)
+formData.append("date",date)
 
-  }
+if(cover) formData.append("cover",cover)
+if(video) formData.append("video",video)
+if(coverVideo) formData.append("coverVideo",coverVideo)
 
+const res=await fetch(
+"http://localhost:5000/api/collections",
+{
+method:"POST",
+headers:{Authorization:`Bearer ${token}`},
+body:formData
+})
 
-  // ================= UPLOAD IMAGES =================
+if(res.ok){
+alert("Collection created")
+window.location.reload()
+}else{
+alert("Failed")
+}
 
-  const handleUploadImages = async (e) => {
+}
 
-    e.preventDefault()
 
-    if (!images || !selectedCollection)
-      return alert('Select collection and images')
+/* CREATE FEATURED COLLECTION */
 
-    const formData = new FormData()
+const createFeaturedCollection=async(e)=>{
 
-    formData.append('collection_id', selectedCollection)
+e.preventDefault()
 
-    Array.from(images).forEach(img =>
-      formData.append('images', img)
-    )
+const formData=new FormData()
 
-    setLoading(true)
+formData.append("title",featuredTitle)
+formData.append("category",category)
+formData.append("description",featuredDescription)
+formData.append("date",featuredDate)
+formData.append("type","featured")
 
-    const res = await fetch(
-      'http://localhost:5000/api/media/multiple',
-      {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-      }
-    )
+if(featuredCover) formData.append("cover",featuredCover)
+if(featuredVideo) formData.append("video",featuredVideo)
+if(featuredCoverVideo) formData.append("coverVideo",featuredCoverVideo)
 
-    if (res.ok) {
+const res=await fetch(
+"http://localhost:5000/api/collections",
+{
+method:"POST",
+headers:{Authorization:`Bearer ${token}`},
+body:formData
+})
 
-      alert('Images uploaded')
+if(res.ok){
+alert("Featured Collection created")
+window.location.reload()
+}else{
+alert("Failed")
+}
 
-      setImages(null)
+}
 
-      fetch(
-        `http://localhost:5000/api/media?collection_id=${selectedCollection}`
-      )
-        .then(res => res.json())
-        .then(data => setMedia(data))
 
-    } else {
+/* CREATE RECENT COLLECTION */
 
-      alert('Upload failed')
+const createRecentCollection=async(e)=>{
 
-    }
+e.preventDefault()
 
-    setLoading(false)
+const formData=new FormData()
 
-  }
+formData.append("title",recentTitle)
+formData.append("category",category)
+formData.append("description",recentDescription)
+formData.append("date",recentDate)
+formData.append("type","recent")
 
+if(recentCover) formData.append("cover",recentCover)
+if(recentVideo) formData.append("video",recentVideo)
+if(recentCoverVideo) formData.append("coverVideo",recentCoverVideo)
 
-  // ================= DELETE IMAGE =================
+const res=await fetch(
+"http://localhost:5000/api/collections",
+{
+method:"POST",
+headers:{Authorization:`Bearer ${token}`},
+body:formData
+})
 
-  const deleteImage = async (id) => {
+if(res.ok){
+alert("Recent Collection created")
+window.location.reload()
+}else{
+alert("Failed")
+}
 
-    if (!confirm('Delete this image?')) return
+}
 
-    await fetch(
-      `http://localhost:5000/api/media/${id}`,
-      {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    )
 
-    setMedia(media.filter(m => m.id !== id))
+/* UPLOAD MEDIA */
 
-  }
+const uploadImages=async(e)=>{
 
+e.preventDefault()
 
-  // ================= DELETE COLLECTION =================
+const formData=new FormData()
 
-  const deleteCollection = async (id) => {
+formData.append("collection_id",selectedCollection)
+formData.append("tag",tag)
 
-    if (!confirm('Delete this collection?')) return
+Array.from(images).forEach(img=>{
+formData.append("images",img)
+})
 
-    await fetch(
-      `http://localhost:5000/api/collections/${id}`,
-      {
-        method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` }
-      }
-    )
+const res=await fetch(
+"http://localhost:5000/api/media/multiple",
+{
+method:"POST",
+headers:{Authorization:`Bearer ${token}`},
+body:formData
+})
 
-    setCollections(collections.filter(c => c.id !== id))
+if(res.ok){
 
-  }
+alert("Uploaded")
 
+fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
+.then(res=>res.json())
+.then(data=>setMedia(data))
 
-  return (
+}else{
 
-    <div className="min-h-screen bg-black text-white p-10 space-y-16">
+alert("Upload failed")
 
-      <h1 className="text-4xl text-gold border-b border-gold/20 pb-4">
-        Admin CMS Dashboard
-      </h1>
+}
 
+}
 
-      {/* ================= CREATE COLLECTION ================= */}
 
-      <div className="border border-gold/20 p-8 rounded-xl bg-gray-900/50">
+/* DELETE IMAGE */
 
-        <h2 className="text-2xl text-gold mb-6">
-          Create New Collection
-        </h2>
+const deleteImage=async(id)=>{
 
-        <form
-          onSubmit={handleCreateCollection}
-          className="space-y-4 max-w-2xl"
-        >
+if(!confirm("Delete image?")) return
 
-          <input
-            type="text"
-            placeholder="Collection Title"
-            className="w-full p-3 bg-gray-800"
-            onChange={(e)=>setTitle(e.target.value)}
-            required
-          />
+await fetch(
+`http://localhost:5000/api/media/${id}`,
+{
+method:"DELETE",
+headers:{Authorization:`Bearer ${token}`}
+})
 
-          <select
-            className="w-full p-3 bg-gray-800"
-            onChange={(e)=>setCategory(e.target.value)}
-            required
-          >
+setMedia(media.filter(m=>m.id!==id))
 
-            <option value="">Select Category</option>
-            <option value="wedding">Wedding</option>
-            <option value="pre-wedding">Pre-Wedding</option>
-            <option value="fashion">Fashion</option>
-            <option value="commercial">Commercial</option>
-            <option value="video-production">Video Production</option>
-            <option value="album-design">Album Design</option>
+}
 
-          </select>
 
-          <textarea
-            placeholder="Description"
-            className="w-full p-3 bg-gray-800"
-            onChange={(e)=>setDescription(e.target.value)}
-          />
+/* DELETE COLLECTION */
 
-          <input
-            type="text"
-            placeholder="Year"
-            className="w-full p-3 bg-gray-800"
-            onChange={(e)=>setDate(e.target.value)}
-          />
+const deleteCollection=async(id)=>{
 
-          <input type="file" onChange={(e)=>setCover(e.target.files[0])}/>
-          <input type="file" onChange={(e)=>setVideo(e.target.files[0])}/>
+if(!confirm("Delete collection?")) return
 
-          <button
-            className="bg-gold text-black px-8 py-3"
-          >
-            {loading ? 'Processing...' : 'Create Collection'}
-          </button>
+await fetch(
+`http://localhost:5000/api/collections/${id}`,
+{
+method:"DELETE",
+headers:{Authorization:`Bearer ${token}`}
+})
 
-        </form>
+setCollections(collections.filter(c=>c.id!==id))
 
-      </div>
+}
 
 
-      {/* ================= UPLOAD IMAGES ================= */}
+/* CREATE COLLECTION INPUTS */
 
-      <div className="border border-gold/20 p-8 rounded-xl bg-gray-900/50">
+const renderCreateInputs=()=>{
 
-        <h2 className="text-2xl text-gold mb-6">
-          Upload Images
-        </h2>
+if(
+category==="wedding" ||
+category==="pre-wedding" ||
+category==="fashion"
+){
 
-        <select
-          className="w-full p-3 bg-gray-800 mb-4"
-          value={uploadFilterCategory}
-          onChange={(e)=>setUploadFilterCategory(e.target.value)}
-        >
+return(
 
-          <option value="">All Categories</option>
-          <option value="wedding">Wedding</option>
-          <option value="pre-wedding">Pre-Wedding</option>
-          <option value="fashion">Fashion</option>
+<>
 
-        </select>
+{/* FEATURED WORKS */}
 
-        <select
-          className="w-full p-3 bg-gray-800 mb-4"
-          value={selectedCollection}
-          onChange={(e)=>setSelectedCollection(e.target.value)}
-        >
+<div className="border border-gold p-4">
 
-          <option value="">Select Collection</option>
+<h3 className="text-gold mb-3">Featured Works</h3>
 
-          {collections.map(c=>(
-            <option key={c.id} value={c.id}>
-              {c.title}
-            </option>
-          ))}
+<input
+placeholder="Title"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setFeaturedTitle(e.target.value)}
+/>
 
-        </select>
+<textarea
+placeholder="Description"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setFeaturedDescription(e.target.value)}
+/>
 
-        <button
-          onClick={()=>deleteCollection(selectedCollection)}
-          className="bg-red-600 px-4 py-2 mb-4"
-        >
-          Delete Collection
-        </button>
+<input
+placeholder="Year"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setFeaturedDate(e.target.value)}
+/>
 
-        <form onSubmit={handleUploadImages}>
+{category==="fashion" && (
+<>
+<label>Cover Video</label>
+<input type="file" onChange={e=>setFeaturedCoverVideo(e.target.files[0])}/>
+</>
+)}
 
-          <input
-            type="file"
-            multiple
-            onChange={(e)=>setImages(e.target.files)}
-          />
+{category!=="fashion" && (
+<>
+<label>Insert Cover Photo</label>
+<input type="file" onChange={e=>setFeaturedCover(e.target.files[0])}/>
+<label>Insert Background Video</label>
+<input type="file" onChange={e=>setFeaturedVideo(e.target.files[0])}/>
+</>
+)}
 
-          <button
-            type="submit"
-            className="bg-gold text-black px-8 py-3 mt-4"
-          >
-            Upload Images
-          </button>
+<button
+onClick={createFeaturedCollection}
+className="bg-gold text-black px-6 py-3 mt-3">
+Create Featured
+</button>
 
-        </form>
+</div>
 
 
-        {/* ================= SHOW MEDIA ================= */}
+{/* RECENT WORKS */}
 
-        <div className="grid grid-cols-4 gap-4 mt-10">
+<div className="border border-gold p-4 mt-4">
 
-          {media.map(img => (
+<h3 className="text-gold mb-3">Recent Works</h3>
 
-            <div key={img.id} className="relative">
+<input
+placeholder="Title"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setRecentTitle(e.target.value)}
+/>
 
-              <img
-                src={`http://localhost:5000${img.image_url}`}
-                className="w-full h-40 object-cover"
-              />
+<textarea
+placeholder="Description"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setRecentDescription(e.target.value)}
+/>
 
-              <button
-                onClick={()=>deleteImage(img.id)}
-                className="absolute top-2 right-2 bg-red-600 text-xs px-2 py-1"
-              >
-                Delete
-              </button>
+<input
+placeholder="Year"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setRecentDate(e.target.value)}
+/>
 
-            </div>
+{category==="fashion" && (
+<>
+<label>Cover Video</label>
+<input type="file" onChange={e=>setRecentCoverVideo(e.target.files[0])}/>
+</>
+)}
 
-          ))}
+{category!=="fashion" && (
+<>
+<label>Insert Cover Photo</label>
+<input type="file" onChange={e=>setRecentCover(e.target.files[0])}/>
+<label>Insert Background Video</label>
+<input type="file" onChange={e=>setRecentVideo(e.target.files[0])}/>
+</>
+)}
 
-        </div>
+<button
+onClick={createRecentCollection}
+className="bg-gold text-black px-6 py-3 mt-3">
+Create Recent
+</button>
 
-      </div>
+</div>
 
-    </div>
+</>
 
-  )
+)
+
+}
+switch(category){
+
+case "blogs":
+
+return(
+<>
+
+<input
+placeholder="Title"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setTitle(e.target.value)}
+/>
+
+<textarea
+placeholder="Description"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setDescription(e.target.value)}
+/>
+
+<input
+placeholder="Year"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setDate(e.target.value)}
+/>
+
+<label>Blog Cover</label>
+<input type="file" onChange={e=>setCover(e.target.files[0])}/>
+
+<button
+onClick={createCollection}
+className="bg-gold text-black px-6 py-3 mt-3"
+>
+Create Blog
+</button>
+
+</>
+)
+
+
+case "video-production":
+
+return(
+<>
+
+<input
+placeholder="Title"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setTitle(e.target.value)}
+/>
+
+<textarea
+placeholder="Description"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setDescription(e.target.value)}
+/>
+
+<input
+placeholder="Year"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setDate(e.target.value)}
+/>
+
+<label>Main Video</label>
+<input type="file" onChange={e=>setVideo(e.target.files[0])}/>
+
+<label>Thumbnail</label>
+<input type="file" onChange={e=>setCover(e.target.files[0])}/>
+
+<button
+onClick={createCollection}
+className="bg-gold text-black px-6 py-3 mt-3"
+>
+Create Video Project
+</button>
+
+</>
+)
+
+
+case "album-design":
+
+return(
+<>
+
+<input
+placeholder="Title"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setTitle(e.target.value)}
+/>
+
+<textarea
+placeholder="Description"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setDescription(e.target.value)}
+/>
+
+<input
+placeholder="Year"
+className="w-full p-3 bg-gray-800"
+onChange={e=>setDate(e.target.value)}
+/>
+
+<label>Album Cover</label>
+<input type="file" onChange={e=>setCover(e.target.files[0])}/>
+
+<button
+onClick={createCollection}
+className="bg-gold text-black px-6 py-3 mt-3"
+>
+Create Album
+</button>
+
+</>
+)
+
+default:
+return null
+
+}
+
+}
+
+
+/* MEDIA UPLOAD OPTIONS */
+
+const renderCollectionUpload=()=>{
+
+switch(category){
+
+case "wedding":
+case "pre-wedding":
+return(
+<>
+<label>Upload Collection Photos</label>
+<input type="file" multiple onChange={e=>setImages(e.target.files)}/>
+</>
+)
+
+case "fashion":
+return(
+<>
+<label>Upload Fashion Assets</label>
+<input type="file" multiple onChange={e=>setImages(e.target.files)}/>
+<input
+placeholder="Tag (reel-video / still-photo / logo)"
+className="w-full p-3 bg-gray-800 mt-2"
+onChange={e=>setTag(e.target.value)}
+/>
+</>
+)
+
+case "gallery":
+return(
+<>
+<label>Upload Gallery Images</label>
+<input type="file" multiple onChange={e=>setImages(e.target.files)}/>
+<input
+placeholder="Tag (wedding / pre-wedding / fashion)"
+className="w-full p-3 bg-gray-800 mt-2"
+onChange={e=>setTag(e.target.value)}
+/>
+</>
+)
+
+case "blogs":
+return(
+<>
+<label>Upload Blog Images</label>
+<input type="file" multiple onChange={e=>setImages(e.target.files)}/>
+</>
+)
+
+default:
+return null
+
+}
+
+}
+
+
+return(
+
+<div className="min-h-screen bg-black text-white p-10 space-y-16">
+
+<h1 className="text-4xl text-gold">Admin CMS</h1>
+
+
+{/* CREATE COLLECTION */}
+
+<div className="border p-8">
+
+<h2>Create Collection</h2>
+
+<select
+className="w-full p-3 bg-gray-800"
+onChange={e=>setCategory(e.target.value)}
+required
+>
+
+<option value="">Select Page</option>
+<option value="wedding">Wedding</option>
+<option value="pre-wedding">Pre Wedding</option>
+<option value="fashion">Fashion</option>
+<option value="gallery">Gallery</option>
+<option value="blogs">Blogs</option>
+<option value="video-production">Video Production</option>
+<option value="album-design">Album Design</option>
+
+</select>
+
+{renderCreateInputs()}
+
+</div>
+
+
+{/* COLLECTION MEDIA MANAGEMENT */}
+
+<div className="border p-8">
+
+<h2>{category} Collections</h2>
+
+<select
+className="w-full p-3 bg-gray-800 mt-3"
+value={selectedCollection}
+onChange={e=>setSelectedCollection(e.target.value)}
+>
+
+<option value="">Select Collection</option>
+
+{collections.map(c=>(
+<option key={c.id} value={c.id}>{c.title}</option>
+))}
+
+</select>
+
+<button
+onClick={()=>deleteCollection(selectedCollection)}
+className="bg-red-600 px-4 py-2 mt-3"
+>
+Delete Collection
+</button>
+
+
+<form onSubmit={uploadImages} className="mt-4">
+
+{renderCollectionUpload()}
+
+<button className="bg-gold text-black px-6 py-3 mt-3">
+Upload
+</button>
+
+</form>
+
+
+<div className="grid grid-cols-4 gap-4 mt-10">
+
+{media.map(img=>(
+<div key={img.id} className="relative">
+
+<img
+src={`http://localhost:5000${img.image_url}`}
+className="w-full h-40 object-cover"
+/>
+
+<button
+onClick={()=>deleteImage(img.id)}
+className="absolute top-2 right-2 bg-red-600 px-2 py-1 text-xs"
+>
+Delete
+</button>
+
+</div>
+))}
+
+</div>
+
+</div>
+
+</div>
+
+)
+
 }
