@@ -68,7 +68,7 @@ exports.getCollectionsByCategory = async (req, res) => {
     if (category) {
 
       const result = await pool.query(
-        `SELECT id,title,cover_image,cover_video,date
+        `SELECT id, title, category, cover_image, cover_video, date
          FROM collections
          WHERE category=$1
          ORDER BY created_at DESC`,
@@ -79,7 +79,7 @@ exports.getCollectionsByCategory = async (req, res) => {
     }
 
     const result = await pool.query(
-      `SELECT id,title,cover_image,cover_video,date
+      `SELECT id, title, category, cover_image, cover_video, date
        FROM collections
        ORDER BY created_at DESC`
     )

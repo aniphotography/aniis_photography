@@ -3,164 +3,134 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
-import { ChevronLeft, ChevronRight, X } from 'lucide-react'
+import { useState, useEffect } from 'react'
 
 export default function GalleryCategoryPage() {
-  const params = useParams()
-  const { id } = params
-  
+
+  const { id } = useParams()
+
+  const [collection, setCollection] = useState(null)
+  const [media, setMedia] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
 
-  const collections = {
-    wedding: {
-      title: 'Wedding Collection',
-      media: [
-        { type: 'image', src: 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800&q=80' },
-        { type: 'image', src: 'https://images.unsplash.com/photo-1511379938547-c1f69b13d835?w=800&q=80' },
-        { type: 'video', src: '/videos/prewedding.mp4' },
-      ],
-    },
-    'pre-wedding': {
-      title: 'Pre Wedding Collection',
-      media: [
-        { type: 'image', src: 'https://images.unsplash.com/photo-1512888286885-9a6c4d8e9e9e?w=800&q=80' },
-        { type: 'video', src: '/videos/prewedding.mp4' },
-      ],
-    },
-    // ... add your other categories here
-  }
+  /* FETCH COLLECTION */
 
-  const category = collections[id]
-  if (!category) return <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center text-white">Category not found</div>
+  useEffect(() => {
 
-  const handleNext = (e) => {
-    e.stopPropagation()
-    setSelectedIndex((prev) => (prev + 1) % category.media.length)
-  }
+    fetch(`http://localhost:5000/api/collections`)
+      .then(res => res.json())
+      .then(data => {
+        const found = data.find(c => c.id == id)
+        setCollection(found)
+      })
 
-  const handlePrev = (e) => {
-    e.stopPropagation()
-    setSelectedIndex((prev) => (prev - 1 + category.media.length) % category.media.length)
-  }
+    fetch(`http://localhost:5000/api/media?collection_id=${id}`)
+      .then(res => res.json())
+      .then(data => setMedia(data))
+
+  }, [id])
+
+  if (!collection) return <div className="text-white p-10">Loading...</div>
 
   return (
-    <main className="min-h-screen bg-[#0a0a0a] text-white">
+    <main className="min-h-screen bg-black text-white">
+
       <Navbar />
 
-      <section className="pt-40 pb-16 px-6 text-center">
-        <h1 className="text-5xl md:text-7xl font-display text-[#d4af37] italic">
-          {category.title}
-        </h1>
+      {/* TITLE */}
+      <section className="pt-40 text-center">
+        <h1 className="text-6xl text-gold">{collection.title}</h1>
       </section>
 
-      {/* Media Grid */}
-      <section className="py-10 px-6">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-          {category.media.map((item, index) => (
-            <div
-              key={index}
-              className="relative aspect-[4/5] overflow-hidden cursor-pointer border border-white/5 bg-[#111] group"
-              onClick={() => setSelectedIndex(index)}
-            >
-              {item.type === 'image' ? (
-                <img 
-                  src={item.src} 
-                  className="w-full h-full object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-700" 
-                  alt="" 
-                />
-              ) : (
-                <video autoPlay muted loop playsInline className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition duration-700">
-                  <source src={item.src} type="video/mp4" />
-                </video>
-              )}
-            </div>
-          ))}
-        </div>
+      {/* GRID */}
+      <section className="p-10 grid grid-cols-3 gap-6">
+
+        {media.map((item, index) => (
+
+          <div
+            key={item.id}
+            onClick={() => setSelectedIndex(index)}
+            className="cursor-pointer"
+          >
+
+            <img
+              src={`http://localhost:5000${item.image_url}`}
+              className="w-full h-80 object-cover"
+            />
+
+          </div>
+
+        ))}
+
       </section>
 
-      {/* Lightbox */}
-     {/* --- CINEMATIC LIGHTBOX --- */}
-{selectedIndex !== null && (
+      {/* LIGHTBOX */}
+
+     {selectedIndex !== null && (
+
   <div
-    className="fixed inset-0 bg-black/98 backdrop-blur-md z-[100] flex flex-col transition-opacity duration-300"
+    className="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] flex flex-col"
     onClick={() => setSelectedIndex(null)}
   >
-    {/* --- TOP BAR --- */}
-    <div className="w-full h-24 flex items-center justify-end px-8 md:px-16 shrink-0">
+
+    {/* TOP BAR (CLOSE BUTTON) */}
+    <div className="w-full h-20 flex items-center justify-end px-10">
       <button
         onClick={() => setSelectedIndex(null)}
-        className="text-[#d4af37] hover:text-white transition-colors z-[110] pointer-events-auto"
+        className="text-gold hover:text-white transition"
       >
-        <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M6 18L18 6M6 6l12 12" />
-        </svg>
+        ✕
       </button>
     </div>
 
-    {/* --- MEDIA AREA --- */}
-    <div className="flex-grow relative flex items-center justify-center p-6 pt-0">
-      
-      {/* --- BIG SIZE NAVIGATION ARROWS --- */}
-      <div className="absolute inset-0 flex items-center justify-between px-4 md:px-10 pointer-events-none">
-        
-        {/* BIG PREVIOUS BUTTON */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedIndex((prev) => (prev - 1 + category.media.length) % category.media.length);
-          }}
-          className="pointer-events-auto w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full border border-[#d4af37]/30 bg-black/40 text-[#d4af37] hover:text-white hover:border-[#d4af37] hover:bg-black/60 transition-all duration-300"
-        >
-          <svg className="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
+    {/* MAIN CONTENT */}
+    <div className="flex-1 flex items-center justify-center relative px-10">
 
-        {/* BIG NEXT BUTTON */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedIndex((prev) => (prev + 1) % category.media.length);
-          }}
-          className="pointer-events-auto w-20 h-20 md:w-24 md:h-24 flex items-center justify-center rounded-full border border-[#d4af37]/30 bg-black/40 text-[#d4af37] hover:text-white hover:border-[#d4af37] hover:bg-black/60 transition-all duration-300"
-        >
-          <svg className="w-12 h-12 md:w-16 md:h-16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
+      {/* LEFT BUTTON */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          setSelectedIndex(
+            (prev) => (prev - 1 + media.length) % media.length
+          )
+        }}
+        className="absolute left-5 text-gold text-4xl hover:text-white"
+      >
+        ‹
+      </button>
 
-      {/* --- THE MEDIA WRAPPER --- */}
-      <div className="relative max-w-5xl w-full flex flex-col items-center" onClick={(e) => e.stopPropagation()}>
-        {category.media[selectedIndex].type === 'image' ? (
-          <img
-            src={category.media[selectedIndex].src}
-            className="w-full max-h-[70vh] object-contain shadow-2xl animate-in zoom-in duration-500"
-            alt="Selected"
-          />
-        ) : (
-          <video 
-            controls 
-            autoPlay 
-            className="w-full max-h-[70vh] object-contain shadow-2xl"
-            key={category.media[selectedIndex].src}
-          >
-            <source src={category.media[selectedIndex].src} type="video/mp4" />
-          </video>
-        )}
-        
-        <div className="mt-8 text-center">
-          <p className="text-[#d4af37] tracking-[0.5em] uppercase text-[10px] font-light opacity-60">
-            {selectedIndex + 1} / {category.media.length}
-          </p>
-        </div>
-      </div>
+      {/* IMAGE */}
+      <img
+        src={`http://localhost:5000${media[selectedIndex].image_url}`}
+        className="max-h-[75vh] max-w-[90vw] object-contain shadow-2xl"
+        onClick={(e) => e.stopPropagation()}
+      />
+
+      {/* RIGHT BUTTON */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          setSelectedIndex(
+            (prev) => (prev + 1) % media.length
+          )
+        }}
+        className="absolute right-5 text-gold text-4xl hover:text-white"
+      >
+        ›
+      </button>
+
     </div>
-  </div>
-)}
 
+    {/* INDEX COUNTER */}
+    <div className="text-center pb-6 text-gray-400 text-sm tracking-widest">
+      {selectedIndex + 1} / {media.length}
+    </div>
+
+  </div>
+
+)}
       <Footer />
+
     </main>
   )
 }
