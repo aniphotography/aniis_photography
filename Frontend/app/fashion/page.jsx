@@ -337,7 +337,7 @@ function HoverVideoCard({ item }) {
           preload="metadata"
           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700"
         >
-          <source src={`http://localhost:5000${item.video}`} type="video/mp4" />
+          <source src={`http://localhost:5000${item.cover_video || item.video_url}`} type="video/mp4" />
         </video>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />

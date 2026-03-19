@@ -25,10 +25,12 @@ export default function AlbumsPage() {
 
   /* GROUPED SECTIONS */
 
-  const weddingAlbums = albums.filter(a => a.category === 'wedding')
-  const preWeddingAlbums = albums.filter(a => a.category === 'pre-wedding')
-  const videoAlbums = albums.filter(a => a.category === 'video-production')
-  const fashionAlbums = albums.filter(a => a.category === 'fashion')
+  const normalize = (str) => str?.trim().toLowerCase()
+
+  const weddingAlbums = albums.filter(a => normalize(a.category) === 'wedding')
+  const preWeddingAlbums = albums.filter(a => normalize(a.category) === 'pre-wedding')
+  const videoAlbums = albums.filter(a => normalize(a.category) === 'video-production')
+  const fashionAlbums = albums.filter(a => normalize(a.category) === 'fashion')
 
   /* IMAGE HANDLER */
 
@@ -62,11 +64,31 @@ export default function AlbumsPage() {
                 className="relative group overflow-hidden border border-white/5"
               >
 
-                <img
-                  src={getImageSrc(album.cover_image)}
-                  alt={album.title || "album"}
-                  className="w-full h-64 object-cover group-hover:scale-110 transition duration-700"
-                />
+                {/* ✅ FIXED MEDIA HANDLING */}
+                {album.cover_video ? (
+                  <video
+                    src={getImageSrc(album.cover_video)}
+                    muted
+                    loop
+                    playsInline
+                    onMouseEnter={e => e.target.play()}
+                    onMouseLeave={e => {
+                      e.target.pause()
+                      e.target.currentTime = 0
+                    }}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition duration-700"
+                  />
+                ) : album.cover_image ? (
+                  <img
+                    src={getImageSrc(album.cover_image)}
+                    alt={album.title || "album"}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-64 bg-gray-800 flex items-center justify-center">
+                    No Media
+                  </div>
+                )}
 
                 <div className="absolute bottom-0 p-4">
                   <p className="text-xs text-[#d4af37]">{album.date}</p>
@@ -124,7 +146,7 @@ export default function AlbumsPage() {
         </div>
       </section>
 
-      {/* ✅ FIXED SECTION LOGIC */}
+      {/* SECTIONS */}
 
       {activeCategory === 'all' && (
         <>
@@ -151,7 +173,7 @@ export default function AlbumsPage() {
         renderSection('Fashion', fashionAlbums)
       }
 
-      {/* ORIGINAL GRID (ONLY FOR ALL) */}
+      {/* ORIGINAL GRID */}
       {activeCategory === 'all' && (
         <section className="py-20 px-6">
           <div className="max-w-7xl mx-auto grid grid-cols-3 gap-6">
@@ -164,11 +186,31 @@ export default function AlbumsPage() {
                 className="relative group"
               >
 
-                <img
-                  src={getImageSrc(album.cover_image)}
-                  alt={album.title || "album"}
-                  className="w-full h-64 object-cover"
-                />
+                {/* ✅ FIXED TERNARY */}
+                {album.cover_video ? (
+                  <video
+                    src={getImageSrc(album.cover_video)}
+                    muted
+                    loop
+                    playsInline
+                    onMouseEnter={e => e.target.play()}
+                    onMouseLeave={e => {
+                      e.target.pause()
+                      e.target.currentTime = 0
+                    }}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition duration-700"
+                  />
+                ) : album.cover_image ? (
+                  <img
+                    src={getImageSrc(album.cover_image)}
+                    alt={album.title || "album"}
+                    className="w-full h-64 object-cover group-hover:scale-110 transition duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-64 bg-gray-800 flex items-center justify-center">
+                    No Media
+                  </div>
+                )}
 
                 <div className="absolute bottom-0 p-4">
                   <p className="text-xs text-gold">{album.date}</p>
