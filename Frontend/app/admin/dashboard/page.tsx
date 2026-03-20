@@ -19,6 +19,8 @@ const [coverVideo,setCoverVideo]=useState(null)
 
 const [images,setImages]=useState(null)
 const [tag,setTag]=useState('')
+const [blogVideo,setBlogVideo]=useState(null)
+const [blogText,setBlogText]=useState('')
 
 /* FEATURED STATES */
 
@@ -198,7 +200,6 @@ alert("Failed")
 
 
 /* UPLOAD MEDIA */
-
 const uploadImages=async(e)=>{
 
 e.preventDefault()
@@ -208,9 +209,22 @@ const formData=new FormData()
 formData.append("collection_id",selectedCollection)
 formData.append("tag",tag)
 
+/* ✅ FIX 1: SAFE IMAGE HANDLING */
+if(images && images.length > 0){
 Array.from(images).forEach(img=>{
 formData.append("images",img)
 })
+}
+
+/* ✅ FIX 2: BLOG VIDEO SUPPORT */
+if(blogVideo){
+formData.append("images",blogVideo)
+}
+
+/* ✅ FIX 3: BLOG TEXT SUPPORT */
+if(blogText){
+formData.append("content",blogText)
+}
 
 const res=await fetch(
 "http://localhost:5000/api/media/multiple",
@@ -235,6 +249,7 @@ alert("Upload failed")
 }
 
 }
+
 
 
 /* DELETE IMAGE */
@@ -554,10 +569,20 @@ onChange={e=>setTag(e.target.value)}
 )
 
 case "blogs":
+
 return(
 <>
 <label>Upload Blog Images</label>
 <input type="file" multiple onChange={e=>setImages(e.target.files)}/>
+
+<label className="mt-3 block">Upload Blog Video</label>
+<input type="file" onChange={e=>setBlogVideo(e.target.files[0])}/>
+
+<textarea
+placeholder="Write Blog Content..."
+className="w-full p-3 bg-gray-800 mt-3"
+onChange={e=>setBlogText(e.target.value)}
+/>
 </>
 )
 
