@@ -75,38 +75,56 @@ exports.createMedia = async (req, res) => {
 
 
 /* ================= MULTIPLE IMAGE UPLOAD ================= */
+exports.uploadMultiple = async (req, res) => {
 
-exports.uploadMultipleImages = async (req, res) => {
   try {
 
-    const { collection_id, tag } = req.body
-    const files = req.files
+    console.log("BODY:", req.body)
+    console.log("FILES:", req.files)
 
-    if (!files || files.length === 0) {
-      return res.status(400).json({ message: "No files uploaded" })
+    const collection_id = req.body?.collection_id
+    const tag = req.body?.tag
+    const content = req.body?.content
+
+    // ❌ prevent crash
+    if (!collection_id) {
+      return res.status(400).json({ message: "collection_id missing" })
     }
 
-    for (const file of files) {
-
+    // ✅ 1. INSERT TEXT
+    if (content && content.trim() !== '') {
       await pool.query(
-        `INSERT INTO media (collection_id, image_url, tag)
+        `INSERT INTO media (collection_id, content, tag)
          VALUES ($1,$2,$3)`,
-        [collection_id, `/uploads/${file.filename}`, tag]
+        [collection_id, content, tag || 'text']
       )
-
     }
 
-    res.json({ message: "Images uploaded successfully" })
+    // ✅ 2. INSERT FILES (SAFE CHECK)
+    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
+      for (let file of req.files) {
+        await pool.query(
+          `INSERT INTO media (collection_id, image_url, tag)
+           VALUES ($1,$2,$3)`,
+          [
+            collection_id,
+            `/uploads/${file.filename}`,
+            tag
+          ]
+        )
+      }
+    }
+
+    res.json({ message: "Uploaded successfully" })
 
   } catch (err) {
 
-    console.error(err)
+    console.error("UPLOAD ERROR:", err)
     res.status(500).json({ message: "Upload failed" })
 
   }
+
 }
-
-
 /* ================= DELETE IMAGE ================= */
 
 exports.deleteMedia = async (req, res) => {

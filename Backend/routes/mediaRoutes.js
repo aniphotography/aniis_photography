@@ -21,7 +21,7 @@ router.post(
   '/multiple',
   auth,
   upload.array('images', 50),
-  controller.uploadMultipleImages
+  controller.uploadMultiple
 )
 
 /* DELETE IMAGE */

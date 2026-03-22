@@ -223,9 +223,8 @@ formData.append("images",blogVideo)
 
 /* ✅ FIX 3: BLOG TEXT SUPPORT */
 if(blogText){
-formData.append("content",blogText)
+  formData.append("content",blogText)
 }
-
 const res=await fetch(
 "http://localhost:5000/api/media/multiple",
 {
@@ -667,32 +666,51 @@ Upload
 
 </form>
 
-
 <div className="grid grid-cols-4 gap-4 mt-10">
 
-{media.map(img=>(
-<div key={img.id} className="relative">
+{media.map(item => (
 
-<img
-src={`http://localhost:5000${img.image_url}`}
-className="w-full h-40 object-cover"
-/>
+  <div key={item.id} className="relative">
 
-<button
-onClick={()=>deleteImage(img.id)}
-className="absolute top-2 right-2 bg-red-600 px-2 py-1 text-xs"
->
-Delete
-</button>
+    {/* TEXT */}
+    {item.content && (
+      <p className="text-white mb-2 text-sm">{item.content}</p>
+    )}
 
-</div>
+    {/* VIDEO */}
+    {item.image_url && item.image_url.endsWith('.mp4') && (
+      <video
+        src={`http://localhost:5000${item.image_url}`}
+        controls
+        className="w-full h-40 object-cover"
+      />
+    )}
+
+    {/* IMAGE */}
+    {item.image_url && !item.image_url.endsWith('.mp4') && (
+      <img
+        src={`http://localhost:5000${item.image_url}`}
+        className="w-full h-40 object-cover"
+      />
+    )}
+
+    {/* DELETE BUTTON */}
+    <button
+      onClick={()=>deleteImage(item.id)}
+      className="absolute top-2 right-2 bg-red-600 px-2 py-1 text-xs"
+    >
+      Delete
+    </button>
+
+  </div>
+
 ))}
 
 </div>
-
 </div>
 
 </div>
+
 
 )
 

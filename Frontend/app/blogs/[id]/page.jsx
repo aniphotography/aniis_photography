@@ -1,4 +1,3 @@
-
 'use client'
 
 import Navbar from '@/components/Navbar'
@@ -14,11 +13,21 @@ export default function BlogDetailPage() {
 
   const [blog, setBlog] = useState(null)
 
+  // ✅ NEW: media state
+  const [media, setMedia] = useState([])
+
   useEffect(() => {
     fetch(`http://localhost:5000/api/collections/${id}`)
       .then(res => res.json())
       .then(data => setBlog(data))
       .catch(err => console.error(err))
+
+    // ✅ NEW: fetch media separately
+    fetch(`http://localhost:5000/api/media?collection_id=${id}`)
+      .then(res => res.json())
+      .then(data => setMedia(data))
+      .catch(err => console.error(err))
+
   }, [id])
 
   const handleAddClick = (type) => {
@@ -41,7 +50,21 @@ export default function BlogDetailPage() {
     )
   }
 
+  // ❌ OLD (kept but unused)
   const extraImages = blog.images || []
+
+  // ✅ NEW: split TEXT and MEDIA properly
+  const textContent = media
+    .filter(item => item.tag === 'text')
+    .map(item => item.content)
+    .join('\n\n')
+
+  const mediaItems = media.filter(item => item.tag !== 'text')
+
+  // ✅ NEW: hero fallback
+  const firstImageMedia = mediaItems.find(
+    m => m.image_url && !m.image_url.endsWith('.mp4')
+  )
 
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
@@ -59,32 +82,71 @@ export default function BlogDetailPage() {
             {blog.date}
           </p>
 
-          {/* Hero Image with fixed aspect ratio */}
-         {/* Hero Image */}
-<div className="rounded-xl overflow-hidden mb-12 relative" style={{ paddingTop: '56.25%' }}>
-  <img
-    src={`http://localhost:5000${blog.cover_image || (blog.images && blog.images[0]?.image_url)}`}
-    alt={blog.title}
-    className="absolute top-0 left-0 w-full h-full object-cover"
-  />
-</div>
+          {/* Hero Image */}
+          <div
+            className="rounded-xl overflow-hidden mb-12 relative"
+            style={{ paddingTop: '56.25%' }}
+          >
+            <img
+              src={`http://localhost:5000${blog.cover_image || firstImageMedia?.image_url || ''}`}
+              alt={blog.title}
+              className="absolute top-0 left-0 w-full h-full object-cover"
+            />
+          </div>
 
-          {/* CONTENT + ADD */}
+          {/* ✅ FIXED CONTENT SECTION */}
           <div className="text-gray-300 leading-relaxed whitespace-pre-line space-y-6 text-lg mb-10">
-            {blog.description && blog.description.trim() !== '' ? (
-              blog.description
+
+            {textContent ? (
+              textContent
             ) : (
               <>
-                <p className="text-gray-500 italic mb-6">No content added yet.</p>
+                <p className="text-gray-500 italic mb-6">
+                  No content added yet.
+                </p>
 
-                {/* ➕ ADD CONTENT BUTTON */}
                 <AddCard onClick={() => handleAddClick('content')} />
               </>
             )}
+
           </div>
 
-          {/* EXTRA IMAGES */}
+          {/* ✅ FIXED GRID (ONLY MEDIA) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16">
+
+            {mediaItems.map((item, i) => (
+
+              <div key={i} className="rounded-xl overflow-hidden">
+
+                {/* VIDEO */}
+                {item.image_url?.endsWith('.mp4') ? (
+                  <video
+                    src={`http://localhost:5000${item.image_url}`}
+                    controls
+                    autoPlay
+                    muted
+                    className="w-full h-96 object-cover"
+                  />
+                ) : (
+                  /* IMAGE */
+                  <img
+                    src={`http://localhost:5000${item.image_url}`}
+                    alt="Blog visual"
+                    className="w-full h-96 object-cover"
+                  />
+                )}
+
+              </div>
+
+            ))}
+
+            {/* ➕ ADD IMAGE BUTTON */}
+            <AddCard onClick={() => handleAddClick('image')} />
+
+          </div>
+
+          {/* ❌ OLD SECTION (KEPT INTACT BUT HIDDEN) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 hidden">
 
             {extraImages.map((img, i) => (
               <div key={i} className="rounded-xl overflow-hidden">
@@ -96,7 +158,6 @@ export default function BlogDetailPage() {
               </div>
             ))}
 
-            {/* ➕ ADD IMAGE BUTTON */}
             {Array.from({
               length: Math.max(0, 2 - extraImages.length)
             }).map((_, index) => (
