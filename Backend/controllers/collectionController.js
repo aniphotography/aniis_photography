@@ -7,7 +7,7 @@ exports.createCollection = async (req, res) => {
 
   try {
 
-    const { title, category, description, date } = req.body
+   const { title, category, description, date, section } = req.body
 
     const slug = title
       .toLowerCase()
@@ -26,24 +26,13 @@ exports.createCollection = async (req, res) => {
       ? `/uploads/${req.files.coverVideo[0].filename}`
       : null
 
-
-    const result = await pool.query(
-      `INSERT INTO collections
-      (title, category, slug, description, date, cover_image, video_url, cover_video)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8)
-      RETURNING *`,
-      [
-        title,
-        category,
-        slug,
-        description,
-        date,
-        cover_image,
-        video_url,
-        cover_video
-      ]
-    )
-
+const result = await pool.query(
+  `INSERT INTO collections
+   (title, category, slug, description, date, section, cover_image, video_url, cover_video)
+   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+   RETURNING *`,
+  [title, category, slug, description, date, section, cover_image, video_url, cover_video]
+)
     res.status(201).json(result.rows[0])
 
   } catch (err) {
@@ -57,29 +46,34 @@ exports.createCollection = async (req, res) => {
 
 
 
-/* ================= GET COLLECTIONS ================= */
+
 
 exports.getCollectionsByCategory = async (req, res) => {
 
   try {
 
-    const { category } = req.query
+    const { category, section } = req.query  // <-- get section from query
 
     if (category) {
 
-      const result = await pool.query(
-        `SELECT id, title, category, cover_image, cover_video, date
-         FROM collections
-         WHERE category=$1
-         ORDER BY created_at DESC`,
-        [category]
-      )
+      let query = `SELECT id, title, category, section, cover_image, cover_video, date
+                   FROM collections
+                   WHERE category=$1`
+      const params = [category]
 
+      if (section) {   // <-- optional filter by section
+        query += ` AND section=$2`
+        params.push(section)
+      }
+
+      query += ` ORDER BY created_at DESC`
+
+      const result = await pool.query(query, params)
       return res.json(result.rows)
     }
 
     const result = await pool.query(
-      `SELECT id, title, category, cover_image, cover_video, date
+      `SELECT id, title, category, section, cover_image, cover_video, date
        FROM collections
        ORDER BY created_at DESC`
     )
@@ -94,9 +88,6 @@ exports.getCollectionsByCategory = async (req, res) => {
   }
 
 }
-
-
-
 /* ================= GET COLLECTION BY ID ================= */
 
 exports.getCollectionById = async (req, res) => {

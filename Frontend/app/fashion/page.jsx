@@ -1,161 +1,4 @@
 
-// 'use client'
-
-// import Navbar from '@/components/Navbar'
-// import Footer from '@/components/Footer'
-// import Link from 'next/link'
-// import { useRef } from 'react'
-
-// export default function FashionPage() {
-  
-//   const featuredGallery = [
-//     { id: 1, title: 'Urban Editorial', video: '/videos/prewedding.mp4' },
-//     { id: 2, title: 'Studio Luxe', video: '/videos/prewedding.mp4' },
-//     { id: 3, title: 'Vogue Concept', video: '/videos/prewedding.mp4' },
-//   ]
-
-//   const recentWork = [
-//     { id: 4, title: 'Summer 26', video: '/videos/prewedding.mp4' },
-//     { id: 5, title: 'Parisian Night', video: '/videos/prewedding.mp4' },
-//     { id: 6, title: 'Minimalist Form', video: '/videos/prewedding.mp4' },
-//   ]
-
-//   const brands = [
-//     'https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png',
-//     'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
-//     'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-//     'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-//     'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
-//     'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
-//   ]
-
-//   return (
-//     <main className="min-h-screen bg-[#0a0a0a] text-white">
-//       <Navbar />
-
-//       {/* HEADER */}
-//       <section className="pt-36 pb-12 px-6 text-center">
-//         <h1 className="text-5xl md:text-7xl font-display mb-4">
-//           <span className="text-gold italic">Fashion</span> Editorial
-//         </h1>
-//         <p className="text-gray-500 text-xs tracking-[0.4em] uppercase">The Motion Collection</p>
-//       </section>
-
-//       {/* FEATURED COLLECTIONS */}
-//       <section className="py-10 px-6">
-//         <div className="max-w-7xl mx-auto">
-//           <div className="flex items-center gap-4 mb-10">
-//             <h2 className="text-2xl font-display uppercase tracking-widest">Featured</h2>
-//             <div className="h-[1px] flex-1 bg-white/10"></div>
-//           </div>
-          
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//             {featuredGallery.map((item) => (
-//               <HoverVideoCard key={item.id} item={item} />
-//             ))}
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* BRAND SLIDER - Placed between sections */}
-//       <section className="py-20 bg-black/30 border-y border-white/5 my-10">
-//         <div className="relative overflow-hidden w-full px-6">
-//           {/* Gradients to fade edges */}
-//           <div className="absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10" />
-//           <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10" />
-          
-//           <div className="flex gap-20 animate-scroll w-max items-center">
-//             {/* Double the array to ensure seamless looping */}
-//             {[...brands, ...brands].map((logo, i) => (
-//               <div key={i} className="flex items-center justify-center shrink-0">
-//                 <img
-//                   src={logo}
-//                   alt="Brand Logo"
-//                   className="h-10 md:h-12 object-contain opacity-40 hover:opacity-100 transition duration-500 grayscale hover:grayscale-0"
-//                 />
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-//       </section>
-
-//       {/* RECENT WORK */}
-//       <section className="py-10 px-6">
-//         <div className="max-w-7xl mx-auto">
-//           <div className="flex items-center gap-4 mb-10">
-//             <h2 className="text-2xl font-display uppercase tracking-widest">Recent Work</h2>
-//             <div className="h-[1px] flex-1 bg-white/10"></div>
-//           </div>
-
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-//             {recentWork.map((item) => (
-//               <HoverVideoCard key={item.id} item={item} />
-//             ))}
-//           </div>
-//         </div>
-//       </section>
-
-//       <Footer />
-
-//       {/* In-page CSS for the scroll animation if not in your Tailwind config */}
-//       <style jsx global>{`
-//         @keyframes scroll {
-//           0% { transform: translateX(0); }
-//           100% { transform: translateX(calc(-50%)); }
-//         }
-//         .animate-scroll {
-//           animation: scroll 30s linear infinite;
-//         }
-//       `}</style>
-//     </main>
-//   )
-// }
-
-// function HoverVideoCard({ item }) {
-//   const videoRef = useRef(null)
-
-//   const handleEnter = () => {
-//     if (videoRef.current) videoRef.current.play().catch(() => {}) 
-//   }
-
-//   const handleLeave = () => {
-//     if (videoRef.current) {
-//       videoRef.current.pause()
-//       videoRef.current.currentTime = 0
-//     }
-//   }
-
-//   return (
-//     <Link href={`/fashion/${item.id}`}>
-//       <div
-//         onMouseEnter={handleEnter}
-//         onMouseLeave={handleLeave}
-//         className="relative aspect-[2/3] w-full overflow-hidden rounded-sm cursor-pointer group bg-[#111]"
-//       >
-//         <video
-//           ref={videoRef}
-//           muted
-//           loop
-//           playsInline
-//           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700"
-//         >
-//           <source src={item.video} type="video/mp4" />
-//         </video>
-
-//         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
-        
-//         <div className="absolute inset-0 flex flex-col justify-end p-8">
-//           <h3 className="text-xl font-display text-white group-hover:text-gold transition-colors duration-300 transform group-hover:-translate-y-1 transition-transform">
-//             {item.title}
-//           </h3>
-//           <p className="text-[9px] text-gray-400 tracking-[0.2em] uppercase mt-2 opacity-0 group-hover:opacity-100 transition-all duration-500">
-//             Explore Project
-//           </p>
-//         </div>
-//       </div>
-//     </Link>
-//   )
-// }
 'use client'
 
 import Navbar from '@/components/Navbar'
@@ -168,14 +11,22 @@ export default function FashionPage() {
 
   const router = useRouter()
   const [collections, setCollections] = useState([])
+const [featuredGallery, setFeaturedGallery] = useState([])
+const [recentWork, setRecentWork] = useState([])
 
-  useEffect(() => {
-    fetch('http://localhost:5000/api/collections?category=fashion')
-      .then(res => res.json())
-      .then(data => setCollections(data))
-      .catch(err => console.error(err))
-  }, [])
-
+useEffect(() => {
+  Promise.all([
+    fetch('http://localhost:5000/api/collections?category=fashion&section=featured'),
+    fetch('http://localhost:5000/api/collections?category=fashion&section=recent')
+  ])
+    .then(async ([fRes, rRes]) => {
+      const fData = await fRes.json()
+      const rData = await rRes.json()
+      setFeaturedGallery(fData)
+      setRecentWork(rData)
+    })
+    .catch(err => console.error(err))
+}, [])
   const handleAddClick = () => {
     const token = localStorage.getItem('adminToken')
 
@@ -185,9 +36,8 @@ export default function FashionPage() {
       router.push('/admin/dashboard?category=fashion')
     }
   }
-
-  const featuredGallery = collections.slice(0,3)
-  const recentWork = collections.slice(3)
+  // const featuredGallery = collections.slice(0,3)
+  // const recentWork = collections.slice(3)
 
   const brands = [
     'https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png',
