@@ -18,17 +18,33 @@ export default function ContactPage() {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
+const handleSubmit = async (e) => {
+  e.preventDefault()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    // Simulate form submission
-    console.log('Form submitted:', formData)
-    setSubmitted(true)
-    setTimeout(() => {
+  try {
+    const res = await fetch("http://localhost:5000/api/contact", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    })
+
+    const data = await res.json()
+
+    if (res.ok) {
+      setSubmitted(true)
       setFormData({ name: '', email: '', eventType: '', message: '' })
-      setSubmitted(false)
-    }, 3000)
+    } else {
+      console.error(data)
+      alert("Failed to send message")
+    }
+
+  } catch (err) {
+    console.error(err)
+    alert("Error sending message")
   }
+}
 
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
