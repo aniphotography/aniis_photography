@@ -4,6 +4,8 @@ const express = require('express')
 const cors = require('cors')
 const path = require('path')
 
+
+const homeRoutes = require('./routes/homeRoutes');
 const authRoutes = require('./routes/authRoutes')
 const mediaRoutes = require('./routes/mediaRoutes')
 const blogRoutes = require('./routes/blogRoutes')
@@ -26,7 +28,7 @@ app.get('/', (req, res) => {
 })
 
 // API Routes
-
+app.use('/api', homeRoutes);
 app.use('/api/auth', authRoutes)
 app.use('/api/media', mediaRoutes)
 app.use('/api/blogs', blogRoutes)
