@@ -50,11 +50,12 @@ export default function AlbumDesignPage() {
 
     let interval
     let currentPage = 0
+    let timeoutId
 
     const waitForFlipBook = () => {
 
       if (!bookRef.current || !bookRef.current.pageFlip()) {
-        setTimeout(waitForFlipBook, 300)
+        timeoutId = setTimeout(waitForFlipBook, 300)
         return
       }
 
@@ -82,7 +83,10 @@ export default function AlbumDesignPage() {
 
     waitForFlipBook()
 
-    return () => clearInterval(interval)
+    return () => {
+      clearInterval(interval)
+      if (timeoutId) clearTimeout(timeoutId)
+    }
 
   }, [mounted])
 
