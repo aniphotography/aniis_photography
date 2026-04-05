@@ -21,23 +21,59 @@ export default function AlbumDesignPage() {
   const [previewPages, setPreviewPages] = useState([])
   const [albums, setAlbums] = useState([])
   const [mounted, setMounted] = useState(false)
+  const [flipbookKey, setFlipbookKey] = useState(0)
+  const abortControllerRef = useRef(null)
 
   useEffect(() => {
     setMounted(true)
+    return () => {
+      setMounted(false)
+      if (bookRef.current) {
+        bookRef.current = null
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
   }, [])
 
 
   /* ================= FETCH PREVIEW IMAGES ================= */
 
   useEffect(() => {
+    abortControllerRef.current = new AbortController()
 
-    fetch('http://localhost:5000/api/media?type=album-preview')
-      .then(res => res.json())
-      .then(data => setPreviewPages(data))
+    const fetchData = async () => {
+      try {
+        const previewRes = await fetch('http://localhost:5000/api/media?type=album-preview', {
+          signal: abortControllerRef.current.signal
+        })
+        if (previewRes.ok) {
+          const previewData = await previewRes.json()
+          if (mounted) setPreviewPages(previewData)
+        }
 
-    fetch('http://localhost:5000/api/collections?category=album-design')
-      .then(res => res.json())
-      .then(data => setAlbums(data))
+        const albumRes = await fetch('http://localhost:5000/api/collections?category=album-design', {
+          signal: abortControllerRef.current.signal
+        })
+        if (albumRes.ok) {
+          const albumData = await albumRes.json()
+          if (mounted) setAlbums(albumData)
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Error fetching data:', error)
+        }
+      }
+    }
+
+    fetchData()
+
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
 
   }, [])
 
@@ -51,30 +87,35 @@ export default function AlbumDesignPage() {
     let interval
     let currentPage = 0
     let timeoutId
+    let isMounted = true
 
     const waitForFlipBook = () => {
 
-      if (!bookRef.current || !bookRef.current.pageFlip()) {
+      if (!isMounted || !bookRef.current) return
+
+      const flipBookInstance = bookRef.current?.pageFlip?.()
+      
+      if (!flipBookInstance) {
         timeoutId = setTimeout(waitForFlipBook, 300)
         return
       }
 
-      const pageFlip = bookRef.current.pageFlip()
-
       interval = setInterval(() => {
+        if (!isMounted || !bookRef.current) return
 
-        const totalPages = pageFlip.getPageCount()
+        try {
+          const pageFlip = bookRef.current.pageFlip()
+          const totalPages = pageFlip.getPageCount()
 
-        if (currentPage < totalPages - 1) {
-
-          pageFlip.flipNext()
-          currentPage++
-
-        } else {
-
-          pageFlip.flip(0)
-          currentPage = 0
-
+          if (currentPage < totalPages - 1) {
+            pageFlip.flipNext()
+            currentPage++
+          } else {
+            pageFlip.flip(0)
+            currentPage = 0
+          }
+        } catch (err) {
+          // Silently catch errors if component is unmounting
         }
 
       }, 3000)
@@ -84,8 +125,10 @@ export default function AlbumDesignPage() {
     waitForFlipBook()
 
     return () => {
+      isMounted = false
       clearInterval(interval)
       if (timeoutId) clearTimeout(timeoutId)
+      bookRef.current = null
     }
 
   }, [mounted])
@@ -139,6 +182,7 @@ export default function AlbumDesignPage() {
         {mounted && (
 
           <HTMLFlipBook
+            key={flipbookKey}
             width={500}
             height={600}
             showCover={true}

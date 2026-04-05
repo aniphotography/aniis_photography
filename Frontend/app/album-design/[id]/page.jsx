@@ -26,26 +26,46 @@ export default function AlbumDetailPage() {
   const [album, setAlbum] = useState(null)
   const [pages, setPages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
+  const [flipbookKey, setFlipbookKey] = useState(0)
 
   const bookRef = useRef(null)
+  const abortControllerRef = useRef(null)
 
   /* ================= FETCH COLLECTION ================= */
 
   useEffect(() => {
+    abortControllerRef.current = new AbortController()
 
-    fetch(`http://localhost:5000/api/collections/${id}`)
-      .then(res => res.json())
-      .then(data => {
+    const fetchCollection = async () => {
+      try {
+        const res = await fetch(`http://localhost:5000/api/collections/${id}`, {
+          signal: abortControllerRef.current.signal
+        })
+        if (res.ok) {
+          const data = await res.json()
+          setAlbum(data.collection)
 
-        setAlbum(data.collection)
+          const imgs = data.images.map(img =>
+            `http://localhost:5000${img.image_url}`
+          )
 
-        const imgs = data.images.map(img =>
-          `http://localhost:5000${img.image_url}`
-        )
+          setPages(imgs)
+          setFlipbookKey(prev => prev + 1)
+        }
+      } catch (error) {
+        if (error.name !== 'AbortError') {
+          console.error('Error fetching collection:', error)
+        }
+      }
+    }
 
-        setPages(imgs)
+    fetchCollection()
 
-      })
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort()
+      }
+    }
 
   }, [id])
 
@@ -58,21 +78,39 @@ export default function AlbumDetailPage() {
 
     let flipInterval
     let currentPage = 0
+    let isMounted = true
 
     const totalPages = pages.length + 2
 
     flipInterval = setInterval(() => {
 
-      if (currentPage < totalPages - 1) {
-        bookRef.current.pageFlip().flipNext()
-        currentPage++
-      } else {
+      if (!isMounted || !bookRef.current) {
+        clearInterval(flipInterval)
+        return
+      }
+
+      try {
+        const pageFlip = bookRef.current?.pageFlip?.()
+        if (!pageFlip) return
+
+        if (currentPage < totalPages - 1) {
+          pageFlip.flipNext()
+          currentPage++
+        } else {
+          clearInterval(flipInterval)
+        }
+      } catch (err) {
+        // Silently catch errors during unmount
         clearInterval(flipInterval)
       }
 
     }, 2500)
 
-    return () => clearInterval(flipInterval)
+    return () => {
+      isMounted = false
+      clearInterval(flipInterval)
+      bookRef.current = null
+    }
 
   }, [pages])
 
@@ -133,6 +171,7 @@ export default function AlbumDetailPage() {
           <div className="flex flex-col items-center mb-20">
 
             <HTMLFlipBook
+              key={flipbookKey}
               width={400}
               height={500}
               showCover={true}
@@ -177,14 +216,26 @@ export default function AlbumDetailPage() {
             <div className="flex gap-6 mt-10">
 
               <button
-                onClick={() => bookRef.current.pageFlip().flipPrev()}
+                onClick={() => {
+                  try {
+                    bookRef.current?.pageFlip?.()?.flipPrev()
+                  } catch (err) {
+                    console.warn('Error flipping page:', err)
+                  }
+                }}
                 className="px-8 py-3 border border-gold text-gold"
               >
                 PREVIOUS
               </button>
 
               <button
-                onClick={() => bookRef.current.pageFlip().flipNext()}
+                onClick={() => {
+                  try {
+                    bookRef.current?.pageFlip?.()?.flipNext()
+                  } catch (err) {
+                    console.warn('Error flipping page:', err)
+                  }
+                }}
                 className="px-8 py-3 bg-gold text-black"
               >
                 NEXT PAGE
