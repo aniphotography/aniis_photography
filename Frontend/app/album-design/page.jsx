@@ -20,17 +20,14 @@ export default function AlbumDesignPage() {
 
   const [previewPages, setPreviewPages] = useState([])
   const [albums, setAlbums] = useState([])
+  const [previewLoaded, setPreviewLoaded] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [flipbookKey, setFlipbookKey] = useState(0)
   const abortControllerRef = useRef(null)
 
   useEffect(() => {
     setMounted(true)
     return () => {
       setMounted(false)
-      if (bookRef.current) {
-        bookRef.current = null
-      }
       if (abortControllerRef.current) {
         abortControllerRef.current.abort()
       }
@@ -50,15 +47,20 @@ export default function AlbumDesignPage() {
         })
         if (previewRes.ok) {
           const previewData = await previewRes.json()
-          if (mounted) setPreviewPages(previewData)
+          setPreviewPages(previewData)
         }
+        setPreviewLoaded(true)
 
-        const albumRes = await fetch('http://localhost:5000/api/collections?category=album-design', {
+        const albumRes = await fetch('http://localhost:5000/api/collections', {
           signal: abortControllerRef.current.signal
         })
         if (albumRes.ok) {
           const albumData = await albumRes.json()
-          if (mounted) setAlbums(albumData)
+          const albumDesignItems = albumData.filter(item => {
+            const category = String(item.category || '').toLowerCase().replace(/\s+/g, '-')
+            return category === 'album-design' || category === 'albumdesign' || category.includes('album')
+          })
+          setAlbums(albumDesignItems)
         }
       } catch (error) {
         if (error.name !== 'AbortError') {
@@ -76,62 +78,6 @@ export default function AlbumDesignPage() {
     }
 
   }, [])
-
-
-  /* ================= AUTO FLIP ================= */
-
-  useEffect(() => {
-
-    if (!mounted) return
-
-    let interval
-    let currentPage = 0
-    let timeoutId
-    let isMounted = true
-
-    const waitForFlipBook = () => {
-
-      if (!isMounted || !bookRef.current) return
-
-      const flipBookInstance = bookRef.current?.pageFlip?.()
-      
-      if (!flipBookInstance) {
-        timeoutId = setTimeout(waitForFlipBook, 300)
-        return
-      }
-
-      interval = setInterval(() => {
-        if (!isMounted || !bookRef.current) return
-
-        try {
-          const pageFlip = bookRef.current.pageFlip()
-          const totalPages = pageFlip.getPageCount()
-
-          if (currentPage < totalPages - 1) {
-            pageFlip.flipNext()
-            currentPage++
-          } else {
-            pageFlip.flip(0)
-            currentPage = 0
-          }
-        } catch (err) {
-          // Silently catch errors if component is unmounting
-        }
-
-      }, 3000)
-
-    }
-
-    waitForFlipBook()
-
-    return () => {
-      isMounted = false
-      clearInterval(interval)
-      if (timeoutId) clearTimeout(timeoutId)
-      bookRef.current = null
-    }
-
-  }, [mounted])
 
 
   /* ================= ADMIN ACTION ================= */
@@ -179,10 +125,9 @@ export default function AlbumDesignPage() {
 
       <section className="py-24 flex justify-center">
 
-        {mounted && (
+        {mounted && previewLoaded && (
 
           <HTMLFlipBook
-            key={flipbookKey}
             width={500}
             height={600}
             showCover={true}
@@ -259,12 +204,17 @@ export default function AlbumDesignPage() {
 
                   <div className="group cursor-pointer">
 
-                    <div className="relative h-96 bg-gold rounded-lg overflow-hidden">
+                    <div className="relative h-96 rounded-lg overflow-hidden bg-[#111]">
 
-                      <img
-                        src={`http://localhost:5000${album.cover_image}`}
-                        className="absolute inset-0 w-full h-full object-cover opacity-40"
-                      />
+                      {album.cover_image ? (
+                        <img
+                          src={`http://localhost:5000${album.cover_image}`}
+                          className="absolute inset-0 w-full h-full object-cover opacity-40"
+                          alt={album.title}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-black/40" />
+                      )}
 
                       <div className="relative z-10 flex items-center justify-center h-full">
 

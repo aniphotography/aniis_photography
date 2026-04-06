@@ -26,7 +26,6 @@ export default function AlbumDetailPage() {
   const [album, setAlbum] = useState(null)
   const [pages, setPages] = useState([])
   const [selectedImage, setSelectedImage] = useState(null)
-  const [flipbookKey, setFlipbookKey] = useState(0)
 
   const bookRef = useRef(null)
   const abortControllerRef = useRef(null)
@@ -50,7 +49,6 @@ export default function AlbumDetailPage() {
           )
 
           setPages(imgs)
-          setFlipbookKey(prev => prev + 1)
         }
       } catch (error) {
         if (error.name !== 'AbortError') {
@@ -70,49 +68,6 @@ export default function AlbumDetailPage() {
   }, [id])
 
 
-  /* ================= AUTO PAGE FLIP ================= */
-
-  useEffect(() => {
-
-    if (!bookRef.current || pages.length === 0) return
-
-    let flipInterval
-    let currentPage = 0
-    let isMounted = true
-
-    const totalPages = pages.length + 2
-
-    flipInterval = setInterval(() => {
-
-      if (!isMounted || !bookRef.current) {
-        clearInterval(flipInterval)
-        return
-      }
-
-      try {
-        const pageFlip = bookRef.current?.pageFlip?.()
-        if (!pageFlip) return
-
-        if (currentPage < totalPages - 1) {
-          pageFlip.flipNext()
-          currentPage++
-        } else {
-          clearInterval(flipInterval)
-        }
-      } catch (err) {
-        // Silently catch errors during unmount
-        clearInterval(flipInterval)
-      }
-
-    }, 2500)
-
-    return () => {
-      isMounted = false
-      clearInterval(flipInterval)
-      bookRef.current = null
-    }
-
-  }, [pages])
 
 
   if (!album) return null
@@ -171,7 +126,6 @@ export default function AlbumDetailPage() {
           <div className="flex flex-col items-center mb-20">
 
             <HTMLFlipBook
-              key={flipbookKey}
               width={400}
               height={500}
               showCover={true}

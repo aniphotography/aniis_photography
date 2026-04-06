@@ -720,8 +720,10 @@
 'use client'
 
 import { useState,useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export default function AdminDashboard(){
+const searchParams = useSearchParams()
 const [homeSection, setHomeSection] = useState('')
 const [homeSlot, setHomeSlot] = useState('')
 const [homePhoto, setHomePhoto] = useState(null)
@@ -845,6 +847,17 @@ fetch(`http://localhost:5000/api/collections?category=${category}`)
 
 },[category])
 
+useEffect(() => {
+  const queryCategory = searchParams?.get('category')
+  if (queryCategory) {
+    setCategory(queryCategory)
+  }
+}, [searchParams])
+
+useEffect(() => {
+  setSelectedCollection('')
+  setMedia([])
+}, [category])
 
 /* LOAD MEDIA */
 
@@ -1044,6 +1057,8 @@ alert("Failed")
 const uploadImages=async(e)=>{
 
 e.preventDefault()
+
+if(!selectedCollection) return alert("Please select a collection before uploading images")
 
 const formData=new FormData()
 
@@ -1405,6 +1420,14 @@ placeholder="Tag (wedding / pre-wedding / fashion)"
 className="w-full p-3 bg-gray-800 mt-2"
 onChange={e=>setTag(e.target.value)}
 />
+</>
+)
+
+case "album-design":
+return(
+<>
+<label>Upload Album Design Images</label>
+<input type="file" multiple onChange={e=>setImages(e.target.files)}/>
 </>
 )
 
