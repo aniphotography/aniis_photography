@@ -113,8 +113,11 @@ exports.getCollectionById = async (req, res) => {
       [id]
     )
 
+    const collection = collectionResult.rows[0]
+
     res.json({
-      collection: collectionResult.rows[0],
+      ...collection,
+      collection,
       images: imagesResult.rows
     })
 

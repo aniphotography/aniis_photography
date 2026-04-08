@@ -10,23 +10,47 @@ import { useRouter } from 'next/navigation'
 export default function FashionPage() {
 
   const router = useRouter()
-  const [collections, setCollections] = useState([])
-const [featuredGallery, setFeaturedGallery] = useState([])
-const [recentWork, setRecentWork] = useState([])
+  const brands = [
+    'https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png',
+    'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
+  ]
 
-useEffect(() => {
-  Promise.all([
-    fetch('http://localhost:5000/api/collections?category=fashion&section=featured'),
-    fetch('http://localhost:5000/api/collections?category=fashion&section=recent')
-  ])
-    .then(async ([fRes, rRes]) => {
-      const fData = await fRes.json()
-      const rData = await rRes.json()
-      setFeaturedGallery(fData)
-      setRecentWork(rData)
-    })
-    .catch(err => console.error(err))
-}, [])
+  const [collections, setCollections] = useState([])
+  const [featuredGallery, setFeaturedGallery] = useState([])
+  const [brandLogos, setBrandLogos] = useState(brands)
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/collections?category=fashion&section=featured')
+      .then(res => res.json())
+      .then(data => setFeaturedGallery(data))
+      .catch(err => console.error(err))
+  }, [])
+
+  // load all collections for "Our Works"
+  useEffect(() => {
+    fetch('http://localhost:5000/api/collections?category=fashion')
+      .then(res => res.json())
+      .then(data => setCollections(data))
+      .catch(err => console.error(err))
+  }, [])
+
+  // try to load logos saved via admin (tag=logo), fallback kept in state
+  useEffect(() => {
+    fetch('http://localhost:5000/api/media?tag=logo')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const urls = data.map(item => `http://localhost:5000${item.image_url}`)
+          setBrandLogos(urls)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   const handleAddClick = () => {
     const token = localStorage.getItem('adminToken')
 
@@ -39,31 +63,7 @@ useEffect(() => {
   // const featuredGallery = collections.slice(0,3)
   // const recentWork = collections.slice(3)
 
-  const brands = [
-    'https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png',
-    'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
-  ]
-
-  // allow dynamic brand logos from backend (fallback to hardcoded list)
   
-
-  useEffect(() => {
-    // try to load logos saved via admin (tag=logo)
-    fetch('http://localhost:5000/api/media?tag=logo')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          const urls = data.map(item => `http://localhost:5000${item.image_url}`)
-          setBrandLogos(urls)
-        }
-      })
-      .catch(() => {})
-  }, [])
-
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar />
@@ -117,7 +117,6 @@ useEffect(() => {
           <div className="absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10" />
 
           <div className="flex gap-20 animate-scroll w-max items-center">
-
             {[...brandLogos, ...brandLogos].map((logo, i) => (
               <div key={i} className="flex items-center justify-center shrink-0">
                 <img
@@ -127,32 +126,47 @@ useEffect(() => {
                 />
               </div>
             ))}
-
           </div>
         </div>
       </section>
-
-      {/* RECENT WORK */}
-      <section className="py-10 px-6">
+      {/* OUR WORKS (dynamic) */}
+      <section className="py-24 px-6 bg-[#080808]">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-10">
-            <h2 className="text-2xl font-display uppercase tracking-widest">
-              Recent Work
+
+          <div className="flex items-center gap-4 mb-12">
+            <h2 className="text-3xl font-display uppercase tracking-widest">
+              Our <span className="text-gold">Works</span>
             </h2>
             <div className="h-[1px] flex-1 bg-white/10"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
-            {recentWork.length > 0 ? (
-              recentWork.map((item) => (
-                <HoverVideoCard key={item.id} item={item} />
-              ))
+            {collections && collections.length > 0 ? (
+              // exclude featured from the works grid to avoid duplicates
+              collections
+                .filter(c => !featuredGallery.some(f => f.id === c.id))
+                .map((col) => (
+                  <Link key={col.id} href={`/fashion/${col.id}`}>
+                    <div className="group overflow-hidden aspect-[2/3] bg-[#111] rounded-sm cursor-pointer">
+                      <img
+                        src={`http://localhost:5000${col.cover_image || col.cover_video || ''}`}
+                        alt={col.title}
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-40 group-hover:opacity-60 transition" />
+                      <div className="p-6 absolute bottom-0 left-0">
+                        <h3 className="text-white font-display text-xl">{col.title}</h3>
+                      </div>
+                    </div>
+                  </Link>
+                ))
             ) : (
-              <AddCard handleAddClick={handleAddClick}/>
+              <AddCard handleAddClick={handleAddClick} />
             )}
 
           </div>
+
         </div>
       </section>
 
