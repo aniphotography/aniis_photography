@@ -72,17 +72,17 @@ const handleSubmit = async (e) => {
                 <div>
                   <h3 className="text-gold font-display mb-2 text-lg">Email</h3>
                   <a
-                    href="mailto:hello@luxephotography.com"
+                    href="mailto:mailaniiphotography@gmail.com"
                     className="text-gray-300 hover-gold-text font-lato"
                   >
-                    hello@luxephotography.com
+                    mailaniiphotography@gmail.com
                   </a>
                 </div>
 
                 <div>
                   <h3 className="text-gold font-display mb-2 text-lg">Phone</h3>
-                  <a href="tel:+15551234567" className="text-gray-300 hover-gold-text font-lato">
-                    +1 (555) 123-4567
+                  <a href="tel:+91 8981106258" className="text-gray-300 hover-gold-text font-lato">
+                    +91 8981106258
                   </a>
                 </div>
 
