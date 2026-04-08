@@ -64,15 +64,15 @@ export default function Footer() {
             </h4>
             <ul className="space-y-4 font-lato text-sm text-gray-400">
               <li className="hover:text-gold transition-colors duration-300">
-                <a href="mailto:hello@luxephotography.com">
-                  hello@luxephotography.com
+                <a href="mailto:mailaniiphotography@gmail.com">
+                  mailaniiphotography@gmail.com
                 </a>
               </li>
               <li className="hover:text-gold transition-colors duration-300 cursor-default">
-                +1 (555) 123-4567
+                +91 8981106258
               </li>
               <li className="hover:text-gold transition-colors duration-300 cursor-default">
-                New York, USA
+                Kolkata, West Bengal, India
               </li>
             </ul>
           </div>
@@ -81,7 +81,7 @@ export default function Footer() {
         {/* Divider */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4 text-gray-500 font-lato text-sm">
-            <p>&copy; {currentYear} LUXE Photography. All rights reserved.</p>
+            <p>&copy; {currentYear} Anni's Photography. All rights reserved.</p>
             <span className="text-gray-600">|</span>
             <Link
               href="/terms"
@@ -98,13 +98,15 @@ export default function Footer() {
           </div>
           <div className="flex gap-8">
             {[
-              { icon: 'f', label: 'Facebook' },
-              { icon: 'i', label: 'Instagram' },
-              { icon: 't', label: 'Twitter' },
+              { icon: 'f', label: 'Facebook', href: 'https://www.facebook.com/the.anii.photography' },
+              { icon: 'i', label: 'Instagram', href: 'https://www.instagram.com/anii_film' },
+              { icon: 'b', label: 'Behance', href: 'https://www.behance.net/aniruddha.das08' },
             ].map((social) => (
               <a
                 key={social.icon}
-                href="#"
+                href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-gray-400 hover:text-gold transition-colors duration-300 font-lato text-sm"
                 aria-label={social.label}
               >

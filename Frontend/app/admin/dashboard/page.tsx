@@ -1,8 +1,18 @@
+
+
 // 'use client'
 
 // import { useState,useEffect } from 'react'
+// import { useSearchParams } from 'next/navigation'
 
 // export default function AdminDashboard(){
+// const searchParams = useSearchParams()
+// const [homeSection, setHomeSection] = useState('')
+// const [homeSlot, setHomeSlot] = useState('')
+// const [homePhoto, setHomePhoto] = useState(null)
+// const [homeData, setHomeData] = useState({})
+
+
 
 // const [collections,setCollections]=useState([])
 // const [selectedCollection,setSelectedCollection]=useState('')
@@ -45,7 +55,49 @@
 // ?localStorage.getItem('adminToken')
 // :null
 
+// /* --- FETCH EXISTING HOME CONTENT --- */
+// useEffect(() => {
+//     fetch("http://localhost:5000/api/home-content")
+//       .then(res => res.json())
+//       .then(data => {
+//         if (Array.isArray(data)) {
+//           const formatted = data.reduce((acc, item) => {
+//             acc[item.slot] = item.image_path;
+//             return acc;
+//           }, {});
+//           setHomeData(formatted);
+//         }
+//       })
+//       .catch(err => console.error("Error loading home content", err));
+//   }, []);
 
+
+// /* --- UPLOAD HANDLER --- */
+// const uploadHomePagePhoto = async (e) => {
+//   e.preventDefault()
+//   if (!homeSection || !homeSlot || !homePhoto) return alert("Please select Section, Slot, and Image")
+
+//   const formData = new FormData()
+//   formData.append("section", homeSection)
+//   formData.append("slot", homeSlot)
+//   formData.append("image", homePhoto)
+
+//   const res = await fetch("http://localhost:5000/api/home-content", {
+//     method: "POST",
+//     headers: { Authorization: `Bearer ${token}` },
+//     body: formData
+//   })
+
+//   if (res.ok) {
+//     const updated = await res.json();
+//     alert(`${homeSlot.toUpperCase()} updated successfully!`)
+//     // Update local state to refresh the preview immediately
+//     setHomeData(prev => ({ ...prev, [updated.slot]: updated.image_path }));
+//     setHomePhoto(null)
+//   } else {
+//     alert("Upload failed")
+//   }
+// }
 // /* LOAD COLLECTIONS */
 
 // useEffect(()=>{
@@ -78,6 +130,17 @@
 
 // },[category])
 
+// useEffect(() => {
+//   const queryCategory = searchParams?.get('category')
+//   if (queryCategory) {
+//     setCategory(queryCategory)
+//   }
+// }, [searchParams])
+
+// useEffect(() => {
+//   setSelectedCollection('')
+//   setMedia([])
+// }, [category])
 
 // /* LOAD MEDIA */
 
@@ -91,7 +154,81 @@
 
 // },[selectedCollection])
 
+// {/* --- HOME PAGE MANAGEMENT SECTION --- */}
+// <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
+//   <h2 className="text-2xl text-gold mb-6 font-serif">Home Page Visuals</h2>
+//   <form onSubmit={uploadHomePagePhoto} className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
+//     {/* Section Selector */}
+//     <div className="flex flex-col space-y-2">
+//       <label className="text-gold/70 text-sm uppercase">Section</label>
+//       <select 
+//         className="w-full p-3 bg-gray-800 border border-gold/20"
+//         value={homeSection}
+//         onChange={e => { setHomeSection(e.target.value); setHomeSlot('') }}
+//       >
+//         <option value="">Select Home Section</option>
+//         <option value="hero">Hero Section</option>
+//         <option value="services">Our Services</option>
+//         <option value="featured">Signature Slots</option>
+//       </select>
+//     </div>
+
+//     {/* Slot Selector (Conditional) */}
+//     <div className="flex flex-col space-y-2">
+//       <label className="text-gold/70 text-sm uppercase">Slot</label>
+//       <select 
+//         className="w-full p-3 bg-gray-800 border border-gold/20" 
+//         value={homeSlot} 
+//         onChange={e => setHomeSlot(e.target.value)}
+//       >
+//         <option value="">Select Slot</option>
+//         {homeSection === 'hero' && <option value="main_hero">Main Hero Background</option>}
+//         {homeSection === 'services' && (
+//           <>
+//             <option value="wedding">Wedding</option>
+//             <option value="pre-wedding">Pre-Wedding</option>
+//             <option value="fashion">Fashion</option>
+//             <option value="video-production">Video Production</option>
+//           </>
+//         )}
+//         {homeSection === 'featured' && (
+//           <>
+//             <option value="slot1">Frame 1 (Left)</option>
+//             <option value="slot2">Frame 2 (Top Right)</option>
+//             <option value="slot3">Frame 3 (Bottom Right)</option>
+//           </>
+//         )}
+//       </select>
+      
+//       {/* PREVIEW OF CURRENT DB IMAGE */}
+//       {homeSlot && homeData[homeSlot] && (
+//         <div className="mt-2">
+//           <p className="text-[10px] text-gray-500 uppercase">Current Image:</p>
+//           <img 
+//             src={`http://localhost:5000${homeData[homeSlot]}`} 
+//             className="h-16 w-24 object-cover border border-gold/30"
+//             alt="Current"
+//           />
+//         </div>
+//       )}
+//     </div>
+
+//     {/* File Input */}
+//     <div className="flex flex-col space-y-2">
+//       <label className="text-gold/70 text-sm uppercase">New Image</label>
+//       <input 
+//         type="file" 
+//         className="p-2 bg-gray-800 border border-gold/20 text-xs"
+//         onChange={e => setHomePhoto(e.target.files[0])}
+//       />
+//     </div>
+
+//     <button className="md:col-span-3 bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-all">
+//       Update Home Content
+//     </button>
+//   </form>
+// </div>
 // /* CREATE COLLECTION */
 
 // const createCollection=async(e)=>{
@@ -203,6 +340,8 @@
 // const uploadImages=async(e)=>{
 
 // e.preventDefault()
+
+// if(!selectedCollection) return alert("Please select a collection before uploading images")
 
 // const formData=new FormData()
 
@@ -567,6 +706,14 @@
 // </>
 // )
 
+// case "album-design":
+// return(
+// <>
+// <label>Upload Album Design Images</label>
+// <input type="file" multiple onChange={e=>setImages(e.target.files)}/>
+// </>
+// )
+
 // case "blogs":
 
 // return(
@@ -599,7 +746,83 @@
 
 // <h1 className="text-4xl text-gold">Admin CMS</h1>
 
+// {/* --- HOME PAGE MANAGEMENT --- */}
+//       <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl">
+//         <h2 className="text-2xl text-gold mb-6">Home Page Media Management</h2>
+//         <form onSubmit={uploadHomePagePhoto} className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
+//           <div className="flex flex-col space-y-2">
+//             <label className="text-gold/70 text-sm uppercase">Section</label>
+//             <select
+//               className="w-full p-3 bg-gray-800 border border-gold/20"
+//               value={homeSection}
+//               onChange={e => { setHomeSection(e.target.value); setHomeSlot('') }}
+//             >
+//               <option value="">Select Home Section</option>
+//               <option value="hero">Hero Section</option>
+//               <option value="services">Our Services Section</option>
+//               <option value="featured">Signature Collections (Featured)</option>
+//             </select>
+//           </div>
+
+//           <div className="flex flex-col space-y-2">
+//             <label className="text-gold/70 text-sm uppercase">Slot</label>
+//             <select 
+//                className="w-full p-3 bg-gray-800 border border-gold/20" 
+//                value={homeSlot} 
+//                onChange={e => setHomeSlot(e.target.value)}
+//             >
+//                 <option value="">Select Slot</option>
+//                 {homeSection === 'hero' && <option value="main_hero">Main Hero Background</option>}
+//                 {homeSection === 'services' && (
+//                     <>
+//                         <option value="wedding">Wedding</option>
+//                         <option value="pre-wedding">Pre-Wedding</option>
+//                         <option value="video-production">Video Production</option>
+//                         <option value="fashion">Fashion</option>
+//                         <option value="album-design">Album Design</option>
+//                     </>
+//                 )}
+//                 {homeSection === 'featured' && (
+//                     <>
+//                         <option value="slot1">Ethereal Elegance (Slot 1)</option>
+//                         <option value="slot2">Romance in Motion (Slot 2)</option>
+//                         <option value="slot3">Timeless Stories (Slot 3)</option>
+//                     </>
+//                 )}
+//             </select>
+
+//             {/* PREVIEW BOX: This shows what is currently in that slot */}
+//             {homeSlot && homeData[homeSlot] && (
+//                 <div className="mt-2 border border-gold/20 p-2 bg-black/50">
+//                     <p className="text-[10px] uppercase text-gray-500 mb-1">Active Image:</p>
+//                     <img 
+//                         src={`http://localhost:5000${homeData[homeSlot]}`} 
+//                         className="h-16 w-full object-cover" 
+//                         alt="preview"
+//                     />
+//                 </div>
+//             )}
+//           </div>
+
+//        <div className="flex flex-col space-y-2">
+//   <label className="text-gold/70 text-sm uppercase">New Image File</label>
+//   <input
+//     /* Adding this key ensures that whenever the slot changes, 
+//       the input is destroyed and recreated, clearing the "Choose File" text.
+//     */
+//     key={homeSlot} 
+//     type="file"
+//     className="p-2 bg-gray-800 border border-gold/20 cursor-pointer"
+//     onChange={e => setHomePhoto(e.target.files[0])}
+//   />
+// </div>
+
+//           <button className="md:col-span-3 bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-colors">
+//             Update Home Content
+//           </button>
+//         </form>
+//       </div>
 // {/* CREATE COLLECTION */}
 
 // <div className="border p-8">
@@ -715,6 +938,8 @@
 // )
 
 // }
+
+
 
 
 'use client'
@@ -958,6 +1183,7 @@ useEffect(() => {
             <option value="pre-wedding">Pre-Wedding</option>
             <option value="fashion">Fashion</option>
             <option value="video-production">Video Production</option>
+        
           </>
         )}
         {homeSection === 'featured' && (
@@ -1549,6 +1775,8 @@ return(
                         <option value="video-production">Video Production</option>
                         <option value="fashion">Fashion</option>
                         <option value="album-design">Album Design</option>
+                        <option value="wedding_bg">Wedding Page (Header Background)</option>
+      <option value="pre-wedding_bg">Pre-Wedding Page (Header Background)</option>
                     </>
                 )}
                 {homeSection === 'featured' && (
@@ -1743,6 +1971,14 @@ Upload
 )
 
 }
+
+
+
+
+
+
+
+
 
 
 
