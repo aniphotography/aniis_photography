@@ -556,19 +556,7 @@
 // />
 
 // <textarea
-// placeholder="Description"
-// className="w-full p-3 bg-gray-800"
-// onChange={e=>setDescription(e.target.value)}
-// />
 
-// <input
-// placeholder="Year"
-// className="w-full p-3 bg-gray-800"
-// onChange={e=>setDate(e.target.value)}
-// />
-
-// <label>Blog Cover</label>
-// <input type="file" onChange={e=>setCover(e.target.files[0])}/>
 
 // <button
 // onClick={createCollection}
@@ -1085,31 +1073,11 @@ const deleteLogo = async (id) => {
 
 useEffect(()=>{
 
-if(!category) return
+  if(!category) return
 
-if(category==="gallery"){
-
-fetch("http://localhost:5000/api/collections")
-.then(res=>res.json())
-.then(data=>{
-
-const filtered=data.filter(
-c =>
-c.category==="wedding" ||
-c.category==="pre-wedding" ||
-c.category==="fashion"
-)
-
-setCollections(filtered)
-
-})
-
-return
-}
-
-fetch(`http://localhost:5000/api/collections?category=${category}`)
-.then(res=>res.json())
-.then(data=>setCollections(data))
+  fetch(`http://localhost:5000/api/collections?category=${category}`)
+    .then(res=>res.json())
+    .then(data=>setCollections(data))
 
 },[category])
 
@@ -1687,18 +1655,6 @@ onChange={e=>setTag(e.target.value)}
 </>
 )
 
-case "gallery":
-return(
-<>
-<label>Upload Gallery Images</label>
-<input type="file" multiple onChange={e=>setImages(e.target.files)}/>
-<input
-placeholder="Tag (wedding / pre-wedding / fashion)"
-className="w-full p-3 bg-gray-800 mt-2"
-onChange={e=>setTag(e.target.value)}
-/>
-</>
-)
 
 case "album-design":
 return(
@@ -1872,7 +1828,6 @@ required
 <option value="wedding">Wedding</option>
 <option value="pre-wedding">Pre Wedding</option>
 <option value="fashion">Fashion</option>
-<option value="gallery">Gallery</option>
 <option value="blogs">Blogs</option>
 <option value="video-production">Video Production</option>
 <option value="album-design">Album Design</option>
