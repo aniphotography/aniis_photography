@@ -49,14 +49,7 @@ useEffect(() => {
   ]
 
   // allow dynamic brand logos from backend (fallback to hardcoded list)
-  const [brandLogos, setBrandLogos] = useState([
-    'https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png',
-    'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
-    'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
-  ])
+  
 
   useEffect(() => {
     // try to load logos saved via admin (tag=logo)
