@@ -86,7 +86,7 @@ const handleSubmit = async (e) => {
                   </a>
                 </div>
 
-                <div>
+                {/* <div>
                   <h3 className="text-gold font-display mb-2 text-lg">Location</h3>
                   <p className="text-gray-300 font-lato">
                     123 Photography Lane
@@ -95,16 +95,15 @@ const handleSubmit = async (e) => {
                     <br />
                     United States
                   </p>
-                </div>
+                </div> */}
 
                 <div>
-                  <h3 className="text-gold font-display mb-2 text-lg">Hours</h3>
+                  <h3 className="text-gold font-display mb-2 text-lg">Calling Hours</h3>
                   <p className="text-gray-300 font-lato">
                     Monday - Friday: 9 AM - 6 PM
                     <br />
-                    Saturday: 10 AM - 4 PM
+                    Saturday - Sunday: 10 AM - 4 PM
                     <br />
-                    Sunday: By Appointment
                   </p>
                 </div>
               </div>
