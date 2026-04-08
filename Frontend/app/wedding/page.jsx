@@ -1,3 +1,4 @@
+
 // 'use client'
 
 // import Navbar from '@/components/Navbar'
@@ -7,14 +8,22 @@
 
 // export default function WeddingPage() {
 //   const router = useRouter()
-//   const [collections, setCollections] = useState([])
+
+//   const [featuredCollections, setFeaturedCollections] = useState([])
+//   const [recentWorks, setRecentWorks] = useState([])
 //   const [loading, setLoading] = useState(true)
 
 //   useEffect(() => {
-//     fetch('http://localhost:5000/api/collections?category=wedding')
-//       .then(res => res.json())
-//       .then(data => {
-//         setCollections(data)
+//     Promise.all([
+//       fetch('http://localhost:5000/api/collections?category=wedding&section=featured'),
+//       fetch('http://localhost:5000/api/collections?category=wedding&section=recent')
+//     ])
+//       .then(async ([fRes, rRes]) => {
+//         const fData = await fRes.json()
+//         const rData = await rRes.json()
+
+//         setFeaturedCollections(fData)
+//         setRecentWorks(rData)
 //         setLoading(false)
 //       })
 //       .catch(() => setLoading(false))
@@ -29,9 +38,6 @@
 //       router.push('/admin/dashboard?category=wedding')
 //     }
 //   }
-
-//   const featuredCollections = collections.slice(0, 2)
-//   const recentWorks = collections.slice(2)
 
 //   return (
 //     <main className="min-h-screen bg-[#1a1a1a] text-white">
@@ -117,14 +123,12 @@
 //                 </div>
 //               ))
 //             ) : (
-//               collections.length > 0 ? null : (
-//                 <div
-//                   onClick={handleAddClick}
-//                   className="flex items-center justify-center h-[300px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
-//                 >
-//                   <span className="text-5xl text-gold">+</span>
-//                 </div>
-//               )
+//               <div
+//                 onClick={handleAddClick}
+//                 className="flex items-center justify-center h-[300px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
+//               >
+//                 <span className="text-5xl text-gold">+</span>
+//               </div>
 //             )}
 //           </div>
 //         </div>
@@ -134,6 +138,7 @@
 //     </main>
 //   )
 // }
+
 'use client'
 
 import Navbar from '@/components/Navbar'
@@ -147,26 +152,37 @@ export default function WeddingPage() {
   const [featuredCollections, setFeaturedCollections] = useState([])
   const [recentWorks, setRecentWorks] = useState([])
   const [loading, setLoading] = useState(true)
+  const [bgImage, setBgImage] = useState('')
 
   useEffect(() => {
     Promise.all([
       fetch('http://localhost:5000/api/collections?category=wedding&section=featured'),
-      fetch('http://localhost:5000/api/collections?category=wedding&section=recent')
+      fetch('http://localhost:5000/api/collections?category=wedding&section=recent'),
+      fetch('http://localhost:5000/api/home-content')
     ])
-      .then(async ([fRes, rRes]) => {
+      // FIX: Destructure ALL THREE responses [fRes, rRes, hRes]
+      .then(async ([fRes, rRes, hRes]) => {
         const fData = await fRes.json()
         const rData = await rRes.json()
-
+        const hData = await hRes.json()
+        
         setFeaturedCollections(fData)
         setRecentWorks(rData)
+        
+        const weddingBg = hData.find(item => item.slot === 'wedding_bg')
+        if (weddingBg) {
+          setBgImage(`http://localhost:5000${weddingBg.image_path}`)
+        }
         setLoading(false)
       })
-      .catch(() => setLoading(false))
+      .catch((err) => {
+        console.error("Fetch error:", err)
+        setLoading(false)
+      })
   }, [])
 
   const handleAddClick = () => {
     const token = localStorage.getItem('adminToken')
-
     if (!token) {
       router.push('/admin/login')
     } else {
@@ -178,8 +194,11 @@ export default function WeddingPage() {
     <main className="min-h-screen bg-[#1a1a1a] text-white">
       <Navbar />
 
-      {/* ===== HERO SECTION (UNCHANGED) ===== */}
-      <section className="relative h-[500px] overflow-hidden">
+      {/* ===== HERO SECTION ===== */}
+      <section 
+        className="relative h-[500px] overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
+      >
         <div className="absolute inset-0 bg-black/70" />
         <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
           <h1 className="text-6xl md:text-7xl font-display mb-4">
