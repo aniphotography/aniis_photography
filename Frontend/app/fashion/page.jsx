@@ -48,6 +48,29 @@ useEffect(() => {
     'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
   ]
 
+  // allow dynamic brand logos from backend (fallback to hardcoded list)
+  const [brandLogos, setBrandLogos] = useState([
+    'https://upload.wikimedia.org/wikipedia/commons/2/24/Adidas_logo.png',
+    'https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg',
+    'https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg',
+  ])
+
+  useEffect(() => {
+    // try to load logos saved via admin (tag=logo)
+    fetch('http://localhost:5000/api/media?tag=logo')
+      .then(res => res.json())
+      .then(data => {
+        if (Array.isArray(data) && data.length > 0) {
+          const urls = data.map(item => `http://localhost:5000${item.image_url}`)
+          setBrandLogos(urls)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar />
@@ -102,12 +125,12 @@ useEffect(() => {
 
           <div className="flex gap-20 animate-scroll w-max items-center">
 
-            {[...brands, ...brands].map((logo, i) => (
+            {[...brandLogos, ...brandLogos].map((logo, i) => (
               <div key={i} className="flex items-center justify-center shrink-0">
                 <img
                   src={logo}
                   alt="Brand Logo"
-                  className="h-10 md:h-12 object-contain opacity-40 hover:opacity-100 transition duration-500 grayscale hover:grayscale-0"
+                  className="h-10 md:h-12 object-contain opacity-40 hover:opacity-100 transition duration-500"
                 />
               </div>
             ))}

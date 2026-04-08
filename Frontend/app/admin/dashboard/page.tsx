@@ -974,6 +974,11 @@ const [tag,setTag]=useState('')
 const [blogVideo,setBlogVideo]=useState(null)
 const [blogText,setBlogText]=useState('')
 
+/* BRAND LOGOS (admin-managed) */
+const [logos, setLogos] = useState([])
+const [logoFile, setLogoFile] = useState(null)
+const [logoTitle, setLogoTitle] = useState('')
+
 /* FEATURED STATES */
 
 const [featuredTitle,setFeaturedTitle]=useState('')
@@ -1042,6 +1047,42 @@ const uploadHomePagePhoto = async (e) => {
 }
 /* LOAD COLLECTIONS */
 
+/* --- LOGO UPLOAD (for brand slider) --- */
+const uploadLogo = async (e) => {
+  e.preventDefault()
+  if (!logoFile) return alert('Please select a logo file')
+
+  const formData = new FormData()
+  formData.append('title', logoTitle || '')
+  formData.append('tag', 'logo')
+  formData.append('image', logoFile)
+
+  const res = await fetch('http://localhost:5000/api/media', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData
+  })
+
+  if (res.ok) {
+    const newLogo = await res.json()
+    setLogos(prev => [newLogo, ...prev])
+    setLogoFile(null)
+    setLogoTitle('')
+    alert('Logo uploaded')
+  } else {
+    alert('Upload failed')
+  }
+}
+
+const deleteLogo = async (id) => {
+  if (!confirm('Delete logo?')) return
+  await fetch(`http://localhost:5000/api/media/${id}`, {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${token}` }
+  })
+  setLogos(prev => prev.filter(l => l.id !== id))
+}
+
 useEffect(()=>{
 
 if(!category) return
@@ -1095,6 +1136,16 @@ fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
 .then(data=>setMedia(data))
 
 },[selectedCollection])
+
+/* --- LOAD BRAND LOGOS FOR ADMIN --- */
+useEffect(() => {
+  fetch('http://localhost:5000/api/media?tag=logo')
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data)) setLogos(data)
+    })
+    .catch(err => console.error('Error loading logos', err))
+}, [])
 
 {/* --- HOME PAGE MANAGEMENT SECTION --- */}
 <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
@@ -1768,7 +1819,44 @@ return(
           </button>
         </form>
       </div>
-{/* CREATE COLLECTION */}
+
+  {/* BRAND LOGOS MANAGEMENT */}
+
+  <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
+    <h2 className="text-2xl text-gold mb-6 font-serif">Brand Logos (Fashion Slider)</h2>
+
+    <form onSubmit={uploadLogo} className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <input
+        type="text"
+        placeholder="Title (optional)"
+        className="w-full p-3 bg-gray-800"
+        value={logoTitle}
+        onChange={e => setLogoTitle(e.target.value)}
+      />
+
+      <input
+        type="file"
+        accept="image/*"
+        className="p-2 bg-gray-800"
+        onChange={e => setLogoFile(e.target.files[0])}
+      />
+
+      <button className="bg-gold text-black px-6 py-3">Upload Logo</button>
+    </form>
+
+    <div className="grid grid-cols-6 gap-4 mt-6">
+      {logos.map(l => (
+        <div key={l.id} className="relative flex items-center justify-center p-2 bg-black/50 border border-white/5">
+          {l.image_url && (
+            <img src={`http://localhost:5000${l.image_url}`} className="h-12 object-contain" alt={l.title || 'logo'} />
+          )}
+          <button onClick={() => deleteLogo(l.id)} className="absolute top-1 right-1 bg-red-600 px-2 py-1 text-xs">Delete</button>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  {/* CREATE COLLECTION */}
 
 <div className="border p-8">
 
