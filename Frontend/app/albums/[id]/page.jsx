@@ -87,81 +87,86 @@ export default function GalleryCategoryPage() {
       {/* LIGHTBOX */}
 
       {selectedIndex !== null && (
+  <div
+    className="fixed inset-0 bg-black/98 backdrop-blur-md z-[100] flex flex-col transition-opacity duration-300"
+    onClick={() => setSelectedIndex(null)}
+  >
+    {/* Close Button Row */}
+    <div className="w-full h-16 flex items-center justify-end px-8 md:px-16 shrink-0">
+      <button
+        onClick={() => setSelectedIndex(null)}
+        className="text-[#d4af37] hover:text-white transition-colors text-2xl z-[110] p-4"
+      >
+        ✕
+      </button>
+    </div>
 
-        <div
-          className="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] flex flex-col"
-          onClick={() => setSelectedIndex(null)}
+    <div className="flex-grow relative flex items-center justify-center p-2 pt-0">
+      {/* Main Container */}
+      <div
+        className="relative max-w-7xl w-full flex flex-col items-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Navigation: Previous Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedIndex((prev) => (prev - 1 + media.length) % media.length);
+          }}
+          className="absolute left-0 top-0 bottom-0 w-1/4 flex items-center justify-start z-[130] transition-all group pl-4 md:pl-10"
         >
+          <span className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 border border-[#d4af37]/30 group-hover:border-[#d4af37] bg-black/10 group-hover:bg-black/50 rounded-full text-[#d4af37] text-6xl md:text-7xl transition-all duration-300 transform group-hover:scale-110 select-none overflow-hidden">
+            <span className="transform translate-y-[-8px] leading-none pr-1">‹</span>
+          </span>
+        </button>
 
-          {/* TOP BAR */}
-          <div className="w-full h-20 flex items-center justify-end px-10">
-            <button
-              onClick={() => setSelectedIndex(null)}
-              className="text-gold hover:text-white transition"
-            >
-              ✕
-            </button>
-          </div>
+        {/* Navigation: Next Button */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedIndex((prev) => (prev + 1) % media.length);
+          }}
+          className="absolute right-0 top-0 bottom-0 w-1/4 flex items-center justify-end z-[130] transition-all group pr-4 md:pr-10"
+        >
+          <span className="flex items-center justify-center w-16 h-16 md:w-20 md:h-20 border border-[#d4af37]/30 group-hover:border-[#d4af37] bg-black/10 group-hover:bg-black/50 rounded-full text-[#d4af37] text-6xl md:text-7xl transition-all duration-300 transform group-hover:scale-110 select-none overflow-hidden">
+            <span className="transform translate-y-[-8px] leading-none pl-1">›</span>
+          </span>
+        </button>
 
-          {/* MAIN CONTENT */}
-          <div className="flex-1 flex items-center justify-center relative px-10">
+        {/* --- MEDIA DISPLAY --- */}
+        {media[selectedIndex].image_url?.endsWith('.mp4') ? (
+          <video
+            src={`http://localhost:5000${media[selectedIndex].image_url}`}
+            autoPlay
+            muted
+            loop
+            playsInline
+            controls
+            className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
+          />
+        ) : (
+          <img
+            src={`http://localhost:5000${media[selectedIndex].image_url}`}
+            className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
+            alt="Gallery View"
+          />
+        )}
 
-            {/* LEFT */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                setSelectedIndex(
-                  (prev) => (prev - 1 + media.length) % media.length
-                )
-              }}
-              className="absolute left-5 text-gold text-4xl hover:text-white"
-            >
-              ‹
-            </button>
-
-            {/* MEDIA DISPLAY */}
-            {media[selectedIndex].image_url?.endsWith('.mp4') ? (
-              <video
-                src={`http://localhost:5000${media[selectedIndex].image_url}`}
-                autoPlay
-                muted
-                loop
-                playsInline
-                controls
-                className="max-h-[75vh] max-w-[90vw] object-contain shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              />
-            ) : (
-              <img
-                src={`http://localhost:5000${media[selectedIndex].image_url}`}
-                className="max-h-[75vh] max-w-[90vw] object-contain shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              />
-            )}
-
-            {/* RIGHT */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                setSelectedIndex(
-                  (prev) => (prev + 1) % media.length
-                )
-              }}
-              className="absolute right-5 text-gold text-4xl hover:text-white"
-            >
-              ›
-            </button>
-
-          </div>
-
-          {/* COUNTER */}
-          <div className="text-center pb-6 text-gray-400 text-sm tracking-widest">
+        {/* Info Area */}
+        <div className="mt-4 text-center">
+          {media[selectedIndex].caption && (
+            <p className="text-[#d4af37] tracking-[0.4em] uppercase text-xs font-medium mb-1">
+              {media[selectedIndex].caption}
+            </p>
+          )}
+          <p className="text-gray-500 text-[10px] tracking-widest">
             {selectedIndex + 1} / {media.length}
-          </div>
-
+          </p>
         </div>
-
-      )}
+      </div>
+    </div>
+  </div>
+)}
 
       <Footer />
 
