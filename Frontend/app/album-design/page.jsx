@@ -137,12 +137,16 @@ export default function AlbumDesignPage() {
 
             {/* COVER */}
 
-            <div className="page bg-gold flex items-center justify-center text-black text-3xl">
-              Premium Collection
-            </div>
+           <div className="page bg-gold border-r border-black/20 shadow-inner">
+  <div className="flex h-full w-full items-center justify-center p-10 text-center">
+    <h2 className="text-black text-2xl md:text-3xl font-display leading-tight uppercase">
+     PREMIUM COLLECTION
+    </h2>
+  </div>
+</div>
 
 
-            {/* PAGES */}
+            {/* * PAGES */}
 
             {previewPages.length > 0 ? (
 
@@ -173,9 +177,26 @@ export default function AlbumDesignPage() {
 
             {/* BACK */}
 
-            <div className="page bg-black flex items-center justify-center text-gold">
-              Explore More
-            </div>
+            <div className="page bg-black border-l border-white/10">
+  <div className="flex h-full w-full flex-col items-center justify-center text-center p-8">
+    
+    {/* Main Message */}
+     <h3 className="text-yellow-400 text-3xl font-display mb-3 tracking-widest uppercase drop-shadow-[0_2px_10px_rgba(250,204,21,0.3)]">
+      Explore More
+    </h3> 
+    
+    {/* Decorative Divider */}
+     <div className="w-16 h-[2px] bg-yellow-400/50 mb-5" /> 
+    
+    {/* Brand Name */}
+     <p className="text-yellow-500/80 text-[11px] tracking-[0.6em] uppercase font-medium">
+      Anii's Photography
+    </p>
+
+  </div>
+</div> 
+
+
 
           </HTMLFlipBook>
 
@@ -203,36 +224,29 @@ export default function AlbumDesignPage() {
                 <Link key={album.id} href={`/album-design/${album.id}`}>
 
                   <div className="group cursor-pointer">
+<div className="relative h-96 rounded-lg overflow-hidden">
+  {album.cover_image ? (
+    <>
+      <img
+        src={`http://localhost:5000${album.cover_image}`}
+        className="absolute inset-0 w-full h-full object-cover" // Full opacity
+        alt={album.title}
+      />
+      {/* This adds a dark tint only at the bottom/center to help text pop */}
+      <div className="absolute inset-0 bg-black/30" /> 
+    </>
+  ) : (
+    <div className="absolute inset-0 bg-[#111]" />
+  )}
 
-                    <div className="relative h-96 rounded-lg overflow-hidden bg-[#111]">
-
-                      {album.cover_image ? (
-                        <img
-                          src={`http://localhost:5000${album.cover_image}`}
-                          className="absolute inset-0 w-full h-full object-cover opacity-40"
-                          alt={album.title}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 bg-black/40" />
-                      )}
-
-                      <div className="relative z-10 flex items-center justify-center h-full">
-
-                        <div className="text-center">
-
-                          <p className="text-black text-3xl font-display">
-                            {album.title}
-                          </p>
-
-                          <p className="text-black/70 text-sm">
-                            Album {album.date}
-                          </p>
-
-                        </div>
-
-                      </div>
-
-                    </div>
+  <div className="relative z-10 flex items-center justify-center h-full">
+     {/* Change text to white so it contrasts with the image */}
+     <div className="text-center text-white"> 
+        <p className="text-3xl font-display">{album.title}</p>
+        <p className="opacity-80 text-sm">Album {album.date}</p>
+     </div>
+  </div>
+</div>
 
                   </div>
 

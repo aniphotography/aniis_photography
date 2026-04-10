@@ -538,6 +538,9 @@ fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
 .then(res=>res.json())
 .then(data=>setMedia(data))
 
+
+
+
 }else{
 
 alert("Upload failed")
