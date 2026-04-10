@@ -109,14 +109,48 @@ const uploadHomePagePhoto = async (e) => {
 /* LOAD COLLECTIONS */
 
 /* --- LOGO UPLOAD (for brand slider) --- */
+// const uploadLogo = async (e) => {
+//   e.preventDefault()
+//   if (!logoFile) return alert('Please select a logo file')
+
+//   const formData = new FormData()
+//   formData.append('title', logoTitle || '')
+//   formData.append('tag', 'logo')
+//   formData.append('image', logoFile)
+
+//   const res = await fetch('http://localhost:5000/api/media', {
+//     method: 'POST',
+//     headers: { Authorization: `Bearer ${token}` },
+//     body: formData
+//   })
+
+//   if (res.ok) {
+//     const newLogo = await res.json()
+//     setLogos(prev => [newLogo, ...prev])
+//     setLogoFile(null)
+//     setLogoTitle('')
+//     alert('Logo uploaded')
+//   } else {
+//     alert('Upload failed')
+//   }
+// }
 const uploadLogo = async (e) => {
   e.preventDefault()
   if (!logoFile) return alert('Please select a logo file')
 
   const formData = new FormData()
+  
+  // 1. MUST BE 'image' to match your createMedia controller
+  formData.append('image', logoFile) 
+  
+  // 2. Metadata
   formData.append('title', logoTitle || '')
   formData.append('tag', 'logo')
-  formData.append('image', logoFile)
+
+  // 3. Logic: ONLY append collection_id if it is a valid number
+  if (selectedCollection) {
+    formData.append('collection_id', selectedCollection)
+  }
 
   const res = await fetch('http://localhost:5000/api/media', {
     method: 'POST',
@@ -129,12 +163,11 @@ const uploadLogo = async (e) => {
     setLogos(prev => [newLogo, ...prev])
     setLogoFile(null)
     setLogoTitle('')
-    alert('Logo uploaded')
+    alert('Fashion Logo uploaded')
   } else {
-    alert('Upload failed')
+    alert('Upload failed. Check backend terminal for SQL errors.')
   }
 }
-
 const deleteLogo = async (id) => {
   if (!confirm('Delete logo?')) return
   await fetch(`http://localhost:5000/api/media/${id}`, {
@@ -143,32 +176,70 @@ const deleteLogo = async (id) => {
   })
   setLogos(prev => prev.filter(l => l.id !== id))
 }
+// const uploadVideoLogo = async (e) => {
+//     e.preventDefault()
+//     if (!videoLogoFile) return alert('Please select a logo file')
+
+//     const formData = new FormData()
+//     formData.append('title', videoLogoTitle || '')
+//     formData.append('page', 'video-production')
+//     formData.append('section', 'collections')
+//     formData.append('file', videoLogoFile)
+
+//     const res = await fetch('http://localhost:5000/api/media/upload', {
+//       method: 'POST',
+//       headers: { Authorization: `Bearer ${token}` },
+//       body: formData
+//     })
+
+//     if (res.ok) {
+//       const newLogo = await res.json()
+//       setVideoLogos(prev => [newLogo, ...prev])
+//       setVideoLogoFile(null)
+//       setVideoLogoTitle('')
+//       alert('Video Production Logo uploaded')
+//     } else {
+//       alert('Upload failed')
+//     }
+//   }
 const uploadVideoLogo = async (e) => {
-    e.preventDefault()
-    if (!videoLogoFile) return alert('Please select a logo file')
+  e.preventDefault();
+  if (!videoLogoFile) return alert('Please select a logo file');
 
-    const formData = new FormData()
-    formData.append('title', videoLogoTitle || '')
-    formData.append('tag', 'video_logo') // This identifies it for the Video Production page
-    formData.append('image', videoLogoFile)
+  const formData = new FormData();
+  
+  // 1. Ensure the key is 'image' to match your controller
+  formData.append('image', videoLogoFile); 
+  
+  // 2. Metadata
+  formData.append('title', videoLogoTitle || '');
+  formData.append('tag', 'video_logo');
+  
+  /* ✅ THE FIX: 
+     If collection_id is an integer, sending an empty string "" causes a 500 error.
+     We omit it or send nothing so the DB handles it as NULL. 
+  */
+  // formData.append('collection_id', ''); // REMOVE OR COMMENT THIS OUT
 
-    const res = await fetch('http://localhost:5000/api/media', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData
-    })
+  const res = await fetch('http://localhost:5000/api/media', {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData
+  });
 
-    if (res.ok) {
-      const newLogo = await res.json()
-      setVideoLogos(prev => [newLogo, ...prev])
-      setVideoLogoFile(null)
-      setVideoLogoTitle('')
-      alert('Video Production Logo uploaded')
-    } else {
-      alert('Upload failed')
-    }
+  if (res.ok) {
+    const newLogo = await res.json();
+    setVideoLogos(prev => [newLogo, ...prev]);
+    setVideoLogoFile(null);
+    setVideoLogoTitle('');
+    alert('Video Production Logo uploaded successfully!');
+  } else {
+    // This will help us see the REAL error in the browser console
+    const errorText = await res.text();
+    console.error("Server Error Details:", errorText);
+    alert('Upload failed. Check the backend terminal for the SQL error.');
   }
-
+};
   const deleteVideoLogo = async (id) => {
     if (!confirm('Delete video logo?')) return
     await fetch(`http://localhost:5000/api/media/${id}`, {
@@ -189,15 +260,23 @@ useEffect(()=>{
 
 useEffect(() => {
   const queryCategory = searchParams?.get('category')
+  const querySelected = searchParams?.get('id')
+
   if (queryCategory) {
     setCategory(queryCategory)
+  }
+  if (querySelected) {
+    setSelectedCollection(querySelected)
   }
 }, [searchParams])
 
 useEffect(() => {
-  setSelectedCollection('')
-  setMedia([])
-}, [category])
+  const querySelected = searchParams?.get('id')
+  if (!querySelected) {
+    setSelectedCollection('')
+    setMedia([])
+  }
+}, [category, searchParams])
 
 /* LOAD MEDIA */
 
@@ -320,7 +399,8 @@ formData.append("category",category)
 formData.append("description",description)
 formData.append("date",date)
 
-if(cover) formData.append("cover",cover)
+// if(cover) formData.append("cover",cover)
+if(cover) formData.append("file", cover) // Use "file" to match backend upload.single('file')
 if(video) formData.append("video",video)
 if(coverVideo) formData.append("coverVideo",coverVideo)
 
@@ -682,11 +762,8 @@ className="w-full p-3 bg-gray-800"
 onChange={e=>setDate(e.target.value)}
 />
 
-<label>Main Video</label>
-<input type="file" onChange={e=>setVideo(e.target.files[0])}/>
-
 <label>Thumbnail</label>
-<input type="file" onChange={e=>setCover(e.target.files[0])}/>
+<input type="file" accept="image/*" onChange={e=>setCover(e.target.files[0])}/>
 
 <button
 onClick={createCollection}
@@ -771,6 +848,18 @@ onChange={e=>setTag(e.target.value)}
 </>
 )
 
+case "video-production":
+return(
+<>
+<label>Upload Video Production Files</label>
+<input type="file" multiple accept="image/*,video/*" onChange={e=>setImages(e.target.files)}/>
+<input
+placeholder="Tag (optional: still, video, thumbnail)"
+className="w-full p-3 bg-gray-800 mt-2"
+onChange={e=>setTag(e.target.value)}
+/>
+</>
+)
 
 case "album-design":
 return(

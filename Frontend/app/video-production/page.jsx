@@ -79,7 +79,7 @@ export default function VideoProductionPage() {
       </section>
 
       {/* ✅ VIDEO LOGO SLIDER */}
-      <div className="overflow-hidden bg-black py-6">
+      {/* <div className="overflow-hidden bg-black py-6">
         <div className="flex gap-10 animate-scroll items-center">
           {[...videoLogos, ...videoLogos].map((logo, idx) => (
             <img
@@ -89,7 +89,32 @@ export default function VideoProductionPage() {
             />
           ))}
         </div>
-      </div>
+      </div> */}
+{/* ✅ Updated to use videoLogos variable */}
+<div className="relative overflow-hidden bg-black py-8">
+  <div className="flex gap-6 animate-scroll">
+    {videoLogos.length > 0 ? (
+      [...videoLogos, ...videoLogos].map((logo, idx) => (
+        <div
+          key={`${logo.id || idx}-${idx}`}
+          className="flex-shrink-0 w-64 h-48 overflow-hidden group"
+        >
+          <img
+            src={`http://localhost:5000${logo.image_url}`}
+            alt="Client Logo"
+            className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-105 opacity-70 hover:opacity-100"
+          />
+        </div>
+      ))
+    ) : (
+      Array.from({ length: 5 }).map((_, idx) => (
+        <div key={idx} className="flex-shrink-0 w-64 h-48 bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 text-sm">
+          Logo slot
+        </div>
+      ))
+    )}
+  </div>
+</div>
 
       {/* OUR WORKS */}
       <section className="py-20">
@@ -109,8 +134,8 @@ export default function VideoProductionPage() {
             >
               <img
                 src={
-                  slide.cover
-                    ? `http://localhost:5000${slide.cover}`
+                  slide.cover_image
+                    ? `http://localhost:5000${slide.cover_image}`
                     : "/placeholder.svg"
                 }
                 className="w-full h-full object-cover"
@@ -126,19 +151,19 @@ export default function VideoProductionPage() {
           ))}
 
           {/* NAV BUTTONS */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 p-3"
-          >
-            ‹
-          </button>
+         <button
+  onClick={prevSlide}
+  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
+>
+  <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">‹</span>
+</button>
 
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 p-3"
-          >
-            ›
-          </button>
+<button
+  onClick={nextSlide}
+  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
+>
+  <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">›</span>
+</button>
 
         </div>
       </section>
