@@ -400,7 +400,7 @@ formData.append("description",description)
 formData.append("date",date)
 
 // if(cover) formData.append("cover",cover)
-if(cover) formData.append("file", cover) // Use "file" to match backend upload.single('file')
+if(cover) formData.append("cover", cover) // Use "file" to match backend upload.single('file')
 if(video) formData.append("video",video)
 if(coverVideo) formData.append("coverVideo",coverVideo)
 
