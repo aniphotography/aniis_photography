@@ -21,7 +21,7 @@ exports.createContact = async (req, res) => {
 
     // Send Email Notification
     await transporter.sendMail({
-      from: `"Anii's Photography" <${process.env.EMAIL_USER}>`,
+      from: `"Anii Photography" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       subject: '📩 Booking Enquiry',
       html: `

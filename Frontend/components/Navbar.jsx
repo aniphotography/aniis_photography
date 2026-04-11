@@ -31,7 +31,7 @@ export default function Navbar() {
 
         {/* Logo */}
         <Link href="/" className="text-2xl font-display text-gold flex-shrink-0">
-          ANII'S
+          ANII
         </Link>
 
         {/* Desktop Menu */}
