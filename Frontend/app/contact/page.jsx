@@ -100,9 +100,9 @@ const handleSubmit = async (e) => {
                 <div>
                   <h3 className="text-gold font-display mb-2 text-lg">Calling Hours</h3>
                   <p className="text-gray-300 font-lato">
-                    Monday - Friday: 9 AM - 6 PM
+                    Monday - Friday: 9 AM - 9 PM
                     <br />
-                    Saturday - Sunday: 10 AM - 4 PM
+                    Saturday - Sunday: 10 AM - 9 PM
                     <br />
                   </p>
                 </div>

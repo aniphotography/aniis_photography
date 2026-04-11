@@ -51,7 +51,7 @@ export default function Navbar() {
         {/* Right Side Buttons */}
         <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
 
-          {/* Admin / Dashboard */}
+          {/* Admin / Dashboard
           {isAdmin ? (
             <Link
               href="/admin/dashboard"
@@ -66,7 +66,7 @@ export default function Navbar() {
             >
               Admin
             </Link>
-          )}
+          )} */}
 
           {/* Book Session */}
           <Link
