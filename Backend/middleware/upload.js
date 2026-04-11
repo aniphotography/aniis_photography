@@ -1,55 +1,59 @@
-const fs = require('fs')
-const path = require('path')
-const multer = require('multer')
+const multer = require('multer');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+const cloudinary = require('../config/cloudinary');
+const path = require('path');
 
-const uploadPath = path.join(__dirname, '../uploads')
-
-if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath, { recursive: true })
-}
-
+// Allowed extensions (kept for validation like before)
 const allowedExtensions = [
-  '.jpeg','.jpg','.png','.webp',
-  '.mp4','.mov','.avi'
-]
+  '.jpeg', '.jpg', '.png', '.webp',
+  '.mp4', '.mov', '.avi',
+  '.txt', '.pdf' // ✅ added for blog/text support (optional use)
+];
 
-const fileFilter = (req,file,cb)=>{
+const fileFilter = (req, file, cb) => {
+  const ext = path.extname(file.originalname).toLowerCase();
 
-  const ext = path.extname(file.originalname).toLowerCase()
-
-  const validExt = allowedExtensions.includes(ext)
+  const validExt = allowedExtensions.includes(ext);
 
   const validMime =
     file.mimetype.startsWith('image/') ||
-    file.mimetype.startsWith('video/')
+    file.mimetype.startsWith('video/') ||
+    file.mimetype === 'text/plain' ||
+    file.mimetype === 'application/pdf';
 
-  if(validExt && validMime){
-    cb(null,true)
-  }else{
-    cb(new Error("Only images and videos allowed"))
+  if (validExt && validMime) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only images, videos, and supported files allowed'));
   }
+};
 
-}
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    let resourceType = 'image';
 
-const storage = multer.diskStorage({
+    if (file.mimetype.startsWith('video/')) {
+      resourceType = 'video';
+    } else if (
+      file.mimetype === 'text/plain' ||
+      file.mimetype === 'application/pdf'
+    ) {
+      resourceType = 'raw'; // ✅ for text/pdf files
+    }
 
-  destination:(req,file,cb)=>{
-    cb(null,uploadPath)
+    return {
+      folder: 'photography',
+      resource_type: resourceType,
+      public_id: Date.now() + '-' + Math.round(Math.random() * 1e9),
+    };
   },
-
-  filename:(req,file,cb)=>{
-    const unique =
-      Date.now()+'-'+Math.round(Math.random()*1e9)
-
-    cb(null,unique+path.extname(file.originalname))
-  }
-
-})
+});
 
 module.exports = multer({
   storage,
   fileFilter,
-  limits:{
-    fileSize:100*1024*1024
-  }
-})
+  limits: {
+    fileSize: 100 * 1024 * 1024, // 100MB
+  },
+});
