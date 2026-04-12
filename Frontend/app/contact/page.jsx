@@ -22,7 +22,7 @@ const handleSubmit = async (e) => {
   e.preventDefault()
 
   try {
-    const res = await fetch(`${API}/api/contact", {
+   const res = await fetch(`${API}/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
