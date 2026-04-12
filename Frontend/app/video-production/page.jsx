@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { getMediaUrl } from '@/lib/utils'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function VideoProductionPage() {
 
   const [currentSlide, setCurrentSlide] = useState(0)
@@ -15,7 +15,7 @@ export default function VideoProductionPage() {
 
   // ✅ FETCH VIDEO PROJECTS
   useEffect(() => {
-    fetch("http://localhost:5000/api/collections?category=video-production")
+    fetch(`${API}/api/collections?category=video-production`)
       .then(res => res.json())
       .then(data => {
         console.log("Projects:", data) // DEBUG
@@ -30,7 +30,7 @@ export default function VideoProductionPage() {
 
   // ✅ FETCH VIDEO LOGOS
   useEffect(() => {
-    fetch("http://localhost:5000/api/media?tag=video_logo")
+    fetch(`${API}/api/media?tag=video_logo`)
       .then(res => res.json())
       .then(data => {
         console.log("Video Logos:", data) // DEBUG

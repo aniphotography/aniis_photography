@@ -14,7 +14,7 @@ export default function AlbumsPage() {
   /* FETCH COLLECTIONS */
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/collections')
+    fetch(`${API}/api/collections`)
       .then(res => res.json())
       .then(data => setAlbums(data))
   }, [])

@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function BlogsPage() {
 
   const [blogs, setBlogs] = useState([])
@@ -15,7 +15,7 @@ export default function BlogsPage() {
 
   // 🔥 FETCH BLOGS FROM COLLECTIONS
   const fetchBlogs = () => {
-    fetch('http://localhost:5000/api/collections?category=blogs')
+    fetch(`${API}/api/collections?category=blogs`)
       .then(res => res.json())
       .then(data => setBlogs(data))
       .catch(err => console.error(err))

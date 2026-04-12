@@ -15,16 +15,14 @@ exports.createCollection = async (req, res) => {
       .replace(/[^\w-]+/g, '')
 
     const cover_image = req.files?.cover
-      ? `/uploads/${req.files.cover[0].filename}`
-      : null
+  ? req.files.cover[0].path : null
 
+    
     const video_url = req.files?.video
-      ? `/uploads/${req.files.video[0].filename}`
-      : null
+  ? req.files.video[0].path : null
 
     const cover_video = req.files?.coverVideo
-      ? `/uploads/${req.files.coverVideo[0].filename}`
-      : null
+  ? req.files.coverVideo[0].path : null
 
 const result = await pool.query(
   `INSERT INTO collections

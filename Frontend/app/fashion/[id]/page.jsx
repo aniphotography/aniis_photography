@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function FashionDetailPage() {
 
   const params = useParams()
@@ -18,7 +18,7 @@ export default function FashionDetailPage() {
   const [project, setProject] = useState(null)
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/collections/${id}`)
+    fetch(`${API}/api/collections/${id}`)
       .then(res => res.json())
       .then(data => setProject(data))
       .catch(err => console.error(err))

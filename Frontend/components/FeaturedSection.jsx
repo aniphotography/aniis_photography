@@ -1,5 +1,6 @@
-'use client'
 
+'use client'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -19,7 +20,7 @@ export default function FeaturedSection() {
     // 2. Fetch data directly from the API
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/home-content")
+        const res = await fetch(`${API}/api/home-content`)
         const json = await res.json()
         setDbData(json)
       } catch (err) {

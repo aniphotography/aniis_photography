@@ -15,8 +15,8 @@
 
 //   useEffect(() => {
 //     Promise.all([
-//       fetch('http://localhost:5000/api/collections?category=wedding&section=featured'),
-//       fetch('http://localhost:5000/api/collections?category=wedding&section=recent')
+//       fetch(`${API}/api/collections?category=wedding&section=featured'),
+//       fetch(`${API}/api/collections?category=wedding&section=recent')
 //     ])
 //       .then(async ([fRes, rRes]) => {
 //         const fData = await fRes.json()
@@ -146,7 +146,7 @@ import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getMediaUrl } from '@/lib/utils'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function WeddingPage() {
   const router = useRouter()
 
@@ -157,9 +157,9 @@ export default function WeddingPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch('http://localhost:5000/api/collections?category=wedding&section=featured'),
-      fetch('http://localhost:5000/api/collections?category=wedding&section=recent'),
-      fetch('http://localhost:5000/api/home-content')
+     fetch(`${API}/api/collections?category=wedding&section=featured`),
+      fetch(`${API}/api/collections?category=wedding&section=recent`),
+      fetch(`${API}/api/home-content`)
     ])
       // FIX: Destructure ALL THREE responses [fRes, rRes, hRes]
       .then(async ([fRes, rRes, hRes]) => {

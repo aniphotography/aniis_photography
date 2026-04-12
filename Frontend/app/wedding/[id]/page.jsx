@@ -143,8 +143,9 @@
 //     </main>
 //   )
 // }
-'use client'
 
+'use client'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useState, useEffect } from 'react'

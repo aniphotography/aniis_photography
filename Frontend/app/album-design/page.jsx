@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 const HTMLFlipBook = dynamic(
   () => import('react-pageflip').then((mod) => mod.default),
   { ssr: false }
@@ -43,7 +43,7 @@ export default function AlbumDesignPage() {
 
     const fetchData = async () => {
       try {
-        const previewRes = await fetch('http://localhost:5000/api/media?type=album-preview', {
+        const previewRes = await fetch(`${API}/api/media?type=album-preview`, {
           signal: abortControllerRef.current.signal
         })
         if (previewRes.ok) {
@@ -52,7 +52,7 @@ export default function AlbumDesignPage() {
         }
         setPreviewLoaded(true)
 
-        const albumRes = await fetch('http://localhost:5000/api/collections', {
+        const albumRes = await fetch(`${API}/api/collections`, {
           signal: abortControllerRef.current.signal
         })
         if (albumRes.ok) {

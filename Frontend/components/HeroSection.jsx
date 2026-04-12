@@ -1,6 +1,6 @@
 
 'use client'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -16,7 +16,7 @@ export default function HeroSection() {
   useEffect(() => {
     const fetchHero = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/home-content")
+        const res = await fetch(`${API}/api/home-content`)
         const allData = await res.json()
         
         // Find the specific slot for the Hero

@@ -1,6 +1,6 @@
 
 'use client'
-
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -20,7 +20,7 @@ export default function CategoriesSection() {
     // 2. Fetch data directly
     const fetchData = async () => {
       try {
-        const res = await fetch("http://localhost:5000/api/home-content")
+        const res = await fetch(`${API}/api/home-content`)
         const json = await res.json()
         setDbData(json)
       } catch (err) {
@@ -61,7 +61,7 @@ export default function CategoriesSection() {
       <Link 
         key={category.id}
         href={category.href}
-        className={`group relative overflow-hidden h-80 rounded-2xl shadow-xl transition-all duration-300 block bg-[#0a0a0a] ${isWide ? 'w-full lg:w-1/2' : 'w-full'}`}
+        className={"group relative overflow-hidden h-80 rounded-2xl shadow-xl transition-all duration-300 block bg-[#0a0a0a] " + (isWide ? 'w-full lg:w-1/2' : 'w-full')}
       >
         {/* ===== PHOTO LAYER ===== */}
         {hasImage && (
@@ -125,4 +125,4 @@ export default function CategoriesSection() {
       </div>
     </section>
   )
-}
+      }

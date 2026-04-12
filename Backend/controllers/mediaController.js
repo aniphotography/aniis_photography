@@ -54,7 +54,7 @@ exports.createMedia = async (req, res) => {
 
     const { title, collection_id, tag } = req.body
 
-    const image_url = `/uploads/${req.file.filename}`
+    const image_url = req.file.path
 
     const result = await pool.query(
       `INSERT INTO media (title, image_url, collection_id, tag)
@@ -108,7 +108,7 @@ exports.uploadMultiple = async (req, res) => {
            VALUES ($1,$2,$3)`,
           [
             collection_id,
-            `/uploads/${file.filename}`,
+            file.path,
             tag
           ]
         )

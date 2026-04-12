@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
 export default function BookSessionModal() {
   const pathname = usePathname()
 
@@ -42,7 +44,7 @@ export default function BookSessionModal() {
     setLoading(true)
 
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
+      const res = await fetch(`${API}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
