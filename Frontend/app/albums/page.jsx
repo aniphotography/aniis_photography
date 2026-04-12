@@ -5,20 +5,35 @@ import Footer from '@/components/Footer'
 import { useState, useEffect } from 'react'
 import { getMediaUrl } from '@/lib/utils'
 
+// export default function AlbumsPage() {
+
+//   const [albums, setAlbums] = useState([])
+//   const [selectedIndex, setSelectedIndex] = useState(null)
+//   const [activeCategory, setActiveCategory] = useState('all')
+
+//   /* FETCH COLLECTIONS */
+
+//   useEffect(() => {
+//     fetch(`${API}/api/collections`)
+//       .then(res => res.json())
+//       .then(data => setAlbums(data))
+//   }, [])
 export default function AlbumsPage() {
+  // Add this line to link the variable to your Vercel Environment Variable
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
   const [albums, setAlbums] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [activeCategory, setActiveCategory] = useState('all')
 
   /* FETCH COLLECTIONS */
-
   useEffect(() => {
+    // Now ${API} will correctly point to your backend URL
     fetch(`${API}/api/collections`)
       .then(res => res.json())
       .then(data => setAlbums(data))
-  }, [])
-
+      .catch(err => console.error("Fetch error:", err));
+  }, [API]); // Added API to dependency array for safety
   const filteredAlbums =
     activeCategory === 'all'
       ? albums
