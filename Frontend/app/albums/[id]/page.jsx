@@ -1,5 +1,8 @@
 'use client'
 
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+import { getMediaUrl } from '@/lib/utils'  // ADD THIS
+
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useParams } from 'next/navigation'

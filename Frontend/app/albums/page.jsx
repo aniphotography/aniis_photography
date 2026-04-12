@@ -18,10 +18,9 @@ import { getMediaUrl } from '@/lib/utils'
 //       .then(res => res.json())
 //       .then(data => setAlbums(data))
 //   }, [])
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function AlbumsPage() {
   // Add this line to link the variable to your Vercel Environment Variable
-  const API = process.env.NEXT_PUBLIC_API_URL;
-
   const [albums, setAlbums] = useState([])
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [activeCategory, setActiveCategory] = useState('all')
@@ -33,7 +32,7 @@ export default function AlbumsPage() {
       .then(res => res.json())
       .then(data => setAlbums(data))
       .catch(err => console.error("Fetch error:", err));
-  }, [API]); // Added API to dependency array for safety
+  }, []); // Added API to dependency array for safety
   const filteredAlbums =
     activeCategory === 'all'
       ? albums
