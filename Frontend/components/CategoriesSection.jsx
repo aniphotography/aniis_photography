@@ -1,6 +1,6 @@
 
 'use client'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'

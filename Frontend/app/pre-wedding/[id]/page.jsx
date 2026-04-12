@@ -201,7 +201,7 @@
 
 // export default function AlbumGalleryPage() {
 //   const { id: albumId } = useParams()
-//   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+//   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 
 //   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
 //   const [album, setAlbum] = useState(null)
@@ -377,7 +377,7 @@
 
 //         {/* --- ACTUAL IMAGE --- */}
 //         <img
-//           src={`http://localhost:5000${selectedImage.image_url}`}
+//           src={`http://${API}:5000${selectedImage.image_url}`}
 //           className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
 //           alt="Gallery View"
 //         />
@@ -408,10 +408,10 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 export default function AlbumGalleryPage() {
   const { id: albumId } = useParams()
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
   const [album, setAlbum] = useState(null)

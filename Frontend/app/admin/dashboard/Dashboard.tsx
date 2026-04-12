@@ -12,7 +12,7 @@
 // const [homePhoto, setHomePhoto] = useState(null)
 // const [homeData, setHomeData] = useState({})
 
-// const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+// const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 
 // const [collections,setCollections]=useState([])
 // const [selectedCollection,setSelectedCollection]=useState('')
@@ -171,7 +171,7 @@
 // }
 // const deleteLogo = async (id) => {
 //   if (!confirm('Delete logo?')) return
-//   await fetch(`http://localhost:5000/api/media/${id}`, {
+//   await fetch(`http://${API}:5000/api/media/${id}`, {
 //     method: 'DELETE',
 //     headers: { Authorization: `Bearer ${token}` }
 //   })
@@ -243,7 +243,7 @@
 // };
 //   const deleteVideoLogo = async (id) => {
 //     if (!confirm('Delete video logo?')) return
-//     await fetch(`http://localhost:5000/api/media/${id}`, {
+//     await fetch(`http://${API}:5000/api/media/${id}`, {
 //       method: 'DELETE',
 //       headers: { Authorization: `Bearer ${token}` }
 //     })
@@ -253,7 +253,7 @@
 
 //   if(!category) return
 
-//   fetch(`http://localhost:5000/api/collections?category=${category}`)
+//   fetch(`http://${API}:5000/api/collections?category=${category}`)
 //     .then(res=>res.json())
 //     .then(data=>setCollections(data))
 
@@ -285,7 +285,7 @@
 
 // if(!selectedCollection) return
 
-// fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
+// fetch(`http://${API}:5000/api/media?collection_id=${selectedCollection}`)
 // .then(res=>res.json())
 // .then(data=>setMedia(data))
 
@@ -535,7 +535,7 @@
 
 // alert("Uploaded")
 
-// fetch(`http://localhost:5000/api/media?collection_id=${selectedCollection}`)
+// fetch(`http://${API}:5000/api/media?collection_id=${selectedCollection}`)
 // .then(res=>res.json())
 // .then(data=>setMedia(data))
 
@@ -559,7 +559,7 @@
 // if(!confirm("Delete image?")) return
 
 // await fetch(
-// `http://localhost:5000/api/media/${id}`,
+// `http://${API}:5000/api/media/${id}`,
 // {
 // method:"DELETE",
 // headers:{Authorization:`Bearer ${token}`}
@@ -577,7 +577,7 @@
 // if(!confirm("Delete collection?")) return
 
 // await fetch(
-// `http://localhost:5000/api/collections/${id}`,
+// `http://${API}:5000/api/collections/${id}`,
 // {
 // method:"DELETE",
 // headers:{Authorization:`Bearer ${token}`}
@@ -1190,7 +1190,7 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 
 export default function AdminDashboard() {
   const searchParams = useSearchParams()

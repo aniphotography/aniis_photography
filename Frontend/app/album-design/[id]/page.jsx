@@ -8,7 +8,7 @@ import { useState, useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 const HTMLFlipBook = dynamic(
   () => import('react-pageflip').then((mod) => mod.default),
   {
@@ -39,7 +39,7 @@ const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
     const fetchCollection = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/collections/${id}`, {
+        const res = await fetch(`http://${API}:5000/api/collections/${id}`, {
           signal: abortControllerRef.current.signal
         })
         if (res.ok) {

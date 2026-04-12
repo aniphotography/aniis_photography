@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getMediaUrl } from '@/lib/utils'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
 export default function PreWeddingPage() {
   const router = useRouter()
 
