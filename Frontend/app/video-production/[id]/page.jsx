@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function VideoProductionDetailPage() {
 
 	const params = useParams()
@@ -17,7 +17,7 @@ export default function VideoProductionDetailPage() {
 	const [project, setProject] = useState(null)
 
 	useEffect(() => {
-		fetch(`http://${API}:5000/api/collections/${id}`)
+		fetch(`${API}:5000/api/collections/${id}`)
 			.then(res => res.json())
 			.then(data => setProject(data))
 			.catch(err => console.error(err))

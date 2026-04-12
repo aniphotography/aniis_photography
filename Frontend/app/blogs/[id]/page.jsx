@@ -5,7 +5,7 @@ import Footer from '@/components/Footer'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function BlogDetailPage() {
 
   const params = useParams()
@@ -18,13 +18,13 @@ export default function BlogDetailPage() {
   const [media, setMedia] = useState([])
 
   useEffect(() => {
-    fetch(`http://${API}:5000/api/collections/${id}`)
+    fetch(`${API}:5000/api/collections/${id}`)
       .then(res => res.json())
       .then(data => setBlog(data))
       .catch(err => console.error(err))
 
     // ✅ NEW: fetch media separately
-    fetch(`http://${API}:5000/api/media?collection_id=${id}`)
+    fetch(`${API}:5000/api/media?collection_id=${id}`)
       .then(res => res.json())
       .then(data => setMedia(data))
       .catch(err => console.error(err))

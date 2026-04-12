@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function BlogsPage() {
 
   const [blogs, setBlogs] = useState([])

@@ -10,6 +10,6 @@ export function getMediaUrl(url?: string | null) {
   if (typeof url !== 'string') return url
   if (url.startsWith('http')) return url
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
   return url.startsWith('/') ? `${baseUrl}${url}` : `${baseUrl}/${url}`
 }

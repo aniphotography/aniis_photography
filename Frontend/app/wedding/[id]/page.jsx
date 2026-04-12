@@ -13,7 +13,7 @@
 //   const [album, setAlbum] = useState(null)
 
 //   useEffect(() => {
-//     fetch(`http://${API}:5000/api/collections/${albumId}`)
+//     fetch(`${API}:5000/api/collections/${albumId}`)
 //       .then(res => res.json())
 //       .then(data => {
 //         setAlbum({
@@ -145,7 +145,7 @@
 // }
 
 'use client'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useState, useEffect } from 'react'
@@ -160,7 +160,7 @@ export default function AlbumGalleryPage() {
   const [album, setAlbum] = useState(null)
 
   useEffect(() => {
-    fetch(`http://${API}:5000/api/collections/${albumId}`)
+    fetch(`${API}:5000/api/collections/${albumId}`)
       .then(res => res.json())
       .then(data => {
         setAlbum({

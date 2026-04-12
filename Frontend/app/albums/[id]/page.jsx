@@ -18,14 +18,14 @@ export default function GalleryCategoryPage() {
 
   useEffect(() => {
 
-    fetch(`http://${API}:5000/api/collections`)
+    fetch(`${API}:5000/api/collections`)
       .then(res => res.json())
       .then(data => {
         const found = data.find(c => c.id == id)
         setCollection(found)
       })
 
-    fetch(`http://${API}:5000/api/media?collection_id=${id}`)
+    fetch(`${API}:5000/api/media?collection_id=${id}`)
       .then(res => res.json())
       .then(data => setMedia(data))
 

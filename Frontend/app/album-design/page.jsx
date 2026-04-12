@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://${API}:5000'
+const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 const HTMLFlipBook = dynamic(
   () => import('react-pageflip').then((mod) => mod.default),
   { ssr: false }
