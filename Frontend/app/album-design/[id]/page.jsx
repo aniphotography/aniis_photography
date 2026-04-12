@@ -39,7 +39,7 @@ const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
     const fetchCollection = async () => {
       try {
-        const res = await fetch(`${API}:5000/api/collections/${id}`, {
+        const res = await fetch(`${API}/api/collections/${id}`, {
           signal: abortControllerRef.current.signal
         })
         if (res.ok) {

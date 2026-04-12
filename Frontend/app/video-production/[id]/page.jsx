@@ -17,7 +17,7 @@ export default function VideoProductionDetailPage() {
 	const [project, setProject] = useState(null)
 
 	useEffect(() => {
-		fetch(`${API}:5000/api/collections/${id}`)
+		fetch(`${API}/api/collections/${id}`)
 			.then(res => res.json())
 			.then(data => setProject(data))
 			.catch(err => console.error(err))

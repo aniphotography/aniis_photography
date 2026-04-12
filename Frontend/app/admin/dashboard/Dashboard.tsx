@@ -171,7 +171,7 @@
 // }
 // const deleteLogo = async (id) => {
 //   if (!confirm('Delete logo?')) return
-//   await fetch(`${API}:5000/api/media/${id}`, {
+//   await fetch(`${API}/api/media/${id}`, {
 //     method: 'DELETE',
 //     headers: { Authorization: `Bearer ${token}` }
 //   })
@@ -243,7 +243,7 @@
 // };
 //   const deleteVideoLogo = async (id) => {
 //     if (!confirm('Delete video logo?')) return
-//     await fetch(`${API}:5000/api/media/${id}`, {
+//     await fetch(`${API}/api/media/${id}`, {
 //       method: 'DELETE',
 //       headers: { Authorization: `Bearer ${token}` }
 //     })
@@ -253,7 +253,7 @@
 
 //   if(!category) return
 
-//   fetch(`${API}:5000/api/collections?category=${category}`)
+//   fetch(`${API}/api/collections?category=${category}`)
 //     .then(res=>res.json())
 //     .then(data=>setCollections(data))
 
@@ -285,7 +285,7 @@
 
 // if(!selectedCollection) return
 
-// fetch(`${API}:5000/api/media?collection_id=${selectedCollection}`)
+// fetch(`${API}/api/media?collection_id=${selectedCollection}`)
 // .then(res=>res.json())
 // .then(data=>setMedia(data))
 
@@ -535,7 +535,7 @@
 
 // alert("Uploaded")
 
-// fetch(`${API}:5000/api/media?collection_id=${selectedCollection}`)
+// fetch(`${API}/api/media?collection_id=${selectedCollection}`)
 // .then(res=>res.json())
 // .then(data=>setMedia(data))
 
@@ -559,7 +559,7 @@
 // if(!confirm("Delete image?")) return
 
 // await fetch(
-// `${API}:5000/api/media/${id}`,
+// `${API}/api/media/${id}`,
 // {
 // method:"DELETE",
 // headers:{Authorization:`Bearer ${token}`}
@@ -577,7 +577,7 @@
 // if(!confirm("Delete collection?")) return
 
 // await fetch(
-// `${API}:5000/api/collections/${id}`,
+// `${API}/api/collections/${id}`,
 // {
 // method:"DELETE",
 // headers:{Authorization:`Bearer ${token}`}

@@ -13,7 +13,7 @@
 //   const [album, setAlbum] = useState(null)
 
 //   useEffect(() => {
-//     fetch(`${API}:5000/api/collections/${albumId}`)
+//     fetch(`${API}/api/collections/${albumId}`)
 //       .then(res => res.json())
 //       .then(data => {
 //         setAlbum({
@@ -160,7 +160,7 @@ export default function AlbumGalleryPage() {
   const [album, setAlbum] = useState(null)
 
   useEffect(() => {
-    fetch(`${API}:5000/api/collections/${albumId}`)
+    fetch(`${API}/api/collections/${albumId}`)
       .then(res => res.json())
       .then(data => {
         setAlbum({

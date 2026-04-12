@@ -270,7 +270,7 @@
 //             key={album.video_url} // Force reload when album changes
 //             className="w-full h-full object-cover opacity-40"
 //           >
-//             <source src={`${API_BASE}${album.video_url}`} type="video/mp4" />
+//             <source src={getMediaUrl(album.video_url)}} type="video/mp4" />
 //           </video>
 //           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/20 to-[#1a1a1a]" />
 //         </div>
@@ -309,7 +309,7 @@
 //                 >
 //                   <img
                   
-//                     src={`${API_BASE}${image.image_url}`}
+//                     src={getMediaUrl(image.image_url)}}
 //                     alt={image.caption}
 //                     className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
 //                   />
@@ -377,7 +377,7 @@
 
 //         {/* --- ACTUAL IMAGE --- */}
 //         <img
-//           src={`${API}:5000${selectedImage.image_url}`}
+//           src={`${API}${selectedImage.image_url}`}
 //           className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
 //           alt="Gallery View"
 //         />
@@ -487,7 +487,7 @@ export default function AlbumGalleryPage() {
             key={album.video_url}
             className="w-full h-full object-cover opacity-40"
           >
-            <source src={`${API_BASE}${album.video_url}`} type="video/mp4" />
+            <source src={getMediaUrl(album.video_url)} type="video/mp4" />
           </video>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/20 to-[#1a1a1a]" />
         </div>
@@ -525,7 +525,7 @@ export default function AlbumGalleryPage() {
                   onClick={() => setSelectedImageIndex(index)}
                 >
                   <img
-                    src={`${API_BASE}${image.image_url}`}
+                    src={getMediaUrl(image.image_url)}
                     alt={image.caption}
                     className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
                   />

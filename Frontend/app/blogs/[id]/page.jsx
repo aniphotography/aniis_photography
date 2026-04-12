@@ -18,13 +18,13 @@ export default function BlogDetailPage() {
   const [media, setMedia] = useState([])
 
   useEffect(() => {
-    fetch(`${API}:5000/api/collections/${id}`)
+    fetch(`${API}/api/collections/${id}`)
       .then(res => res.json())
       .then(data => setBlog(data))
       .catch(err => console.error(err))
 
     // ✅ NEW: fetch media separately
-    fetch(`${API}:5000/api/media?collection_id=${id}`)
+    fetch(`${API}/api/media?collection_id=${id}`)
       .then(res => res.json())
       .then(data => setMedia(data))
       .catch(err => console.error(err))
