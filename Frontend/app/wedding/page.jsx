@@ -73,7 +73,7 @@
 //                 >
 //                   <div className="overflow-hidden rounded-[2rem] border border-white/10">
 //                     <img
-//                       src={`http://localhost:5000${item.cover_image}`}
+//                       src={getMediaUrl(item.cover_image)}
 //                       className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
 //                       alt={item.title}
 //                     />
@@ -112,7 +112,7 @@
 //                 >
 //                   <div className="overflow-hidden rounded-xl border border-white/10">
 //                     <img
-//                       src={`http://localhost:5000${item.cover_image}`}
+//                       src={getMediaUrl(item.cover_image)}
 //                       className="w-full h-[300px] object-cover group-hover:scale-110 transition duration-700"
 //                       alt={item.title}
 //                     />
@@ -145,6 +145,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function WeddingPage() {
   const router = useRouter()
@@ -171,7 +172,7 @@ export default function WeddingPage() {
         
         const weddingBg = hData.find(item => item.slot === 'wedding_bg')
         if (weddingBg) {
-          setBgImage(`http://localhost:5000${weddingBg.image_path}`)
+          setBgImage(getMediaUrl(weddingBg.image_path))
         }
         setLoading(false)
       })
@@ -227,7 +228,7 @@ export default function WeddingPage() {
                 >
                   <div className="overflow-hidden rounded-[2rem] border border-white/10">
                     <img
-                      src={`http://localhost:5000${item.cover_image}`}
+                      src={getMediaUrl(item.cover_image)}
                       className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
                       alt={item.title}
                     />
@@ -266,7 +267,7 @@ export default function WeddingPage() {
                 >
                   <div className="overflow-hidden rounded-xl border border-white/10">
                     <img
-                      src={`http://localhost:5000${item.cover_image}`}
+                      src={getMediaUrl(item.cover_image)}
                       className="w-full h-[300px] object-cover group-hover:scale-110 transition duration-700"
                       alt={item.title}
                     />

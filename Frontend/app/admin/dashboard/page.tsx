@@ -3,6 +3,7 @@
 
 import { useState,useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 export const dynamic = "force-dynamic";
 export default function AdminDashboard(){
 const searchParams = useSearchParams()
@@ -362,7 +363,7 @@ useEffect(() => {
         <div className="mt-2">
           <p className="text-[10px] text-gray-500 uppercase">Current Image:</p>
           <img 
-            src={`http://localhost:5000${homeData[homeSlot]}`} 
+            src={getMediaUrl(homeData[homeSlot])} 
             className="h-16 w-24 object-cover border border-gold/30"
             alt="Current"
           />
@@ -957,7 +958,7 @@ return(
                 <div className="mt-2 border border-gold/20 p-2 bg-black/50">
                     <p className="text-[10px] uppercase text-gray-500 mb-1">Active Image:</p>
                     <img 
-                        src={`http://localhost:5000${homeData[homeSlot]}`} 
+                        src={getMediaUrl(homeData[homeSlot])} 
                         className="h-16 w-full object-cover" 
                         alt="preview"
                     />
@@ -1012,7 +1013,7 @@ return(
       {logos.map(l => (
         <div key={l.id} className="relative flex items-center justify-center p-2 bg-black/50 border border-white/5">
           {l.image_url && (
-            <img src={`http://localhost:5000${l.image_url}`} className="h-12 object-contain" alt={l.title || 'logo'} />
+            <img src={getMediaUrl(l.image_url)} className="h-12 object-contain" alt={l.title || 'logo'} />
           )}
           <button onClick={() => deleteLogo(l.id)} className="absolute top-1 right-1 bg-red-600 px-2 py-1 text-xs">Delete</button>
         </div>
@@ -1054,7 +1055,7 @@ return(
       <div key={l.id} className="relative flex items-center justify-center p-2 bg-black/50 border border-white/5 group">
         {l.image_url && (
           <img
-            src={`http://localhost:5000${l.image_url}`}
+            src={getMediaUrl(l.image_url)}
             className="h-12 object-contain"
           />
         )}
@@ -1148,7 +1149,7 @@ Upload
     {/* VIDEO */}
     {item.image_url && item.image_url.endsWith('.mp4') && (
       <video
-        src={`http://localhost:5000${item.image_url}`}
+        src={getMediaUrl(item.image_url)}
         controls
         className="w-full h-40 object-cover"
       />
@@ -1157,7 +1158,7 @@ Upload
     {/* IMAGE */}
     {item.image_url && !item.image_url.endsWith('.mp4') && (
       <img
-        src={`http://localhost:5000${item.image_url}`}
+        src={getMediaUrl(item.image_url)}
         className="w-full h-40 object-cover"
       />
     )}

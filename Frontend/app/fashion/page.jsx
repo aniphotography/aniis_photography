@@ -257,6 +257,7 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useRef, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function FashionPage() {
 
@@ -391,7 +392,7 @@ useEffect(() => {
           >
          <img
   // Use a higher base opacity (70) so it's visible but still looks like a secondary brand
-  src={typeof logo === 'string' ? logo : `http://localhost:5000${logo.image_url}`}
+  src={typeof logo === 'string' ? logo : getMediaUrl(logo.image_url)}
   alt="Brand Logo"
   className="w-full h-full object-contain p-6 transition-all duration-500 opacity-70 group-hover:opacity-100 group-hover:scale-105"
 />
@@ -479,7 +480,7 @@ function HoverVideoCard({ item }) {
           preload="metadata"
           className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-700"
         >
-          <source src={`http://localhost:5000${item.cover_video || item.video_url}`} type="video/mp4" />
+          <source src={getMediaUrl(item.cover_video || item.video_url)} type="video/mp4" />
         </video>
 
         <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500" />

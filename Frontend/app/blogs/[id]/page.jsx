@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function BlogDetailPage() {
 
@@ -88,7 +89,7 @@ export default function BlogDetailPage() {
             style={{ paddingTop: '56.25%' }}
           >
             <img
-              src={`http://localhost:5000${blog.cover_image || firstImageMedia?.image_url || ''}`}
+              src={getMediaUrl(blog.cover_image || firstImageMedia?.image_url || '')}
               alt={blog.title}
               className="absolute top-0 left-0 w-full h-full object-cover"
             />
@@ -121,7 +122,7 @@ export default function BlogDetailPage() {
                 {/* VIDEO */}
                 {item.image_url?.endsWith('.mp4') ? (
                   <video
-                    src={`http://localhost:5000${item.image_url}`}
+                    src={getMediaUrl(item.image_url)}
                     controls
                     autoPlay
                     muted
@@ -130,7 +131,7 @@ export default function BlogDetailPage() {
                 ) : (
                   /* IMAGE */
                   <img
-                    src={`http://localhost:5000${item.image_url}`}
+                    src={getMediaUrl(item.image_url)}
                     alt="Blog visual"
                     className="w-full h-96 object-cover"
                   />
@@ -151,7 +152,7 @@ export default function BlogDetailPage() {
             {extraImages.map((img, i) => (
               <div key={i} className="rounded-xl overflow-hidden">
                 <img
-                  src={`http://localhost:5000${img.image_url}`}
+                  src={getMediaUrl(img.image_url)}
                   alt="Blog visual"
                   className="w-full h-96 object-cover"
                 />

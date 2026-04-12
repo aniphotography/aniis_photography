@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function HeroSection() {
   const router = useRouter()
@@ -23,7 +24,7 @@ export default function HeroSection() {
         
         if (heroItem) {
           setHeroData({
-            image: `http://localhost:5000${heroItem.image_path}`,
+            image: getMediaUrl(heroItem.image_path),
             title1: "Capturing", // You can eventually pull these from DB too
             title2: "Timeless Moments"
           })

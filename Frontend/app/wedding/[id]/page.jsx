@@ -39,7 +39,7 @@
 //             className="w-full h-full object-cover opacity-50"
 //           >
 //             <source
-//               src={`http://localhost:5000${album.video_url}`}
+//               src={getMediaUrl(album.video_url)}
 //               type="video/mp4"
 //             />
 //           </video>
@@ -88,7 +88,7 @@
 //                   onClick={() => setSelectedImage(image)}
 //                 >
 //                   <img
-//                     src={`http://localhost:5000${image.image_url}`}
+//                     src={getMediaUrl(image.image_url)}
 //                     alt={image.caption}
 //                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
 //                   />
@@ -126,7 +126,7 @@
 //               onClick={(e) => e.stopPropagation()}
 //             >
 //               <img
-//                 src={`http://localhost:5000${selectedImage.image_url}`}
+//                 src={getMediaUrl(selectedImage.image_url)}
 //                 className="w-full max-h-[70vh] object-contain shadow-2xl"
 //               />
 //               <div className="mt-6 text-center">
@@ -149,6 +149,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function AlbumGalleryPage() {
   const params = useParams()
@@ -202,7 +203,7 @@ export default function AlbumGalleryPage() {
             className="w-full h-full object-cover opacity-50"
           >
             <source
-              src={`http://localhost:5000${album.video_url}`}
+              src={getMediaUrl(album.video_url)}
               type="video/mp4"
             />
           </video>
@@ -251,7 +252,7 @@ export default function AlbumGalleryPage() {
                   onClick={() => setSelectedImage(image)}
                 >
                   <img
-                    src={`http://localhost:5000${image.image_url}`}
+                    src={getMediaUrl(image.image_url)}
                     alt={image.caption}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
@@ -319,7 +320,7 @@ export default function AlbumGalleryPage() {
 
         {/* --- ACTUAL IMAGE --- */}
         <img
-          src={`http://localhost:5000${selectedImage.image_url}`}
+          src={getMediaUrl(selectedImage.image_url)}
           className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
           alt="Gallery View"
         />

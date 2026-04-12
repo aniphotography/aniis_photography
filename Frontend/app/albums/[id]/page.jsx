@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useParams } from 'next/navigation'
 import { useState, useEffect } from 'react'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function GalleryCategoryPage() {
 
@@ -56,7 +57,7 @@ export default function GalleryCategoryPage() {
             {/* MEDIA */}
             {item.image_url?.endsWith('.mp4') ? (
               <video
-                src={`http://localhost:5000${item.image_url}`}
+                src={getMediaUrl(item.image_url)}
                 muted
                 loop
                 playsInline
@@ -64,7 +65,7 @@ export default function GalleryCategoryPage() {
               />
             ) : (
               <img
-                src={`http://localhost:5000${item.image_url}`}
+                src={getMediaUrl(item.image_url)}
                 className="w-full h-80 object-cover"
               />
             )}
@@ -136,7 +137,7 @@ export default function GalleryCategoryPage() {
         {/* --- MEDIA DISPLAY --- */}
         {media[selectedIndex].image_url?.endsWith('.mp4') ? (
           <video
-            src={`http://localhost:5000${media[selectedIndex].image_url}`}
+            src={getMediaUrl(media[selectedIndex].image_url)}
             autoPlay
             muted
             loop
@@ -146,7 +147,7 @@ export default function GalleryCategoryPage() {
           />
         ) : (
           <img
-            src={`http://localhost:5000${media[selectedIndex].image_url}`}
+            src={getMediaUrl(media[selectedIndex].image_url)}
             className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
             alt="Gallery View"
           />

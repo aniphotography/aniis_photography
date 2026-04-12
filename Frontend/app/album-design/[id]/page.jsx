@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useRef, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 const HTMLFlipBook = dynamic(
   () => import('react-pageflip').then((mod) => mod.default),
@@ -45,7 +46,7 @@ const [selectedImageIndex, setSelectedImageIndex] = useState(null);
           setAlbum(data.collection)
 
           const imgs = data.images.map(img =>
-            `http://localhost:5000${img.image_url}`
+            getMediaUrl(img.image_url)
           )
 
           setPages(imgs)
@@ -103,7 +104,7 @@ const showPrevImage = (e) => {
         {album.video_url && (
           <video autoPlay muted loop className="absolute inset-0 w-full h-full object-cover">
             <source
-              src={`http://localhost:5000${album.video_url}`}
+              src={getMediaUrl(album.video_url)}
               type="video/mp4"
             />
           </video>

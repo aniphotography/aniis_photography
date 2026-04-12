@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function VideoProductionPage() {
 
@@ -84,7 +85,7 @@ export default function VideoProductionPage() {
           {[...videoLogos, ...videoLogos].map((logo, idx) => (
             <img
               key={`${logo.id}-${idx}`}
-              src={`http://localhost:5000${logo.image_url}`}
+              src={getMediaUrl(logo.image_url)}
               className="h-12 object-contain opacity-70 hover:opacity-100 transition"
             />
           ))}
@@ -100,7 +101,7 @@ export default function VideoProductionPage() {
           className="flex-shrink-0 w-64 h-48 overflow-hidden group"
         >
           <img
-            src={`http://localhost:5000${logo.image_url}`}
+            src={getMediaUrl(logo.image_url)}
             alt="Client Logo"
             className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-105 opacity-70 hover:opacity-100"
           />
@@ -135,7 +136,7 @@ export default function VideoProductionPage() {
               <img
                 src={
                   slide.cover_image
-                    ? `http://localhost:5000${slide.cover_image}`
+                    ? getMediaUrl(slide.cover_image)
                     : "/placeholder.svg"
                 }
                 className="w-full h-full object-cover"

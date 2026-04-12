@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function CategoriesSection() {
   const router = useRouter()
@@ -40,7 +41,7 @@ export default function CategoriesSection() {
   // Helper to find the specific image path for a slot
   const getImageUrl = (slotName) => {
     const item = dbData.find(d => d.slot === slotName)
-    return item ? `http://localhost:5000${item.image_path}` : null
+    return item ? getMediaUrl(item.image_path) : null
   }
 
   // This maps your UI cards to the Database Slots

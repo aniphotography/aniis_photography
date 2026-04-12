@@ -3,6 +3,7 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useState, useEffect } from 'react'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function AlbumsPage() {
 
@@ -38,8 +39,8 @@ export default function AlbumsPage() {
     if (!url) return '/no-image.png'
 
     return url.startsWith('/')
-      ? `http://localhost:5000${url}`
-      : `http://localhost:5000/${url}`
+      ? getMediaUrl(url)
+      : getMediaUrl(url)
   }
 
   /* SECTION RENDER */

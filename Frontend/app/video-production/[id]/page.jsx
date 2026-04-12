@@ -5,6 +5,7 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function VideoProductionDetailPage() {
 
@@ -84,7 +85,7 @@ const images = allMedia.filter(m =>
 						{videos.map((video, i) => (
 							<div key={i} className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl">
 								<video controls muted loop playsInline className="w-full h-full object-cover">
-									<source src={`http://localhost:5000${video.image_url}`} type="video/mp4" />
+									<source src={getMediaUrl(video.image_url)} type="video/mp4" />
 								</video>
 							</div>
 						))}
@@ -117,7 +118,7 @@ const images = allMedia.filter(m =>
 						{images.map((img, i) => (
 							<div key={i} className="aspect-[2/3] overflow-hidden group">
 								<img
-									src={`http://localhost:5000${img.image_url}`}
+									src={getMediaUrl(img.image_url)}
 									alt=""
 									className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
 								/>

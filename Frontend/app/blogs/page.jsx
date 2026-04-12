@@ -6,6 +6,7 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function BlogsPage() {
 
@@ -60,7 +61,7 @@ export default function BlogsPage() {
 
                 <div className="overflow-hidden rounded-xl mb-5 border border-white/10">
                   <img
-                    src={`http://localhost:5000${blog.cover_image}`}
+                    src={getMediaUrl(blog.cover_image)}
                     alt={blog.title}
                     className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-105"
                   />

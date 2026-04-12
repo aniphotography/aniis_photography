@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function FeaturedSection() {
   const router = useRouter()
@@ -39,7 +40,7 @@ export default function FeaturedSection() {
   // Helper to find image for specific slots (slot1, slot2, slot3)
   const getImageUrl = (slotName) => {
     const item = dbData.find(d => d.slot === slotName && d.section === 'featured')
-    return item ? `http://localhost:5000${item.image_path}` : null
+    return item ? getMediaUrl(item.image_path) : null
   }
 
   // Unified Data mapped to your DB Slots

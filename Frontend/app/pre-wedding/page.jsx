@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { getMediaUrl } from '@/lib/utils'
 
 export default function PreWeddingPage() {
   const router = useRouter()
@@ -31,7 +32,7 @@ export default function PreWeddingPage() {
         // Find the slot dedicated to the pre-wedding page header background
         const preWedBg = hData.find(item => item.slot === 'pre-wedding_bg')
         if (preWedBg) {
-          setBgImage(`http://localhost:5000${preWedBg.image_path}`)
+          setBgImage(getMediaUrl(preWedBg.image_path))
         }
         
         setLoading(false)
@@ -94,7 +95,7 @@ export default function PreWeddingPage() {
                 >
                   <div className="overflow-hidden rounded-xl border border-white/10">
                     <img
-                      src={`http://localhost:5000${item.cover_image}`}
+                      src={getMediaUrl(item.cover_image)}
                       className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
                       alt={item.title}
                     />
@@ -133,7 +134,7 @@ export default function PreWeddingPage() {
                 >
                   <div className="overflow-hidden rounded-xl border border-white/10">
                     <img
-                      src={`http://localhost:5000${item.cover_image}`}
+                      src={getMediaUrl(item.cover_image)}
                       className="w-full h-[300px] object-cover group-hover:scale-110 transition duration-700"
                       alt={item.title}
                     />

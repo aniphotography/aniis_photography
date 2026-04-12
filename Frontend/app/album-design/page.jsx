@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
+import { getMediaUrl } from '@/lib/utils'
 
 const HTMLFlipBook = dynamic(
   () => import('react-pageflip').then((mod) => mod.default),
@@ -155,7 +156,7 @@ export default function AlbumDesignPage() {
                 <div key={i} className="page bg-white">
 
                   <img
-                    src={`http://localhost:5000${img.image_url}`}
+                    src={getMediaUrl(img.image_url)}
                     className="w-full h-full object-cover"
                   />
 
@@ -228,7 +229,7 @@ export default function AlbumDesignPage() {
   {album.cover_image ? (
     <>
       <img
-        src={`http://localhost:5000${album.cover_image}`}
+        src={getMediaUrl(album.cover_image)}
         className="absolute inset-0 w-full h-full object-cover" // Full opacity
         alt={album.title}
       />
