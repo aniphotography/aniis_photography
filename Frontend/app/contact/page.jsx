@@ -18,34 +18,64 @@ export default function ContactPage() {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
+// const handleSubmit = async (e) => {
+//   e.preventDefault()
+
+//   try {
+//    const res = await fetch(`${API}/api/contact`, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json"
+//       },
+//       body: JSON.stringify(formData)
+//     })
+
+//     const data = await res.json()
+
+//     if (res.ok) {
+//       setSubmitted(true)
+//       setFormData({ name: '', email: '', eventType: '', message: '' })
+//     } else {
+//       console.error(data)
+//       alert("Failed to send message")
+//     }
+
+//   } catch (err) {
+//     console.error(err)
+//     alert("Error sending message")
+//   }
+// }
 const handleSubmit = async (e) => {
-  e.preventDefault()
+  e.preventDefault();
+
+  // FIX: Define API by pulling it from your Environment Variables
+  const API = process.env.NEXT_PUBLIC_API_URL;
 
   try {
-   const res = await fetch(`${API}/api/contact`, {
+    // Now ${API} will work correctly
+    const res = await fetch(`${API}/api/contact`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(formData)
-    })
+    });
 
-    const data = await res.json()
+    const data = await res.json();
 
     if (res.ok) {
-      setSubmitted(true)
-      setFormData({ name: '', email: '', eventType: '', message: '' })
+      setSubmitted(true);
+      setFormData({ name: '', email: '', eventType: '', message: '' });
     } else {
-      console.error(data)
-      alert("Failed to send message")
+      console.error(data);
+      alert("Failed to send message");
     }
 
   } catch (err) {
-    console.error(err)
-    alert("Error sending message")
+    console.error(err);
+    alert("Error sending message");
   }
-}
-
+};
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
       <Navbar />
