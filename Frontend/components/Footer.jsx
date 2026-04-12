@@ -81,7 +81,7 @@ export default function Footer() {
         {/* Divider */}
         <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-4 text-gray-500 font-lato text-sm">
-            <p>&copy; {currentYear} Anni's Photography. All rights reserved.</p>
+            <p>&copy; {currentYear} Anii Photography. All rights reserved.</p>
             <span className="text-gray-600">|</span>
             <Link
               href="/terms"

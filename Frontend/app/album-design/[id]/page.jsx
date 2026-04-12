@@ -262,7 +262,7 @@ const showPrevImage = (e) => {
   {/* Right Side: The Branding Label */}
   <div className="mt-4 md:mt-0">
     <p className="text-[#d4af37]/60 text-[9px] md:text-[10px] tracking-[0.6em] uppercase font-medium leading-none">
-      Anii's Photography Standard
+      Anii Photography Standard
     </p>
   </div>
 </div>

@@ -191,7 +191,7 @@ export default function AlbumDesignPage() {
     
     {/* Brand Name */}
      <p className="text-yellow-500/80 text-[11px] tracking-[0.6em] uppercase font-medium">
-      Anii's Photography
+      Anii Photography
     </p>
 
   </div>
