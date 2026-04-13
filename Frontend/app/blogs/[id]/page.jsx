@@ -121,8 +121,7 @@ export default function BlogDetailPage() {
 
                 {/* VIDEO */}
                 {item.image_url?.endsWith('.mp4') ? (
-                  <video
-                    src={getMediaUrl(item.image_url)}
+                  <video autoPlay loop muted playsInline                    src={getMediaUrl(item.image_url)}
                     controls
                     autoPlay
                     muted

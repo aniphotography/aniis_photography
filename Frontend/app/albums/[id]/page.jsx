@@ -58,8 +58,7 @@ export default function GalleryCategoryPage() {
 
             {/* MEDIA */}
             {item.image_url?.endsWith('.mp4') ? (
-              <video
-                src={getMediaUrl(item.image_url)}
+              <video autoPlay loop muted playsInline                src={getMediaUrl(item.image_url)}
                 muted
                 loop
                 playsInline
@@ -138,8 +137,7 @@ export default function GalleryCategoryPage() {
 
         {/* --- MEDIA DISPLAY --- */}
         {media[selectedIndex].image_url?.endsWith('.mp4') ? (
-          <video
-            src={getMediaUrl(media[selectedIndex].image_url)}
+          <video autoPlay loop muted playsInline            src={getMediaUrl(media[selectedIndex].image_url)}
             autoPlay
             muted
             loop

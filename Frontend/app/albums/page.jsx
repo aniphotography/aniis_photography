@@ -81,8 +81,7 @@ export default function AlbumsPage() {
 
                 {/* MEDIA */}
                 {album.cover_video ? (
-                  <video
-                    src={getImageSrc(album.cover_video)}
+                  <video         src={getImageSrc(album.cover_video)}
                     muted
                     loop
                     playsInline

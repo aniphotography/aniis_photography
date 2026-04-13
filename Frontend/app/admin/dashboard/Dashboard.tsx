@@ -1148,8 +1148,7 @@
 
 //     {/* VIDEO */}
 //     {item.image_url && item.image_url.endsWith('.mp4') && (
-//       <video
-//         src={getMediaUrl(item.image_url)}
+//       <video autoPlay loop muted playsInline//         src={getMediaUrl(item.image_url)}
 //         controls
 //         className="w-full h-40 object-cover"
 //       />

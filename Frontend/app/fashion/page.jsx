@@ -219,8 +219,7 @@ function HoverVideoCard({ item }) {
         className="relative aspect-[2/3] w-full overflow-hidden rounded-sm cursor-pointer group bg-[#111]"
       >
 
-        <video
-          ref={videoRef}
+        <video autoPlay loop muted playsInline          ref={videoRef}
           muted
           loop
           playsInline

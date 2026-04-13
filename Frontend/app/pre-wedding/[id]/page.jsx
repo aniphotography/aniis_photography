@@ -78,8 +78,7 @@ export default function AlbumGalleryPage() {
       {/* HERO SECTION */}
       <section className="relative h-[75vh] w-full overflow-hidden">
         <div className="absolute inset-0">
-          <video
-            autoPlay
+          <video             autoPlay
             loop
             muted
             playsInline

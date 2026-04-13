@@ -31,8 +31,7 @@
 //       {/* HERO SECTION WITH VIDEO */}
 //       <section className="relative h-[70vh] w-full overflow-hidden bg-black">
 //         <div className="absolute inset-0 w-full h-full">
-//           <video
-//             autoPlay
+//           <video autoPlay loop muted playsInline//             autoPlay
 //             loop
 //             muted
 //             playsInline
@@ -196,8 +195,7 @@ export default function AlbumGalleryPage() {
       {/* HERO SECTION WITH VIDEO */}
       <section className="relative h-[70vh] w-full overflow-hidden bg-black">
         <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
+          <video autoPlay loop muted playsInline            autoPlay
             loop
             muted
             playsInline
