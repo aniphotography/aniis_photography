@@ -103,32 +103,11 @@ export default function CategoriesSection() {
 
   if (loading) return <div className="py-20 bg-black text-center text-gold">Loading Services...</div>
 
-  // return (
-  //   <section className="py-20 px-6 bg-black">
-  //     <div className="max-w-7xl mx-auto">
-  //       <div className="text-center mb-16">
-  //         <h2 className="text-4xl md:text-5xl font-display text-white mb-4">
-  //           Our <span className="text-gold">Services</span>
-  //         </h2>
-  //         <div className="w-12 h-1 bg-gold mx-auto mb-6" />
-  //       </div>
-
-  //       <div className="flex flex-col gap-8">
-  //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-  //           {categories.slice(0, 3).map((cat) => renderCard(cat))}
-  //         </div>
-
-  //         <div className="flex flex-col md:flex-row justify-center gap-8">
-  //           {categories.slice(3, 5).map((cat) => renderCard(cat, true))}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </section>
-  // )
 
   return (
     <section className="py-20 px-6 bg-black">
       <div className="max-w-7xl mx-auto">
+        {/* HEADER */}
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-display text-white mb-4">
             Our <span className="text-gold">Services</span>
@@ -137,23 +116,27 @@ export default function CategoriesSection() {
         </div>
 
         <div className="flex flex-col gap-8">
-          {/* --- TOP ROW: 2 LARGER BOXES (Fashion & Wedding) --- */}
-          <div className="flex flex-col md:flex-row justify-center gap-8">
-            {/* Fashion (ID 4) and Wedding (ID 1) */}
-            {categories.filter(cat => cat.id === 4 || cat.id === 1).map((cat) => 
-              renderCard(cat, true)
-            )}
+          
+          {/* TOP ROW: Fashion & Wedding (2 Large Boxes) */}
+          <div className="flex flex-col md:flex-row gap-8">
+            {categories
+              .filter(cat => cat.id === 4 || cat.id === 1)
+              .map((cat) => renderCard(cat, true)) 
+            }
           </div>
 
-          {/* --- BOTTOM ROW: 3 SMALLER BOXES (Album Design, Video Production, and Pre-Wedding) --- */}
+          {/* BOTTOM ROW: Album Design, Video Production, Pre-Wedding (3 Smaller Boxes) */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Album Design (ID 5), Video Production (ID 3), and Pre-Wedding (ID 2) */}
             {[
               categories.find(c => c.id === 5), 
-              categories.find(c => c.id === 3), 
-              categories.find(c => c.id === 2)
-            ].map((cat) => renderCard(cat))}
+              categories.find(c => c.id === 2), 
+              categories.find(c => c.id === 3)
+            ]
+              .filter(Boolean) // This prevents errors if a category isn't found
+              .map((cat) => renderCard(cat, false))
+            }
           </div>
+
         </div>
       </div>
     </section>
