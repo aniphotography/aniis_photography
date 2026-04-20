@@ -56,7 +56,75 @@ export default function CategoriesSection() {
   const renderCard = (category, isWide = false) => {
     const image = getImageUrl(category.slot)
     const hasImage = !!image
-// ... (previous logic for categories and renderCard remains the same)
+
+    return (
+      <Link 
+        key={category.id}
+        href={category.href}
+        className={"group relative overflow-hidden h-80 rounded-2xl shadow-xl transition-all duration-300 block bg-[#0a0a0a] " + (isWide ? 'w-full lg:w-1/2' : 'w-full')}
+      >
+        {/* ===== PHOTO LAYER ===== */}
+        {hasImage && (
+          <img
+            src={image}
+            alt={category.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80"
+          />
+        )}
+
+        {/* ===== CENTERED PLUS BUTTON (ONLY IF NO IMAGE AND IS ADMIN) ===== */}
+        {!hasImage && isAdmin && (
+          <div className="absolute inset-0 flex items-center justify-center z-30">
+            <button
+              onClick={handleAddClick}
+              className="w-20 h-20 flex flex-col items-center justify-center rounded-full border-2 border-dashed border-gold text-gold text-4xl hover:bg-gold hover:text-black hover:border-solid transition-all transform hover:scale-110 shadow-2xl bg-black/40"
+            >
+              +
+            </button>
+          </div>
+        )}
+
+        {/* GRADIENT OVERLAY */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+
+        {/* CONTENT */}
+        <div className="absolute inset-0 flex flex-col justify-end p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 z-20 pointer-events-none">
+          <h3 className="text-3xl font-display text-white mb-2">
+            {category.title}
+          </h3>
+          <p className="text-gray-200 text-sm font-lato opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            {category.description}
+          </p>
+          <div className="w-12 h-1 bg-gold mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        </div>
+      </Link>
+    )
+  }
+
+  if (loading) return <div className="py-20 bg-black text-center text-gold">Loading Services...</div>
+
+  // return (
+  //   <section className="py-20 px-6 bg-black">
+  //     <div className="max-w-7xl mx-auto">
+  //       <div className="text-center mb-16">
+  //         <h2 className="text-4xl md:text-5xl font-display text-white mb-4">
+  //           Our <span className="text-gold">Services</span>
+  //         </h2>
+  //         <div className="w-12 h-1 bg-gold mx-auto mb-6" />
+  //       </div>
+
+  //       <div className="flex flex-col gap-8">
+  //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  //           {categories.slice(0, 3).map((cat) => renderCard(cat))}
+  //         </div>
+
+  //         <div className="flex flex-col md:flex-row justify-center gap-8">
+  //           {categories.slice(3, 5).map((cat) => renderCard(cat, true))}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </section>
+  // )
 
   return (
     <section className="py-20 px-6 bg-black">
@@ -90,72 +158,4 @@ export default function CategoriesSection() {
       </div>
     </section>
   )
-  //   return (
-  //     <Link 
-  //       key={category.id}
-  //       href={category.href}
-  //       className={"group relative overflow-hidden h-80 rounded-2xl shadow-xl transition-all duration-300 block bg-[#0a0a0a] " + (isWide ? 'w-full lg:w-1/2' : 'w-full')}
-  //     >
-  //       {/* ===== PHOTO LAYER ===== */}
-  //       {hasImage && (
-  //         <img
-  //           src={image}
-  //           alt={category.title}
-  //           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80"
-  //         />
-  //       )}
-
-  //       {/* ===== CENTERED PLUS BUTTON (ONLY IF NO IMAGE AND IS ADMIN) ===== */}
-  //       {!hasImage && isAdmin && (
-  //         <div className="absolute inset-0 flex items-center justify-center z-30">
-  //           <button
-  //             onClick={handleAddClick}
-  //             className="w-20 h-20 flex flex-col items-center justify-center rounded-full border-2 border-dashed border-gold text-gold text-4xl hover:bg-gold hover:text-black hover:border-solid transition-all transform hover:scale-110 shadow-2xl bg-black/40"
-  //           >
-  //             +
-  //           </button>
-  //         </div>
-  //       )}
-
-  //       {/* GRADIENT OVERLAY */}
-  //       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
-
-  //       {/* CONTENT */}
-  //       <div className="absolute inset-0 flex flex-col justify-end p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 z-20 pointer-events-none">
-  //         <h3 className="text-3xl font-display text-white mb-2">
-  //           {category.title}
-  //         </h3>
-  //         <p className="text-gray-200 text-sm font-lato opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-  //           {category.description}
-  //         </p>
-  //         <div className="w-12 h-1 bg-gold mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-  //       </div>
-  //     </Link>
-  //   )
-  // }
-
-  // if (loading) return <div className="py-20 bg-black text-center text-gold">Loading Services...</div>
-
-  // return (
-  //   <section className="py-20 px-6 bg-black">
-  //     <div className="max-w-7xl mx-auto">
-  //       <div className="text-center mb-16">
-  //         <h2 className="text-4xl md:text-5xl font-display text-white mb-4">
-  //           Our <span className="text-gold">Services</span>
-  //         </h2>
-  //         <div className="w-12 h-1 bg-gold mx-auto mb-6" />
-  //       </div>
-
-  //       <div className="flex flex-col gap-8">
-  //         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-  //           {categories.slice(0, 3).map((cat) => renderCard(cat))}
-  //         </div>
-
-  //         <div className="flex flex-col md:flex-row justify-center gap-8">
-  //           {categories.slice(3, 5).map((cat) => renderCard(cat, true))}
-  //         </div>
-  //       </div>
-  //     </div>
-  //   </section>
-  // )
-  //     }
+      }
