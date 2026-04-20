@@ -31,7 +31,7 @@ export default function CategoriesSection() {
     }
     fetchData()
   }, [])
-
+const videoRefs = {} 
   const handleAddClick = (e) => {
     e.preventDefault() 
     e.stopPropagation() 
@@ -53,31 +53,101 @@ export default function CategoriesSection() {
     { id: 5, title: 'Album Design', slot: 'album-design', href: '/album-design', description: 'Creative album layouts and custom designs' },
   ]
 
-  const renderCard = (category, isWide = false) => {
-    const image = getImageUrl(category.slot)
-    const hasImage = !!image
+  // const renderCard = (category, isWide = false) => {
+  //   const image = getImageUrl(category.slot)
+  //   const hasImage = !!image
+
+  //   return (
+  //     <Link 
+  //       key={category.id}
+  //       href={category.href}
+  //       className={"group relative overflow-hidden h-80 rounded-2xl shadow-xl transition-all duration-300 block bg-[#0a0a0a] " + (isWide ? 'w-full lg:w-1/2' : 'w-full')}
+  //     >
+  //       {/* ===== PHOTO LAYER ===== */}
+  //       {hasImage && (
+  //         <img
+  //           src={image}
+  //           alt={category.title}
+  //           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80"
+  //         />
+  //       )}
+
+  //       {/* ===== CENTERED PLUS BUTTON (ONLY IF NO IMAGE AND IS ADMIN) ===== */}
+  //       {!hasImage && isAdmin && (
+  //         <div className="absolute inset-0 flex items-center justify-center z-30">
+  //           <button
+  //             onClick={handleAddClick}
+  //             className="w-20 h-20 flex flex-col items-center justify-center rounded-full border-2 border-dashed border-gold text-gold text-4xl hover:bg-gold hover:text-black hover:border-solid transition-all transform hover:scale-110 shadow-2xl bg-black/40"
+  //           >
+  //             +
+  //           </button>
+  //         </div>
+  //       )}
+
+  //       {/* GRADIENT OVERLAY */}
+  //       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+
+  //       {/* CONTENT */}
+  //       <div className="absolute inset-0 flex flex-col justify-end p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 z-20 pointer-events-none">
+  //         <h3 className="text-3xl font-display text-white mb-2">
+  //           {category.title}
+  //         </h3>
+  //         <p className="text-gray-200 text-sm font-lato opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+  //           {category.description}
+  //         </p>
+  //         <div className="w-12 h-1 bg-gold mt-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+  //       </div>
+  //     </Link>
+  //   )
+  // }
+const renderCard = (category, isWide = false) => {
+    const mediaPath = getImageUrl(category.slot)
+    const hasMedia = !!mediaPath
+    // Check if the file extension is a video format
+    const isVideo = mediaPath?.match(/\.(mp4|webm|ogg)$/i)
 
     return (
       <Link 
         key={category.id}
         href={category.href}
+        onMouseEnter={(e) => {
+          const video = e.currentTarget.querySelector('video')
+          if (video) video.play()
+        }}
+        onMouseLeave={(e) => {
+          const video = e.currentTarget.querySelector('video')
+          if (video) {
+            video.pause()
+            video.currentTime = 0 // Optional: Reset to start
+          }
+        }}
         className={"group relative overflow-hidden h-80 rounded-2xl shadow-xl transition-all duration-300 block bg-[#0a0a0a] " + (isWide ? 'w-full lg:w-1/2' : 'w-full')}
       >
-        {/* ===== PHOTO LAYER ===== */}
-        {hasImage && (
-          <img
-            src={image}
-            alt={category.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80"
-          />
+        {/* ===== MEDIA LAYER ===== */}
+        {hasMedia && (
+          isVideo ? (
+            <video
+              src={mediaPath}
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80"
+            />
+          ) : (
+            <img
+              src={mediaPath}
+              alt={category.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 opacity-80"
+            />
+          )
         )}
 
-        {/* ===== CENTERED PLUS BUTTON (ONLY IF NO IMAGE AND IS ADMIN) ===== */}
-        {!hasImage && isAdmin && (
+        {/* ===== CENTERED PLUS BUTTON (ONLY IF NO MEDIA AND IS ADMIN) ===== */}
+        {!hasMedia && isAdmin && (
           <div className="absolute inset-0 flex items-center justify-center z-30">
             <button
               onClick={handleAddClick}
-              className="w-20 h-20 flex flex-col items-center justify-center rounded-full border-2 border-dashed border-gold text-gold text-4xl hover:bg-gold hover:text-black hover:border-solid transition-all transform hover:scale-110 shadow-2xl bg-black/40"
+              className="w-20 h-20 flex flex-col items-center justify-center rounded-full border-2 border-dashed border-gold text-gold text-4xl hover:bg-gold hover:text-black hover:border-solid transition-all transform hover:scale-110 shadow-2xl bg-black/40 pointer-events-auto"
             >
               +
             </button>
@@ -85,7 +155,7 @@ export default function CategoriesSection() {
         )}
 
         {/* GRADIENT OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent z-10 pointer-events-none" />
 
         {/* CONTENT */}
         <div className="absolute inset-0 flex flex-col justify-end p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 z-20 pointer-events-none">
@@ -100,7 +170,6 @@ export default function CategoriesSection() {
       </Link>
     )
   }
-
   if (loading) return <div className="py-20 bg-black text-center text-gold">Loading Services...</div>
 
 
