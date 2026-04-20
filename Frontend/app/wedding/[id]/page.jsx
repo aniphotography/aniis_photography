@@ -195,10 +195,7 @@ export default function AlbumGalleryPage() {
       {/* HERO SECTION WITH VIDEO */}
       <section className="relative h-[70vh] w-full overflow-hidden bg-black">
         <div className="absolute inset-0 w-full h-full">
-          <video autoPlay loop muted playsInline            autoPlay
-            loop
-            muted
-            playsInline
+          <video autoPlay loop muted playsInline
             className="w-full h-full object-cover opacity-50"
           >
             <source
@@ -236,7 +233,7 @@ export default function AlbumGalleryPage() {
       {/* MASONRY GRID */}
       <section className="px-6 py-20 bg-[#1a1a1a]">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[300px] gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[300px] gap-1">
             {album.images.map((image, index) => {
               const isLarge = index % 5 === 0
               const isWide = index % 5 === 3

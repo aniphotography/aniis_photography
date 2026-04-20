@@ -102,10 +102,10 @@ const handleSubmit = async (e) => {
                 <div>
                   <h3 className="text-gold font-display mb-2 text-lg">Email</h3>
                   <a
-                    href="mailto:mailaniiphotography@gmail.com"
+                    href="mailto:contact@aniiphotography.com"
                     className="text-gray-300 hover-gold-text font-lato"
                   >
-                    mailaniiphotography@gmail.com
+                    contact@aniiphotography.com
                   </a>
                 </div>
 
@@ -131,8 +131,6 @@ const handleSubmit = async (e) => {
                   <h3 className="text-gold font-display mb-2 text-lg">Calling Hours</h3>
                   <p className="text-gray-300 font-lato">
                     Monday - Friday: 9 AM - 9 PM
-                    <br />
-                    Saturday - Sunday: 10 AM - 9 PM
                     <br />
                   </p>
                 </div>
