@@ -17,6 +17,9 @@ export default function BlogDetailPage() {
   // ✅ NEW: media state
   const [media, setMedia] = useState([])
 
+  // ✅ NEW: admin login state
+  const [isAdmin, setIsAdmin] = useState(false)
+
   useEffect(() => {
     fetch(`${API}/api/collections/${id}`)
       .then(res => res.json())
@@ -29,6 +32,10 @@ export default function BlogDetailPage() {
       .then(data => setMedia(data))
       .catch(err => console.error(err))
 
+    // ✅ NEW: check admin login
+    const token = localStorage.getItem('adminToken')
+    setIsAdmin(!!token)
+
   }, [id])
 
   const handleAddClick = (type) => {
@@ -40,6 +47,41 @@ export default function BlogDetailPage() {
       router.push(`/admin/dashboard?category=blogs&id=${id}&type=${type}`)
     }
   }
+const handleWatchStory = () => {
+    // Dynamically check for a link in the blog data
+    // Replace 'video_url' or 'story_url' with the actual key from your backend
+    const storyLink = blog.video_url || blog.story_url;
+
+    if (storyLink) {
+      window.open(storyLink, '_blank', 'noopener,noreferrer');
+    } else {
+      alert("We are Eagerly Waiting to show you the Story. Working on It. Coming Very Soon.");
+    }
+  };
+
+  const handleShare = async () => {
+    const shareData = {
+      title: blog.title,
+      text: `Check out this story: ${blog.title}`,
+      url: window.location.href, // Dynamically gets the current page URL
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        console.log('Share cancelled or failed', err);
+      }
+    } else {
+      // Fallback for browsers that don't support native sharing
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard! Share it anywhere.');
+      } catch (err) {
+        alert('Could not copy link.');
+      }
+    }
+  };
 
   if (!blog) {
     return (
@@ -106,7 +148,7 @@ export default function BlogDetailPage() {
                   No content added yet.
                 </p>
 
-                <AddCard onClick={() => handleAddClick('content')} />
+                {isAdmin && <AddCard onClick={() => handleAddClick('content')} />}
               </>
             )}
 
@@ -141,9 +183,66 @@ export default function BlogDetailPage() {
             ))}
 
             {/* ➕ ADD IMAGE BUTTON */}
-            <AddCard onClick={() => handleAddClick('image')} />
+            {isAdmin && <AddCard onClick={() => handleAddClick('image')} />}
 
           </div>
+          {/* ✅ DYNAMIC ACTION BUTTONS - PLACED AT THE END OF CONTENT */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-20 mb-10 border-t border-white/10 pt-12">
+            
+            {/* Watch Story Button */}
+            <button
+              onClick={() => {
+                // Change 'story_url' to match your database field name
+                const storyLink = blog.story_url || blog.video_url;
+                if (storyLink) {
+                  window.open(storyLink, '_blank', 'noopener,noreferrer');
+                } else {
+                  alert("We are Eagerly Waiting to show you the Story. Working on It. Coming Very Soon.");
+                }
+              }}
+              className="group relative flex items-center justify-center px-8 py-4 bg-white text-black rounded-full transition-all hover:scale-105 active:scale-95 w-full sm:w-64"
+            >
+              <span className="font-display font-bold uppercase tracking-widest text-sm">
+                Watch Story
+              </span>
+              <svg className="w-4 h-4 ml-2 fill-current" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </button>
+
+            {/* Share Story Button */}
+            <button
+              onClick={async () => {
+                const shareData = {
+                  title: blog.title,
+                  text: `Check out this story: ${blog.title}`,
+                  url: window.location.href,
+                };
+
+                if (navigator.share) {
+                  try {
+                    await navigator.share(shareData);
+                  } catch (err) {
+                    console.log('Share cancelled');
+                  }
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert('Link copied to clipboard!');
+                }
+              }}
+              className="flex items-center justify-center px-8 py-4 border border-white/30 text-white rounded-full transition-all hover:bg-white/10 hover:border-white active:scale-95 w-full sm:w-64"
+            >
+              <span className="font-display font-bold uppercase tracking-widest text-sm">
+                Share Story
+              </span>
+              <svg className="w-4 h-4 ml-2 stroke-current fill-none" viewBox="0 0 24 24" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                <polyline points="16 6 12 2 8 6" />
+                <line x1="12" y1="2" x2="12" y2="15" />
+              </svg>
+            </button>
+
+</div>
 
           {/* ❌ OLD SECTION (KEPT INTACT BUT HIDDEN) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 hidden">

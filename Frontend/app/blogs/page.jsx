@@ -12,6 +12,13 @@ export default function BlogsPage() {
 
   const [blogs, setBlogs] = useState([])
   const router = useRouter()
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  // Check admin status
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken')
+    setIsAdmin(!!token)
+  }, [])
 
   // 🔥 FETCH BLOGS FROM COLLECTIONS
   const fetchBlogs = () => {
@@ -80,7 +87,7 @@ export default function BlogsPage() {
           ))}
 
           {/* ➕ ADD CARD */}
-          <AddCard handleAddClick={handleAddClick} />
+          {isAdmin && <AddCard handleAddClick={handleAddClick} />}
 
         </div>
       </section>
