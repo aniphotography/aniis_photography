@@ -124,88 +124,73 @@ export default function AlbumDesignPage() {
 
       {/* ================= FLIPBOOK ================= */}
 
-      <section className="py-24 flex justify-center">
-
-        {mounted && previewLoaded && (
-
-          <HTMLFlipBook
-            width={500}
-            height={600}
-            showCover={true}
-            flippingTime={800}
-            ref={bookRef}
-          >
-
-            {/* COVER */}
-
-           <div className="page bg-gold border-r border-black/20 shadow-inner">
-  <div className="flex h-full w-full items-center justify-center p-10 text-center">
-    <h2 className="text-black text-2xl md:text-3xl font-display leading-tight uppercase">
-     PREMIUM COLLECTION
-    </h2>
-  </div>
-</div>
-
-
-            {/* * PAGES */}
-
-            {previewPages.length > 0 ? (
-
-              previewPages.map((img, i) => (
-
-                <div key={i} className="page bg-white">
-
-                  <img
-                    src={getMediaUrl(img.image_url)}
-                    className="w-full h-full object-cover"
-                  />
-
-                </div>
-
-              ))
-
-            ) : (
-
-              <div
-                onClick={handleInsertPreview}
-                className="page bg-black flex items-center justify-center text-gold text-5xl cursor-pointer"
-              >
-                +
-              </div>
-
-            )}
-
-
-            {/* BACK */}
-
-            <div className="page bg-black border-l border-white/10">
-  <div className="flex h-full w-full flex-col items-center justify-center text-center p-8">
-    
-    {/* Main Message */}
-     <h3 className="text-yellow-400 text-3xl font-display mb-3 tracking-widest uppercase drop-shadow-[0_2px_10px_rgba(250,204,21,0.3)]">
-      Explore More
-    </h3> 
-    
-    {/* Decorative Divider */}
-     <div className="w-16 h-[2px] bg-yellow-400/50 mb-5" /> 
-    
-    {/* Brand Name */}
-     <p className="text-yellow-500/80 text-[11px] tracking-[0.6em] uppercase font-medium">
-      Anii Photography
-    </p>
-
-  </div>
-</div> 
-
-
-
-          </HTMLFlipBook>
-
+     <section className="py-24 flex justify-center">
+  {mounted && previewLoaded && (
+    <HTMLFlipBook
+      /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
+      width={1200}
+      height={400}
+      size="stretch" // Allows the book to scale properly
+      minWidth={300}
+      maxWidth={1500}
+      minHeight={100}
+      maxHeight={500}
+      showCover={true}
+      flippingTime={800}
+      ref={bookRef}
+      className="shadow-2xl"
+    >
+      {/* FRONT COVER - First Image with Overlay */}
+      <div className="page relative bg-black overflow-hidden">
+        {previewPages.length > 0 && (
+          <img
+            src={getMediaUrl(previewPages[0].image_url)}
+            className="w-full h-full object-cover opacity-60"
+          />
         )}
+        <div className="absolute inset-0 flex items-center justify-center p-10 bg-black/20">
+          <h2 className="text-gold text-4xl md:text-5xl font-display leading-tight uppercase tracking-[0.2em]">
+            PREMIUM COLLECTION
+          </h2>
+        </div>
+      </div>
 
-      </section>
+      {/* INNER PAGES (Middle of the deck) */}
+      {previewPages.slice(1, -1).map((img, i) => (
+        <div key={i} className="page bg-white overflow-hidden">
+          <img
+            src={getMediaUrl(img.image_url)}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ))}
 
+      {/* BACK COVER - Last Image with Overlay */}
+      <div className="page relative bg-black overflow-hidden">
+        {previewPages.length > 1 && (
+          <img
+            src={getMediaUrl(previewPages[previewPages.length - 1].image_url)}
+            className="w-full h-full object-cover opacity-60"
+          />
+        )}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-black/30">
+          <h3 className="text-yellow-400 text-4xl font-display mb-3 tracking-widest uppercase">
+            Explore More
+          </h3>
+          <div className="w-24 h-[1px] bg-gold/50 mb-6" />
+          <p className="text-yellow-500/80 text-xs tracking-[0.8em] uppercase font-medium">
+            Anii Photography
+          </p>
+        </div>
+      </div>
+    </HTMLFlipBook>
+  )}
+</section>
 
+<h6 className="text-3xl md:text-5xl font-display text-center py-20">
+  We don't just design <span className="text-gold italic">albums</span>, 
+  We Create <span className="text-gold italic">Stories</span>
+</h6>
       {/* ================= FEATURED ALBUMS ================= */}
 
       <section className="py-20 px-6">

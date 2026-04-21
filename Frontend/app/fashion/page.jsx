@@ -329,7 +329,7 @@ export default function FashionPage() {
       {/* HEADER */}
       <section className="pt-36 pb-12 px-6 text-center">
         <h1 className="text-5xl md:text-7xl font-display mb-4">
-          <span className="text-gold italic">Fashion</span> Editorial
+          <span className="text-gold italic">Fashion</span> Collections
         </h1>
         <p className="text-gray-500 text-xs tracking-[0.4em] uppercase">
           The Motion Collection

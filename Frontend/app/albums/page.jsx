@@ -125,7 +125,7 @@ export default function AlbumsPage() {
       {/* HEADER */}
       <section className="pt-40 pb-10 px-6 text-center">
         <h1 className="text-6xl md:text-8xl font-display mb-6 tracking-tight">
-          <span className="text-[#d4af37]">Photo</span> Albums
+          <span className="text-[#d4af37]">Projects by</span> ANII
         </h1>
       </section>
 
