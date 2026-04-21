@@ -678,7 +678,9 @@ export default function AdminDashboard() {
   const [recentCover, setRecentCover] = useState(null)
   const [recentVideo, setRecentVideo] = useState(null)
   const [recentCoverVideo, setRecentCoverVideo] = useState(null)
-
+  // Add this state at the top with other states:
+const [isFeatured, setIsFeatured] = useState(false)
+const [featuredSlot, setFeaturedSlot] = useState('')
   const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null
 
   /* FETCH HOME CONTENT */
@@ -697,6 +699,17 @@ export default function AdminDashboard() {
       .catch(err => console.error("Error loading home content", err))
   }, [])
 
+const setFeaturedStatus = async (collectionId, isFeat, slot) => {
+  if (!isFeat) return
+  await fetch(`${API}/api/collections/${collectionId}/featured`, {
+    method: 'PATCH',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ is_featured: isFeat, featured_slot: parseInt(slot) })
+  })
+}
   /* UPLOAD HOME PHOTO */
   const uploadHomePagePhoto = async (e) => {
     e.preventDefault()
@@ -883,7 +896,14 @@ export default function AdminDashboard() {
       headers: { Authorization: `Bearer ${token}` },
       body: formData
     })
-    if (res.ok) { alert("Featured Collection created"); window.location.reload() }
+    if (res.ok) {
+  const newCollection = await res.json()
+  if (isFeatured && featuredSlot) {
+    await setFeaturedStatus(newCollection.id, true, featuredSlot)
+  }
+  alert("Featured Collection created")
+  window.location.reload()
+}
     else alert("Failed")
   }
 
@@ -984,6 +1004,38 @@ export default function AdminDashboard() {
                 <input type="file" onChange={e => setFeaturedVideo(e.target.files[0])} />
               </>
             )}
+            {(category === 'wedding' || category === 'pre-wedding' || 
+  category === 'fashion' || category === 'video-production' || 
+  category === 'blogs') && (
+  <div className="border border-gold/30 p-4 mt-4 bg-black/30 rounded">
+    <h4 className="text-gold text-sm mb-3 uppercase tracking-widest">
+      Homepage Signature Collection
+    </h4>
+    <label className="flex items-center gap-3 cursor-pointer mb-3">
+      <input
+        type="checkbox"
+        checked={isFeatured}
+        onChange={e => setIsFeatured(e.target.checked)}
+        className="w-4 h-4 accent-yellow-400"
+      />
+      <span className="text-white text-sm">
+        Show in Homepage Signature Collections
+      </span>
+    </label>
+    {isFeatured && (
+      <select
+        value={featuredSlot}
+        onChange={e => setFeaturedSlot(e.target.value)}
+        className="w-full p-3 bg-gray-800 border border-gold/20 text-white"
+      >
+        <option value="">Select Slot (1, 2, or 3)</option>
+        <option value="1">Slot 1 (Left)</option>
+        <option value="2">Slot 2 (Center)</option>
+        <option value="3">Slot 3 (Right)</option>
+      </select>
+    )}
+  </div>
+)}
             <button onClick={createFeaturedCollection} className="bg-gold text-black px-6 py-3 mt-3">Create Featured</button>
           </div>
 
@@ -1196,7 +1248,48 @@ export default function AdminDashboard() {
           ))}
         </div>
       </div>
-
+{/* MANAGE FEATURED COLLECTIONS */}
+<div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl">
+  <h2 className="text-2xl text-gold mb-6">Homepage Signature Collections</h2>
+  <p className="text-gray-400 text-sm mb-6">
+    Select which collections appear in the Homepage Signature section. Maximum 3 slots available.
+  </p>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {[1, 2, 3].map(slot => (
+      <div key={slot} className="border border-gold/20 p-4 bg-black/30 rounded">
+        <h3 className="text-gold mb-3 text-sm uppercase">Slot {slot}</h3>
+        <select
+          className="w-full p-3 bg-gray-800 text-white text-sm"
+          onChange={async (e) => {
+            const collId = e.target.value
+            if (!collId) return
+            await fetch(`${API}/api/collections/${collId}/featured`, {
+              method: 'PATCH',
+              headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ is_featured: true, featured_slot: slot })
+            })
+            alert(`Slot ${slot} updated!`)
+          }}
+        >
+          <option value="">— Select a Collection —</option>
+          {collections
+            .filter(c => c.category !== 'album-design')
+            .map(c => (
+              <option key={c.id} value={c.id}>
+                {c.title} ({c.category})
+              </option>
+            ))}
+        </select>
+      </div>
+    ))}
+  </div>
+  <p className="text-gray-500 text-xs mt-4">
+    * Selecting a collection for a slot will automatically remove any previous collection from that slot.
+  </p>
+</div>
       {/* CREATE COLLECTION */}
       <div className="border p-8">
         <h2>Create Collection</h2>

@@ -156,5 +156,50 @@ exports.deleteCollection = async (req, res) => {
     res.status(500).json({ message: "Delete failed" })
 
   }
-
 }
+/* ================= UPDATE FEATURED STATUS ================= */
+exports.updateFeaturedStatus = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { is_featured, featured_slot } = req.body
+
+    // If setting as featured, clear any existing collection in that slot first
+    if (is_featured && featured_slot) {
+      await pool.query(
+        `UPDATE collections SET is_featured = FALSE, featured_slot = NULL 
+         WHERE featured_slot = $1 AND id != $2`,
+        [featured_slot, id]
+      )
+    }
+
+    const result = await pool.query(
+      `UPDATE collections 
+       SET is_featured = $1, featured_slot = $2 
+       WHERE id = $3 
+       RETURNING *`,
+      [is_featured, is_featured ? featured_slot : null, id]
+    )
+
+    res.json(result.rows[0])
+  } catch (err) {
+    console.error("UPDATE FEATURED ERROR:", err)
+    res.status(500).json({ message: err.message })
+  }
+}
+
+/* ================= GET FEATURED COLLECTIONS ================= */
+exports.getFeaturedCollections = async (req, res) => {
+  try {
+    const result = await pool.query(
+      `SELECT id, title, category, cover_image, featured_slot 
+       FROM collections 
+       WHERE is_featured = TRUE 
+       ORDER BY featured_slot ASC`
+    )
+    res.json(result.rows)
+  } catch (err) {
+    console.error("GET FEATURED ERROR:", err)
+    res.status(500).json({ message: err.message })
+  }
+}
+
