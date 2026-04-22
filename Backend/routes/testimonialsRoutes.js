@@ -1,19 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
+const cloudinary = require('../config/cloudinary'); // Import your cloudinary config
 const TestimonialController = require('../controllers/testimonialsController');
 
-// Configure Multer for local storage
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/');
-    },
-    filename: (req, file, cb) => {
-        cb(null, `testi-${Date.now()}${path.extname(file.originalname)}`);
-    }
-});
-
+// 1. SWITCH TO MEMORY STORAGE (No more ENOENT errors on Render)
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // GET: Fetch all
@@ -26,12 +18,29 @@ router.get('/', async (req, res) => {
     }
 });
 
-// POST: Create with Image
+// POST: Create with Cloudinary Upload
 router.post('/', upload.single('image'), async (req, res) => {
     try {
         const { author_name, quote } = req.body;
-        // Construct the URL path for the database
-        const image_url = req.file ? `uploads/${req.file.filename}` : null;
+        let image_url = null;
+
+        if (req.file) {
+            // 2. UPLOAD DIRECTLY TO CLOUDINARY FROM RAM
+            const result = await new Promise((resolve, reject) => {
+                const uploadStream = cloudinary.uploader.upload_stream(
+                    { folder: 'nanii_testimonials' },
+                    (error, uploadedFile) => {
+                        if (error) reject(error);
+                        else resolve(uploadedFile);
+                    }
+                );
+                // Send the file buffer to Cloudinary
+                uploadStream.end(req.file.buffer);
+            });
+
+            // 3. USE THE CLOUDINARY HTTPS URL
+            image_url = result.secure_url;
+        }
 
         const newTestimonial = await TestimonialController.create({
             author_name,
@@ -41,6 +50,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 
         res.status(201).json(newTestimonial);
     } catch (err) {
+        console.error("Upload Error:", err);
         res.status(500).json({ message: err.message });
     }
 });
