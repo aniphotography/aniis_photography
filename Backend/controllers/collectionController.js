@@ -38,7 +38,7 @@ exports.getCollectionsByCategory = async (req, res) => {
 
     // 3. Added youtube_url to the SELECT lists so the frontend can see the link in lists
     if (category) {
-      let query = `SELECT id, title, category, section, cover_image, cover_video, youtube_url, date
+      let query = `SELECT id, title, category, section, cover_image, cover_video, video_url, youtube_url, date
                    FROM collections
                    WHERE category=$1`
       const params = [category]
@@ -55,7 +55,7 @@ exports.getCollectionsByCategory = async (req, res) => {
     }
 
     const result = await pool.query(
-      `SELECT id, title, category, section, cover_image, cover_video, youtube_url, date
+      `SELECT id, title, category, section, cover_image, cover_video, video_url, youtube_url, date
        FROM collections
        ORDER BY created_at DESC`
     )
