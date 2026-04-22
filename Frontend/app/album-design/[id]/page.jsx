@@ -274,7 +274,7 @@ const showPrevImage = (e) => {
   </div>
 </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-2">
+{/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-2">
   {pages.map((page, idx) => {
     const isLarge = idx % 7 === 0;
     const isWide = idx % 7 === 3;
@@ -301,6 +301,48 @@ const showPrevImage = (e) => {
             </span>
             <span className="text-[#d4af37] text-[10px] tracking-widest">
               PAGE {idx + 1}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div> */}
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-2">
+  {/* .slice(1) starts the loop from the second photo */}
+  {pages.slice(1).map((page, idx) => {
+    
+    // We use 'idx' from the sliced array so the layout logic 
+    // stays consistent (the new first photo becomes the 'Large' one)
+    const isLarge = idx % 7 === 0;
+    const isWide = idx % 7 === 3;
+
+    return (
+      <div
+        key={idx}
+        className={`group relative overflow-hidden cursor-pointer bg-black transition-all duration-500
+          ${isLarge ? 'md:row-span-2' : ''}
+          ${isWide ? 'md:col-span-2' : ''}
+        `}
+        /* Crucial: We add +1 to the index in the click handler 
+           so that the lightbox/viewer still opens the correct image 
+        */
+        onClick={() => setSelectedImageIndex(idx + 1)}
+      >
+        <img
+          src={page}
+          alt={`Page ${idx + 2}`}
+          className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
+        />
+
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center">
+          <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center">
+            <span className="text-white text-xs tracking-[0.4em] uppercase border-b border-[#d4af37] pb-2 mb-2">
+              View Frame
+            </span>
+            <span className="text-[#d4af37] text-[10px] tracking-widest">
+              {/* Added +2 because we skipped index 0 and index starts at 0 */}
+              PAGE {idx + 2}
             </span>
           </div>
         </div>
