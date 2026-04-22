@@ -204,10 +204,22 @@ const [testimonials, setTestimonials] = useState([])
       router.push('/admin/dashboard?category=wedding')
     }
   }
-  const getMediaUrl = (path) => {
-  if (!path) return "/placeholder-image.jpg"; // Helps see if the path is missing
-  if (path.startsWith('http')) return path;
-  return `${API}${path.startsWith('/') ? '' : '/'}${path}`;
+//   const getMediaUrl = (path) => {
+//   if (!path) return "/placeholder-image.jpg"; // Helps see if the path is missing
+//   if (path.startsWith('http')) return path;
+//   return `${API}${path.startsWith('/') ? '' : '/'}${path}`;
+// };
+const getMediaUrl = (path) => {
+  if (!path) return "/placeholder-image.jpg";
+
+  // If the path is already a full Cloudinary URL, just return it
+  if (path.startsWith('http')) {
+    return path;
+  }
+
+  // Otherwise, fall back to your local/deployed API path
+  const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+  return `${API}/${path}`;
 };
 async function getTestimonials() {
   // Use the env variable if it exists, otherwise default to your local backend port
