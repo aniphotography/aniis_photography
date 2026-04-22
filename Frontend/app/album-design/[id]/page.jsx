@@ -102,33 +102,41 @@ const showPrevImage = (e) => {
 
       {/* <section className="relative h-96 md:h-[500px] overflow-hidden"> */}
 <section className="relative h-60 md:h-[370px] overflow-hidden">
-        {album.video_url && (
-          <video autoPlay muted loop className="absolute inset-0 w-full h-full object-cover">
-            <source
-              src={getMediaUrl(album.video_url)}
-              type="video/mp4"
-            />
-          </video>
-        )}
+  {pages.length > 0 && (
+    <>
+      {/* LAYER 1: The ultra-blurred background layer (the "Haze") */}
+      <img 
+        src={pages[0]} 
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover scale-150 blur-xl opacity-50"
+      />
 
-        <div className="absolute inset-0 bg-black/50" />
+      {/* LAYER 2: The sharp, central focus layer (The "Cut Size") */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <img 
+          src={pages[0]} 
+          alt="Album Cover Focus"
+          /* 'object-contain' ensures the image is NEVER stretched.
+            'h-[110%]' scales it just enough to overlap the top/bottom slightly
+            'mx-auto' keeps it central in the 3:1 frame.
+          */
+          className="h-[110%] w-auto max-w-[90%] object-contain mx-auto drop-shadow-2xl"
+        />
+      </div>
+    </>
+  )}
 
-        <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
+  {/* EXISTING LAYERS (Overlay and Text) */}
+  <div className="absolute inset-0 bg-black/50" />
 
-          <h1 className="text-5xl md:text-6xl font-display mb-4">
-            {album.title}
-            <span className="text-gold"> Album</span>
-          </h1>
-
-          <p className="text-gray-300 text-lg">
-            Year: {album.date}
-          </p>
-
-        </div>
-
-      </section>
-
-
+  <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
+    <h1 className="text-5xl md:text-6xl font-display mb-4 text-white">
+      {album.title}
+      <span className="text-gold"> Album</span>
+    </h1>
+    <p className="text-gray-300 text-lg">Year: {album.date}</p>
+  </div>
+</section>
       <section className="py-20 px-6">
 
         <div className="max-w-7xl mx-auto">
@@ -146,67 +154,66 @@ const showPrevImage = (e) => {
           <div className="flex flex-col items-center mb-20">
 
             <HTMLFlipBook
-              width={400}
-              height={500}
-              showCover={true}
-              flippingTime={800}
-              ref={bookRef}
-            >
-
-              {/* FRONT COVER */}
-
-              {/* <div className="page bg-gold flex items-center justify-center text-black text-3xl font-display">
-                {album.title}
-              </div> */}
-<div className="page bg-gold border-r border-black/20 shadow-inner">
-  <div className="flex h-full w-full items-center justify-center p-10 text-center">
-    <h2 className="text-black text-2xl md:text-3xl font-display leading-tight uppercase">
-      {album.title}
-    </h2>
+  /* 3:1 Ratio: Width 1200 / Height 400 */
+  width={1200} 
+  height={400}
+  size="stretch" 
+  minWidth={300}
+  maxWidth={1800} // Increased to allow for the wide span
+  minHeight={100}
+  maxHeight={600}
+  showCover={true}
+  flippingTime={800}
+  ref={bookRef}
+  className="shadow-2xl"
+>
+  {/* FRONT COVER */}
+  <div className="page relative bg-black overflow-hidden">
+    {pages.length > 1 && (
+      <img
+        src={pages[1]}
+        className="w-full h-full object-cover opacity-60"
+        alt="Cover"
+      />
+    )}
+    <div className="absolute inset-0 flex items-center justify-center p-10 bg-black/20">
+      <h2 className="text-gold text-4xl md:text-6xl font-display leading-tight uppercase tracking-[0.3em] text-center">
+        {album.title}
+      </h2>
+    </div>
   </div>
-</div>
 
-              {/* PHOTO PAGES */}
+  {/* INNER PHOTO PAGES - These will now appear as wide spreads */}
+  {pages.slice(1, -1).map((url, index) => (
+    <div key={index} className="page bg-white overflow-hidden">
+      <img
+        src={url}
+        className="w-full h-full object-cover"
+        alt={`Page ${index + 1}`}
+      />
+    </div>
+  ))}
 
-              {pages.map((url, index) => (
-
-                <div key={index} className="page bg-white">
-
-                  <img
-                    src={url}
-                    className="w-full h-full object-cover"
-                  />
-
-                </div>
-
-              ))}
-
-
-              {/* BACK COVER */}
-
-              {/* <div className="page bg-black flex items-center justify-center text-gold text-xl">
-                Fin.
-              </div> */}
-<div className="page bg-black border-l border-white/10">
-  <div className="flex h-full w-full flex-col items-center justify-center text-center p-8">
-    
-    {/* Main Message */}
-    <h3 className="text-yellow-400 text-3xl font-display mb-3 tracking-widest uppercase drop-shadow-[0_2px_10px_rgba(250,204,21,0.3)]">
-      Thank You
-    </h3>
-    
-    {/* Decorative Divider */}
-    <div className="w-16 h-[2px] bg-yellow-400/50 mb-5" />
-    
-    {/* Brand Name */}
-    <p className="text-yellow-500/80 text-[11px] tracking-[0.6em] uppercase font-medium">
-      Anii's Photography
-    </p>
-
+  {/* BACK COVER */}
+  <div className="page relative bg-black overflow-hidden">
+    {pages.length > 1 && (
+      <img
+        src={pages[pages.length - 1]}
+        className="w-full h-full object-cover opacity-60"
+        alt="Back Cover"
+      />
+    )}
+    <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-black/40">
+      <h3 className="text-yellow-400 text-4xl font-display mb-3 tracking-[0.4em] uppercase">
+        Thank You
+      </h3>
+      <div className="w-32 h-[1px] bg-gold/50 mb-6" />
+      <p className="text-yellow-500/80 text-sm tracking-[0.8em] uppercase font-medium">
+        Anii Photography
+      </p>
+    </div>
   </div>
-</div>
-            </HTMLFlipBook>
-
+</HTMLFlipBook>
 
             {/* NAV BUTTONS */}
 
@@ -267,42 +274,41 @@ const showPrevImage = (e) => {
   </div>
 </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-8">
-            {pages.map((page, idx) => {
-              const isLarge = idx % 7 === 0;
-              const isWide = idx % 7 === 3;
+<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-2">
+  {pages.map((page, idx) => {
+    const isLarge = idx % 7 === 0;
+    const isWide = idx % 7 === 3;
 
-              return (
-                <div
-                  key={idx}
-                  className={`group relative overflow-hidden cursor-pointer bg-black shadow-2xl transition-all duration-500
-                    ${isLarge ? 'md:row-span-2' : ''}
-                    ${isWide ? 'md:col-span-2' : ''}
-                  `}
-                  onClick={() => setSelectedImageIndex(idx)}
-                >
-                  <img
-                    src={page}
-                    alt={`Page ${idx + 1}`}
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 group-hover:opacity-60"
-                  />
+    return (
+      <div
+        key={idx}
+        className={`group relative overflow-hidden cursor-pointer bg-black transition-all duration-500
+          ${isLarge ? 'md:row-span-2' : ''}
+          ${isWide ? 'md:col-span-2' : ''}
+        `}
+        onClick={() => setSelectedImageIndex(idx)}
+      >
+        <img
+          src={page}
+          alt={`Page ${idx + 1}`}
+          className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
+        />
 
-                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center">
-                    <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center">
-                      <span className="text-white text-xs tracking-[0.4em] uppercase border-b border-[#d4af37] pb-2 mb-2">
-                        View Frame
-                      </span>
-                      <span className="text-[#d4af37] text-[10px] tracking-widest">
-                        PAGE {idx + 1}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-</div>
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center">
+          <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center">
+            <span className="text-white text-xs tracking-[0.4em] uppercase border-b border-[#d4af37] pb-2 mb-2">
+              View Frame
+            </span>
+            <span className="text-[#d4af37] text-[10px] tracking-widest">
+              PAGE {idx + 1}
+            </span>
+          </div>
         </div>
-
+      </div>
+    );
+  })}
+</div>
+</div>
       </section>
 
 
