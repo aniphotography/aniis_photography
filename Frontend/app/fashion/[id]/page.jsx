@@ -237,7 +237,7 @@ export default function FashionDetailPage() {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-12">
             <span className="text-[10px] tracking-[0.3em] uppercase text-gray-500">
-              Video Editorial
+              Video Collections
             </span>
             <div className="h-[1px] flex-1 bg-white/10"></div>
           </div>

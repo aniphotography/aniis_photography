@@ -167,39 +167,39 @@ export default function AlbumGalleryPage() {
 
     
       {/* MASONRY GRID */}
-      <section className="px-6 py-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-8">
-            {album.images.map((image, index) => {
-              const isLarge = index % 7 === 0
-              const isWide = index % 7 === 3
+     <section className="px-6 py-24 bg-black"> {/* Added bg-black to keep it consistent */}
+  <div className="max-w-7xl mx-auto">
+    {/* Changed gap-8 to gap-1 to match your previous section */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-1">
+      {album.images.map((image, index) => {
+        const isLarge = index % 7 === 0
+        const isWide = index % 7 === 3
 
-              return (
-                <div
-                  key={image.id}
-                  className={`group relative overflow-hidden cursor-pointer bg-black
-                    ${isLarge ? 'md:row-span-2' : ''}
-                    ${isWide ? 'md:col-span-2' : ''}
-                  `}
-                  onClick={() => setSelectedImageIndex(index)}
-                >
-                  <img
-                    src={getMediaUrl(image.image_url)}
-                    alt={image.caption}
-                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                     <span className="text-white text-xs tracking-[0.3em] uppercase border-b border-[#d4af37] pb-2">
-                        View Frame
-                     </span>
-                  </div>
-                </div>
-              )
-            })}
+        return (
+          <div
+            key={image.id}
+            className={`group relative overflow-hidden cursor-pointer bg-black
+              ${isLarge ? 'md:row-span-2' : ''}
+              ${isWide ? 'md:col-span-2' : ''}
+            `}
+            onClick={() => setSelectedImageIndex(index)}
+          >
+            <img
+              src={getMediaUrl(image.image_url)}
+              alt={image.caption}
+              className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
+            />
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+               <span className="text-white text-xs tracking-[0.3em] uppercase border-b border-[#d4af37] pb-2">
+                 View Frame
+               </span>
+            </div>
           </div>
-        </div>
-      </section>
-
+        )
+      })}
+    </div>
+  </div>
+</section>
       {/* LIGHTBOX */}
       {activeImage && (
         <div
@@ -247,11 +247,12 @@ export default function AlbumGalleryPage() {
               </button>
 
               {/* --- ACTUAL IMAGE --- */}
-              <img
-                src={`${API_BASE}${activeImage.image_url}`}
-                className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
-                alt="Gallery View"
-              />
+           {/* --- ACTUAL IMAGE --- */}
+<img
+  src={getMediaUrl(activeImage.image_url)} // Use the helper here too!
+  className="w-full h-auto max-h-[85vh] object-contain shadow-2xl transition-all duration-300"
+  alt="Gallery View"
+/>
               
               <div className="mt-4 text-center">
                 {activeImage.caption && (
