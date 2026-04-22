@@ -2,6 +2,7 @@ import Navbar from '@/components/Navbar'
 import HeroSection from '@/components/HeroSection'
 import FeaturedSection from '@/components/FeaturedSection'
 import CategoriesSection from '@/components/CategoriesSection'
+import WhyAniiPhotography from '@/components/WhyAniiPhotography'
 import Footer from '@/components/Footer'
 
 export default function Page() {
@@ -11,6 +12,7 @@ export default function Page() {
       <HeroSection />
       <FeaturedSection />
       <CategoriesSection />
+      <WhyAniiPhotography />
       <Footer />
     </main>
   )

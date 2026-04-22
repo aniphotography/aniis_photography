@@ -116,7 +116,21 @@ export default function PreWeddingPage() {
           </div>
         </div>
       </section>
-
+{/* Quote */}
+<div className="w-full py-16 text-center bg-black">
+  <div className="max-w-4xl mx-auto px-6">
+    <p className="text-white text-xl md:text-3xl font-medium tracking-[0.25em] uppercase leading-relaxed">
+      Every great love story <br className="hidden md:block" /> deserves a <span style={{ color: "#d4af37" }}>prologue.</span>
+    </p>
+    
+    {/* The Straight Line Divider */}
+    <div className="h-[1px] w-32 bg-[#d4af37]/50 mx-auto my-8"></div>
+    
+    <p className="text-white text-sm md:text-base font-light tracking-[0.4em] uppercase opacity-70">
+      We just happen to film yours.
+    </p>
+  </div>
+</div>
       {/* ===== RECENT WORKS ===== */}
       <section className="py-20 px-6 bg-black">
         <div className="max-w-7xl mx-auto">
