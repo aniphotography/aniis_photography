@@ -58,7 +58,91 @@ const [recentYoutubeUrl, setRecentYoutubeUrl] = useState('')
   const [blogYoutubeUrl, setBlogYoutubeUrl] = useState('')
 const [fashionYoutubeUrl, setFashionYoutubeUrl] = useState('')
 
+
+
+// Inside AdminDashboard function
+const [testimonials, setTestimonials] = useState([]);
+const [testiAuthor, setTestiAuthor] = useState('');
+const [testiQuote, setTestiQuote] = useState('');
+const [testiImage, setTestiImage] = useState(null); // If you want to upload a couple photo
   const token = typeof window !== 'undefined' ? localStorage.getItem('adminToken') : null
+/* FETCH TESTIMONIALS */
+useEffect(() => {
+  fetch(`${API}/api/testimonials`)
+    .then(res => res.json())
+    .then(data => { if (Array.isArray(data)) setTestimonials(data) })
+    .catch(err => console.error("Error loading testimonials", err));
+}, []);
+
+/* UPLOAD TESTIMONIAL */
+const uploadTestimonial = async (e) => {
+  e.preventDefault();
+
+  // 1. Define the API base (Uses .env variable or defaults to localhost)
+  const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
+
+  // 2. Validation: Ensure required fields are not empty
+  if (!testiAuthor || !testiQuote) {
+    alert("Please provide both the names and the quote.");
+    return;
+  }
+
+  // 3. Prepare FormData for file upload
+  const formData = new FormData();
+  formData.append('author_name', testiAuthor);
+  formData.append('quote', testiQuote);
+  
+  // Only append image if one was selected
+  if (testiImage) {
+    formData.append('image', testiImage); 
+  }
+
+  try {
+    // 4. Send the POST request
+    const response = await fetch(`${API}/api/testimonials`, {
+      method: 'POST',
+      body: formData,
+      // Note: Do NOT set Content-Type header when using FormData
+      // If your routes are protected, uncomment the line below:
+      // headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.ok) {
+      const newTesti = await response.json();
+
+      // 5. Update the UI state immediately
+      setTestimonials((prev) => [newTesti, ...prev]);
+
+      // 6. Clear the form inputs
+      setTestiAuthor('');
+      setTestiQuote('');
+      setTestiImage(null);
+      
+      // Optional: Success message
+      console.log("Testimonial uploaded successfully!");
+    } else {
+      const errorData = await response.json();
+      alert(`Upload failed: ${errorData.message || "Unknown error"}`);
+    }
+  } catch (error) {
+    console.error("Network Error during upload:", error);
+    alert("Could not connect to the server. Please check if the backend is running.");
+  }
+};
+/* DELETE TESTIMONIAL */
+const deleteTestimonial = async (id) => {
+  if (!confirm("Delete this testimonial?")) return;
+  const res = await fetch(`${API}/api/testimonials/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  if (res.ok) {
+    setTestimonials(prev => prev.filter(t => t.id !== id));
+  }
+};
+
+
+
 
   /* FETCH HOME CONTENT */
   useEffect(() => {
@@ -665,6 +749,65 @@ const renderCreateInputs = () => {
         </div>
       </div>
 
+{/* WEDDING TESTIMONIALS MANAGEMENT */}
+<div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
+  <h2 className="text-2xl text-gold mb-6 font-serif">Wedding Testimonials</h2>
+  
+  <form onSubmit={uploadTestimonial} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-4">
+      <input 
+        type="text" 
+        placeholder="Couple Names (e.g. Sarah & Marc)" 
+        className="w-full p-3 bg-gray-800 border border-white/10" 
+        value={testiAuthor} 
+        onChange={e => setTestiAuthor(e.target.value)} 
+      />
+      <textarea 
+        placeholder="The Testimonial Quote..." 
+        className="w-full p-3 bg-gray-800 border border-white/10 h-32" 
+        value={testiQuote} 
+        onChange={e => setTestiQuote(e.target.value)} 
+      />
+    </div>
+    <div className="space-y-4">
+      <label className="text-gray-400 text-sm block">Couple's Photo (Optional)</label>
+      <input 
+        type="file" 
+        accept="image/*" 
+        className="w-full p-2 bg-gray-800 border border-white/10" 
+        onChange={e => setTestiImage(e.target.files[0])} 
+      />
+      {/* Button matches the Video Upload style */}
+      <button className="w-full bg-gold text-black px-6 py-3 font-bold hover:bg-white transition-all">
+        Upload Testimonial
+      </button>
+    </div>
+  </form>
+
+  {/* Display List */}
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-10">
+    {testimonials.map(t => (
+      <div key={t.id} className="relative p-4 bg-black/50 border border-white/5 rounded-lg group">
+        <div className="flex gap-4 items-start">
+          {t.image_url && (
+            <img src={getMediaUrl(t.image_url)} className="w-12 h-12 rounded-full object-cover" alt="couple" />
+          )}
+          <div className="flex-1">
+            {/* Text color changed from amber to gold */}
+            <p className="font-bold text-gold text-sm">{t.author_name}</p>
+            <p className="text-xs text-gray-400 italic line-clamp-3">"{t.quote}"</p>
+          </div>
+        </div>
+        <button 
+          onClick={() => deleteTestimonial(t.id)} 
+          className="absolute -top-2 -right-2 bg-red-600 text-white w-6 h-6 rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          ✕
+        </button>
+      </div>
+    ))}
+  </div>
+</div>
       {/* CREATE COLLECTION */}
       <div className="border p-8">
         <h2>Create Collection</h2>

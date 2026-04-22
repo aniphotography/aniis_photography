@@ -65,6 +65,7 @@ const mediaRoutes = require('./routes/mediaRoutes')
 const blogRoutes = require('./routes/blogRoutes')
 const contactRoutes = require('./routes/contactRoutes')
 const collectionRoutes = require('./routes/collectionRoutes')
+const testimonialsRoutes = require('./routes/testimonialsRoutes')
 
 const app = express()
 
@@ -89,6 +90,7 @@ app.use('/api/media', mediaRoutes)
 app.use('/api/blogs', blogRoutes)
 app.use('/api/contact', contactRoutes)
 app.use('/api/collections', collectionRoutes)
+app.use('/api/testimonials', testimonialsRoutes)
 
 // Global error handler
 app.use((err, req, res, next) => {

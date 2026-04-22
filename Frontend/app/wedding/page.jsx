@@ -147,6 +147,10 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { getMediaUrl } from '@/lib/utils'
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+
+
+
+
 export default function WeddingPage() {
   const router = useRouter()
 
@@ -154,22 +158,32 @@ export default function WeddingPage() {
   const [recentWorks, setRecentWorks] = useState([])
   const [loading, setLoading] = useState(true)
   const [bgImage, setBgImage] = useState('')
-
+  const [heroData, setHeroData] = useState([]);
+const [testimonials, setTestimonials] = useState([])
   useEffect(() => {
     Promise.all([
      fetch(`${API}/api/collections?category=wedding&section=featured`),
       fetch(`${API}/api/collections?category=wedding&section=recent`),
-      fetch(`${API}/api/home-content`)
+      fetch(`${API}/api/home-content`),
+      fetch(`${API}/api/testimonials`)
     ])
-      // FIX: Destructure ALL THREE responses [fRes, rRes, hRes]
-      .then(async ([fRes, rRes, hRes]) => {
-        const fData = await fRes.json()
-        const rData = await rRes.json()
-        const hData = await hRes.json()
-        
-        setFeaturedCollections(fData)
-        setRecentWorks(rData)
-        
+      // FIX: Destructure ALL FOUR responses [fRes, rRes, hRes, tRes]
+      .then(async (responses) => {
+    // Check if all responses are okay
+    if (responses.some(res => !res.ok)) {
+      throw new Error('One or more API requests failed');
+    }
+
+    // Process all JSON parsing in parallel
+    const [fData, rData, hData, tData] = await Promise.all(
+      responses.map(res => res.json())
+    );
+
+    setFeaturedCollections(fData);
+    setRecentWorks(rData);
+    setHeroData(hData);
+    setTestimonials(tData);
+  
         const weddingBg = hData.find(item => item.slot === 'wedding_bg')
         if (weddingBg) {
           setBgImage(getMediaUrl(weddingBg.image_path))
@@ -190,6 +204,32 @@ export default function WeddingPage() {
       router.push('/admin/dashboard?category=wedding')
     }
   }
+  const getMediaUrl = (path) => {
+  if (!path) return "/placeholder-image.jpg"; // Helps see if the path is missing
+  if (path.startsWith('http')) return path;
+  return `${API}${path.startsWith('/') ? '' : '/'}${path}`;
+};
+async function getTestimonials() {
+  // Use the env variable if it exists, otherwise default to your local backend port
+  
+  try {
+    const res = await fetch(`${API}/api/testimonials`, { 
+      cache: 'no-store' 
+    });
+
+    if (!res.ok) {
+      // This helps catch if the route exists but the server is failing
+      console.error(`Error: ${res.status} ${res.statusText}`);
+      return []; 
+    }
+
+    return await res.json();
+  } catch (error) {
+    // This catches if the backend server isn't running at all
+    console.error("Failed to connect to backend:", error);
+    return []; // Return empty array so the .map() doesn't crash the page
+  }
+}
 
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
@@ -301,7 +341,48 @@ export default function WeddingPage() {
             )}
           </div>
         </div>
-      </section>
+        </section>
+<section className="py-24 px-8 max-w-7xl mx-auto bg-[#1a1a1a]">
+  {/* The container with the subtle border from your photo */}
+  <div className="border border-white/10 p-8 bg-black/30 rounded-2xl shadow-2xl">
+    
+    <h4 className="text-center tracking-[0.3em] text-xs mb-4 text-gray-400 uppercase">HERE'S WHAT OUR COUPLES HAVE TO SAY</h4>
+      <h2 className="text-center text-5xl font-display mb-20 uppercase tracking-tight">Notes of <span className="text-gold">Gratitude</span></h2>
+
+    {/* Exact spacing from your first code: space-y-16 */}
+    <div className="space-y-32">
+      {testimonials.map((item, index) => (
+        <div 
+          key={index} 
+          className={`flex flex-col md:items-center gap-8 ${
+            index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
+          }`}
+        >
+          {/* Text Side - Exact text-base and font-serif styles */}
+        {/* Change item.author to item.author_name and fix the img src line */}
+
+<div className="flex-1 text-center md:text-left px-4">
+  <p className="text-xl italic font-light leading-[1.8] mb-8 text-gray-200 font-serif">"{item.quote}"</p>
+  <div className="space-y-1">
+    {/* FIXED: Changed item.author to item.author_name */}
+    <p className="font-bold tracking-[0.2em] text-sm text-gold">- {item.author_name}</p> 
+  </div>
+</div>
+
+{/* Image Side */}
+<div className="flex-1 max-w-sm mx-auto w-full">
+  <img 
+   
+    src={getMediaUrl(item.image_url || item.image_path || item.image)} 
+    alt={item.author_name} 
+    className="rounded-[2.5rem] w-full aspect-[4/3] object-cover shadow-2xl border border-white/5"
+  />
+</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
 <section className="bg-black text-white py-20 px-6">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-center text-4xl md:text-5xl font-light mb-20 tracking-wide">
