@@ -698,7 +698,7 @@ const renderCreateInputs = () => {
       <h3 className="text-gold text-sm uppercase tracking-widest">Collection Cover Media</h3>
       
       {/* Cover Image */}
-      {selected.cover_image &&  && category !== 'fashion' && (
+      {selected.cover_image && category !== 'fashion' && (
         <div className="flex items-center gap-4">
           <img src={getMediaUrl(selected.cover_image)} className="h-16 w-24 object-cover border border-white/10" />
           <div>
