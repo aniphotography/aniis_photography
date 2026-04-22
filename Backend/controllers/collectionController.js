@@ -162,3 +162,39 @@ exports.getFeaturedCollections = async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 }
+  /* ================= UPDATE YOUTUBE URL ================= */
+exports.updateYoutubeUrl = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { youtube_url } = req.body
+    const result = await pool.query(
+      `UPDATE collections SET youtube_url = $1 WHERE id = $2 RETURNING *`,
+      [youtube_url, id]
+    )
+    res.json(result.rows[0])
+  } catch (err) {
+    console.error("UPDATE YOUTUBE URL ERROR:", err)
+    res.status(500).json({ message: err.message })
+  }
+}
+/* ================= UPDATE COLLECTION COVER FIELDS ================= */
+exports.updateCollectionCover = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { field } = req.body // 'cover_image', 'video_url', or 'cover_video'
+
+    const allowedFields = ['cover_image', 'video_url', 'cover_video']
+    if (!allowedFields.includes(field)) {
+      return res.status(400).json({ message: "Invalid field" })
+    }
+
+    const result = await pool.query(
+      `UPDATE collections SET ${field} = NULL WHERE id = $1 RETURNING *`,
+      [id]
+    )
+    res.json(result.rows[0])
+  } catch (err) {
+    console.error("UPDATE COVER ERROR:", err)
+    res.status(500).json({ message: err.message })
+  }
+}

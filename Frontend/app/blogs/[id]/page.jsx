@@ -11,7 +11,7 @@ export default function BlogDetailPage() {
   const params = useParams()
   const router = useRouter()
   const id = params.id
-
+const [showTrailer, setShowTrailer] = useState(false)
   const [blog, setBlog] = useState(null)
 
   // ✅ NEW: media state
@@ -164,9 +164,6 @@ const handleWatchStory = () => {
                 {/* VIDEO */}
                 {item.image_url?.endsWith('.mp4') ? (
                   <video autoPlay loop muted playsInline                    src={getMediaUrl(item.image_url)}
-                    controls
-                    autoPlay
-                    muted
                     className="w-full h-96 object-cover"
                   />
                 ) : (
@@ -192,14 +189,13 @@ const handleWatchStory = () => {
             {/* Watch Story Button */}
             <button
               onClick={() => {
-                // Change 'story_url' to match your database field name
-                const storyLink = blog.story_url || blog.video_url;
-                if (storyLink) {
-                  window.open(storyLink, '_blank', 'noopener,noreferrer');
-                } else {
-                  alert("We are Eagerly Waiting to show you the Story. Working on It. Coming Very Soon.");
-                }
-              }}
+  const link = blog.youtube_url || blog.video_url
+  if (link) {
+    setShowTrailer(true)
+  } else {
+    alert("We are Eagerly Waiting to show you the Story. Coming Very Soon.")
+  }
+}}
               className="group relative flex items-center justify-center px-8 py-4 bg-white text-black rounded-full transition-all hover:scale-105 active:scale-95 w-full sm:w-64"
             >
               <span className="font-display font-bold uppercase tracking-widest text-sm">
@@ -270,7 +266,39 @@ const handleWatchStory = () => {
 
         </div>
       </article>
-
+{/* YOUTUBE EMBED MODAL */}
+{showTrailer && (
+  <div
+    className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200] flex flex-col items-center justify-center p-6"
+    onClick={() => setShowTrailer(false)}
+  >
+    <button
+      onClick={() => setShowTrailer(false)}
+      className="absolute top-6 right-8 text-gold text-3xl hover:text-white transition"
+    >
+      ✕
+    </button>
+    <div
+      className="w-full max-w-4xl aspect-video"
+      onClick={e => e.stopPropagation()}
+    >
+      <iframe
+        src={(() => {
+          const url = blog.youtube_url || blog.video_url || ''
+          // Convert youtube.com/watch?v=ID or youtu.be/ID to embed URL
+          const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)
+          return match ? `https://www.youtube.com/embed/${match[1]}?autoplay=1` : url
+        })()}
+        className="w-full h-full"
+        allowFullScreen
+        allow="autoplay; encrypted-media"
+      />
+    </div>
+    <p className="text-gray-500 text-xs mt-4 uppercase tracking-widest">
+      Click outside to close
+    </p>
+  </div>
+)}
       <Footer />
     </main>
   )

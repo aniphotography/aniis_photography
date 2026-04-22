@@ -85,7 +85,7 @@ exports.uploadMultiple = async (req, res) => {
     const collection_id = req.body?.collection_id
     const tag = req.body?.tag
     const content = req.body?.content
-
+    const youtube_url = req.body?.youtube_url
     // ❌ prevent crash
     if (!collection_id) {
       return res.status(400).json({ message: "collection_id missing" })
@@ -104,13 +104,9 @@ exports.uploadMultiple = async (req, res) => {
     if (req.files && Array.isArray(req.files) && req.files.length > 0) {
       for (let file of req.files) {
         await pool.query(
-          `INSERT INTO media (collection_id, image_url, tag)
-           VALUES ($1,$2,$3)`,
-          [
-            collection_id,
-            file.path,
-            tag
-          ]
+          `INSERT INTO media (collection_id, image_url, tag, youtube_url)
+            VALUES ($1,$2,$3,$4)`,
+          [collection_id, file.path, tag, youtube_url || null]
         )
       }
     }

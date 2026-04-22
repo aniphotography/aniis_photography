@@ -123,4 +123,6 @@ router.patch('/:id/featured', auth, controller.updateFeaturedStatus)
 
 router.delete('/:id', auth, controller.deleteCollection)
 
+router.patch('/:id/youtube', auth, controller.updateYoutubeUrl)
+router.patch('/:id/cover', auth, controller.updateCollectionCover)
 module.exports = router
