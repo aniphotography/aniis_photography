@@ -84,7 +84,7 @@ exports.getCollectionById = async (req, res) => {
     }
 
     const imagesResult = await pool.query(
-      `SELECT id,image_url,tag
+      `SELECT id,image_url,tag,youtube_url
        FROM media
        WHERE collection_id=$1
        ORDER BY created_at ASC`,
