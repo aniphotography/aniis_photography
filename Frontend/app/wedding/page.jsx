@@ -209,6 +209,9 @@ const [testimonials, setTestimonials] = useState([])
 //   if (path.startsWith('http')) return path;
 //   return `${API}${path.startsWith('/') ? '' : '/'}${path}`;
 // };
+//
+
+
 const getMediaUrl = (path) => {
   if (!path) return "/placeholder-image.jpg";
 
@@ -362,7 +365,7 @@ async function getTestimonials() {
       <h2 className="text-center text-5xl font-display mb-20 uppercase tracking-tight">Notes of <span className="text-gold">Gratitude</span></h2>
 
     {/* Exact spacing from your first code: space-y-16 */}
-    <div className="space-y-32">
+    <div className="space-y-10">
       {testimonials.map((item, index) => (
         <div 
           key={index} 
