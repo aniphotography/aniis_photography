@@ -1,65 +1,49 @@
+
 const pool = require('../config/db')
 
-
 /* ================= CREATE COLLECTION ================= */
-
 exports.createCollection = async (req, res) => {
-
   try {
-
-   const { title, category, description, date, section } = req.body
+    // 1. Added youtube_url to the destructured body
+    const { title, category, description, date, section, youtube_url } = req.body
 
     const slug = title
       .toLowerCase()
       .replace(/ /g, '-')
       .replace(/[^\w-]+/g, '')
 
-    const cover_image = req.files?.cover
-  ? req.files.cover[0].path : null
+    const cover_image = req.files?.cover ? req.files.cover[0].path : null
+    const video_url = req.files?.video ? req.files.video[0].path : null
+    const cover_video = req.files?.coverVideo ? req.files.coverVideo[0].path : null
 
-    
-    const video_url = req.files?.video
-  ? req.files.video[0].path : null
-
-    const cover_video = req.files?.coverVideo
-  ? req.files.coverVideo[0].path : null
-
-const result = await pool.query(
-  `INSERT INTO collections
-   (title, category, slug, description, date, section, cover_image, video_url, cover_video)
-   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
-   RETURNING *`,
-  [title, category, slug, description, date, section, cover_image, video_url, cover_video]
-)
+    // 2. Added youtube_url to the INSERT query ($10)
+    const result = await pool.query(
+      `INSERT INTO collections
+       (title, category, slug, description, date, section, cover_image, video_url, cover_video, youtube_url)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+       RETURNING *`,
+      [title, category, slug, description, date, section, cover_image, video_url, cover_video, youtube_url]
+    )
     res.status(201).json(result.rows[0])
 
   } catch (err) {
-
     console.error("CREATE COLLECTION ERROR:", err)
     res.status(500).json({ message: err.message })
-
   }
-
 }
 
-
-
-
-
 exports.getCollectionsByCategory = async (req, res) => {
-
   try {
+    const { category, section } = req.query
 
-    const { category, section } = req.query  // <-- get section from query
-
+    // 3. Added youtube_url to the SELECT lists so the frontend can see the link in lists
     if (category) {
-
-      let query = `SELECT id, title, category, section, cover_image, cover_video, date
+      let query = `SELECT id, title, category, section, cover_image, cover_video, youtube_url, date
                    FROM collections
                    WHERE category=$1`
       const params = [category]
 
-      if (section) {   // <-- optional filter by section
+      if (section) {
         query += ` AND section=$2`
         params.push(section)
       }
@@ -71,7 +55,7 @@ exports.getCollectionsByCategory = async (req, res) => {
     }
 
     const result = await pool.query(
-      `SELECT id, title, category, section, cover_image, cover_video, date
+      `SELECT id, title, category, section, cover_image, cover_video, youtube_url, date
        FROM collections
        ORDER BY created_at DESC`
     )
@@ -79,21 +63,17 @@ exports.getCollectionsByCategory = async (req, res) => {
     res.json(result.rows)
 
   } catch (err) {
-
     console.error("GET COLLECTIONS ERROR:", err)
     res.status(500).json({ message: err.message })
-
   }
-
 }
+
 /* ================= GET COLLECTION BY ID ================= */
-
 exports.getCollectionById = async (req, res) => {
-
   try {
-
     const { id } = req.params
 
+    // 4. SELECT * already includes youtube_url, so no manual change needed here
     const collectionResult = await pool.query(
       `SELECT * FROM collections WHERE id=$1`,
       [id]
@@ -114,56 +94,36 @@ exports.getCollectionById = async (req, res) => {
     const collection = collectionResult.rows[0]
 
     res.json({
-      ...collection,
-      collection,
+      ...collection, // Spread the collection data (includes youtube_url)
+      collection,    // Keep your existing double-nesting for frontend compatibility
       images: imagesResult.rows
     })
 
   } catch (err) {
-
     console.error("GET COLLECTION ERROR:", err)
     res.status(500).json({ message: err.message })
-
   }
-
 }
-
-
 
 /* ================= DELETE COLLECTION ================= */
-
 exports.deleteCollection = async (req, res) => {
-
   try {
-
     const { id } = req.params
-
-    await pool.query(
-      `DELETE FROM media WHERE collection_id=$1`,
-      [id]
-    )
-
-    await pool.query(
-      `DELETE FROM collections WHERE id=$1`,
-      [id]
-    )
-
+    await pool.query(`DELETE FROM media WHERE collection_id=$1`, [id])
+    await pool.query(`DELETE FROM collections WHERE id=$1`, [id])
     res.json({ message: "Collection deleted" })
-
   } catch (err) {
-
     console.error("DELETE COLLECTION ERROR:", err)
     res.status(500).json({ message: "Delete failed" })
-
   }
 }
+
 /* ================= UPDATE FEATURED STATUS ================= */
 exports.updateFeaturedStatus = async (req, res) => {
   try {
     const { id } = req.params
     const { is_featured, featured_slot } = req.body
 
-    // If setting as featured, clear any existing collection in that slot first
     if (is_featured && featured_slot) {
       await pool.query(
         `UPDATE collections SET is_featured = FALSE, featured_slot = NULL 
@@ -191,7 +151,7 @@ exports.updateFeaturedStatus = async (req, res) => {
 exports.getFeaturedCollections = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, title, category, cover_image, featured_slot 
+      `SELECT id, title, category, cover_image, youtube_url, featured_slot 
        FROM collections 
        WHERE is_featured = TRUE 
        ORDER BY featured_slot ASC`
@@ -202,4 +162,3 @@ exports.getFeaturedCollections = async (req, res) => {
     res.status(500).json({ message: err.message })
   }
 }
-

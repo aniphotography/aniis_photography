@@ -1,20 +1,19 @@
 
 'use client'
-
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { useState, useEffect, useCallback } from 'react'
 import { useParams } from 'next/navigation'
-import { getMediaUrl } from '@/lib/utils' 
+import { getMediaUrl } from '@/lib/utils'
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 export default function AlbumGalleryPage() {
   const { id: albumId } = useParams()
-  const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
   const [selectedImageIndex, setSelectedImageIndex] = useState(null)
   const [album, setAlbum] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [showVideo, setShowVideo] = useState(false)
 
   // Fetch Album Data
   useEffect(() => {
@@ -29,9 +28,19 @@ export default function AlbumGalleryPage() {
       })
       .catch(err => console.error("Error fetching album:", err))
       .finally(() => setLoading(false))
-  }, [albumId, API_BASE])
+  }, [albumId])
 
-  // --- RECONCILED NAVIGATION LOGIC ---
+  // Helper to format YouTube link for the modal
+  const getYoutubeEmbedUrl = (url) => {
+    if (!url) return '';
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) 
+      ? `https://www.youtube-nocookie.com/embed/${match[2]}?autoplay=1&mute=0` 
+      : '';
+  };
+
+  // --- NAVIGATION LOGIC ---
   const showNextImage = useCallback((e) => {
     if (e) e.stopPropagation();
     if (selectedImageIndex === null || !album) return
@@ -76,35 +85,87 @@ export default function AlbumGalleryPage() {
       <Navbar />
 
       {/* HERO SECTION */}
-      <section className="relative h-[75vh] w-full overflow-hidden">
-        <div className="absolute inset-0">
-          <video             autoPlay
-            loop
-            muted
+      <section className="relative h-[70vh] w-full overflow-hidden bg-black">
+        <div className="absolute inset-0 w-full h-full">
+          <video 
+            autoPlay 
+            loop 
+            muted 
             playsInline
-            key={album.video_url}
-            className="w-full h-full object-cover opacity-40"
+            className="w-full h-full object-cover opacity-50"
           >
+            {/* Background uses Cloudinary URL */}
             <source src={getMediaUrl(album.video_url)} type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#1a1a1a]/20 to-[#1a1a1a]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#1a1a1a] via-transparent to-black/40" />
         </div>
 
-        <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex flex-col justify-center">
-          <div className="border-l-2 border-[#d4af37] pl-8 max-w-3xl">
-            <span className="text-[#d4af37] text-xs uppercase tracking-[0.4em] mb-4 block">
-              {album.date || 'Cinematic Collection'}
-            </span>
-            <h1 className="text-6xl md:text-8xl font-display mb-6 leading-tight">
+        <div className="relative z-10 h-full max-w-7xl mx-auto px-6 flex flex-col justify-end pb-12">
+          <div className="border-l-4 border-[#d4af37] pl-6 mb-4">
+            <p className="text-[#d4af37] text-sm uppercase tracking-[0.3em] mb-2">
+              {album.date}
+            </p>
+            <h1 className="text-5xl md:text-7xl font-display mb-4 tracking-tight">
               {album.title}
             </h1>
-            <p className="text-gray-400 font-lato text-lg leading-relaxed max-w-xl">
+            
+            <div className="flex flex-wrap items-center gap-4 text-gray-300 mb-6">
+              <span className="text-xs tracking-widest uppercase">
+                {album.images?.length} Photos
+              </span>
+              <span className="w-8 h-[1px] bg-[#d4af37]/50"></span>
+              <span className="text-xs tracking-widest uppercase italic">
+                High-Resolution Collection
+              </span>
+
+              {/* WATCH NOW BUTTON: Uses the youtube_url column */}
+              {album.youtube_url && (
+                <button 
+                  onClick={() => setShowVideo(true)}
+                  className="group flex items-center gap-3 bg-white text-black px-5 py-2 rounded-full font-medium hover:bg-[#d4af37] hover:text-white transition-all duration-300 shadow-xl ml-2"
+                >
+                  <span className="text-xs uppercase tracking-wider">Watch it now</span>
+                  <div className="bg-red-600 rounded-full p-1 group-hover:scale-110 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" className="w-3 h-3">
+                      <path d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                    </svg>
+                  </div>
+                </button>
+              )}
+            </div>
+
+            <p className="text-gray-400 font-lato max-w-2xl leading-relaxed">
               {album.description}
             </p>
           </div>
         </div>
       </section>
 
+      {/* FILM MODAL: Separate from Background Video logic */}
+      {showVideo && album.youtube_url && (
+        <div className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-12 animate-in fade-in duration-300">
+          <button 
+            onClick={() => setShowVideo(false)}
+            className="absolute top-8 right-8 text-white/70 hover:text-[#d4af37] text-4xl transition-colors z-[210]"
+          >
+            ✕
+          </button>
+          <div 
+            className="w-full max-w-6xl aspect-video border border-[#d4af37]/20 shadow-2xl relative"
+            onClick={(e) => e.stopPropagation()} // Prevents closing when clicking video
+          >
+            <iframe
+              className="w-full h-full"
+              src={getYoutubeEmbedUrl(album.youtube_url)}
+              allow="autoplay; encrypted-media"
+              allowFullScreen
+            />
+          </div>
+        </div>
+      )}
+
+
+    
       {/* MASONRY GRID */}
       <section className="px-6 py-24">
         <div className="max-w-7xl mx-auto">
