@@ -748,7 +748,50 @@ const renderCreateInputs = () => {
           ))}
         </div>
       </div>
-
+{/* MANAGE FEATURED COLLECTIONS */}
+<div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl">
+  <h2 className="text-2xl text-gold mb-6">Homepage Signature Collections</h2>
+  <p className="text-gray-400 text-sm mb-6">
+    Select which collections appear in the Homepage Signature section. Maximum 3 slots available.
+  </p>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    {[1, 2, 3].map(slot => (
+      <div key={slot} className="border border-gold/20 p-4 bg-black/30 rounded">
+        <h3 className="text-gold mb-3 text-sm uppercase">Slot {slot}</h3>
+        <select
+          className="w-full p-3 bg-gray-800 text-white text-sm"
+          onChange={async (e) => {
+            const collId = e.target.value
+            if (!collId) return
+            const currentToken = localStorage.getItem('adminToken')
+            const res = await fetch(`${API}/api/collections/${collId}/featured`, {
+              method: 'PATCH',
+              headers: {
+                Authorization: `Bearer ${currentToken}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ is_featured: true, featured_slot: slot })
+            })
+            if (res.ok) alert(`Slot ${slot} updated!`)
+            else alert(`Failed: ${res.status}`)
+          }}
+        >
+          <option value="">— Select a Collection —</option>
+          {collections
+            .filter(c => c.category !== 'album-design')
+            .map(c => (
+              <option key={c.id} value={c.id}>
+                {c.title} ({c.category})
+              </option>
+            ))}
+        </select>
+      </div>
+    ))}
+  </div>
+  <p className="text-gray-500 text-xs mt-4">
+    * Selecting a collection for a slot will automatically remove any previous collection from that slot.
+  </p>
+</div>
 {/* WEDDING TESTIMONIALS MANAGEMENT */}
 <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
   <h2 className="text-2xl text-gold mb-6 font-serif">Wedding Testimonials</h2>

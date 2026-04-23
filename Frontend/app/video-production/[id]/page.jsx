@@ -83,12 +83,42 @@ const images = allMedia.filter(m =>
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
 
 						{videos.map((video, i) => (
-							<div key={i} className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl">
-								<video controls muted loop playsInline className="w-full h-full object-cover">
-									<source src={getMediaUrl(video.image_url)} type="video/mp4" />
-								</video>
-							</div>
-						))}
+  <div
+    key={i}
+    className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl relative cursor-pointer group"
+    onClick={() => {
+      if (video.youtube_url) setTrailerUrl(video.youtube_url)
+    }}
+    onMouseEnter={e => {
+      const v = e.currentTarget.querySelector('video')
+      if (v) v.play().catch(() => {})
+    }}
+    onMouseLeave={e => {
+      const v = e.currentTarget.querySelector('video')
+      if (v) { v.pause(); v.currentTime = 0 }
+    }}
+  >
+    <video
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className="w-full h-full object-cover pointer-events-none"
+    >
+      <source src={getMediaUrl(video.image_url)} type="video/mp4" />
+    </video>
+    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-end justify-center pb-6">
+      {video.youtube_url && (
+        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 px-5 py-2 bg-black/80 border border-gold text-gold text-xs uppercase tracking-widest">
+          <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z" />
+          </svg>
+          Watch Trailer
+        </span>
+      )}
+    </div>
+  </div>
+))}
 
 						{Array.from({ length: 3 - videos.length }).map((_, index) => (
 							<AddCard

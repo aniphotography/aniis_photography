@@ -188,12 +188,20 @@ const handleWatchStory = () => {
             
             {/* Watch Story Button */}
             <button
-              onClick={() => {
-  const link = blog.youtube_url || blog.video_url
-  if (link) {
+  onClick={() => {
+  const link = blog.youtube_url || blog.video_url || blog.external_url
+
+  if (!link) {
+    alert("We are Eagerly Waiting to show you the Story. Coming Soon.")
+    return
+  }
+
+  const isYouTube = /youtube\.com|youtu\.be/.test(link)
+
+  if (isYouTube) {
     setShowTrailer(true)
   } else {
-    alert("We are Eagerly Waiting to show you the Story. Coming Very Soon.")
+    window.open(link, '_blank', 'noopener,noreferrer')
   }
 }}
               className="group relative flex items-center justify-center px-8 py-4 bg-white text-black rounded-full transition-all hover:scale-105 active:scale-95 w-full sm:w-64"

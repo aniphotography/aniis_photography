@@ -89,26 +89,43 @@ const [trailerUrl, setTrailerUrl] = useState(null)
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-           {videos.map((video, i) => (
-  <div key={i} className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl relative group">
-    <video controls muted loop playsInline className="w-full h-full object-cover">
+          {videos.map((video, i) => (
+  <div
+    key={i}
+    className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl relative cursor-pointer group"
+    onClick={() => {
+      if (video.youtube_url) setTrailerUrl(video.youtube_url)
+    }}
+    onMouseEnter={e => {
+      const v = e.currentTarget.querySelector('video')
+      if (v) v.play().catch(() => {})
+    }}
+    onMouseLeave={e => {
+      const v = e.currentTarget.querySelector('video')
+      if (v) { v.pause(); v.currentTime = 0 }
+    }}
+  >
+    <video
+      muted
+      loop
+      playsInline
+      preload="metadata"
+      className="w-full h-full object-cover pointer-events-none"
+    >
       <source src={getMediaUrl(video.image_url)} type="video/mp4" />
     </video>
-    
-    {/* WATCH TRAILER BUTTON */}
-    {video.youtube_url && (
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-        <button
-          onClick={() => setTrailerUrl(video.youtube_url)}
-          className="flex items-center gap-2 px-6 py-3 bg-black/80 border border-gold text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
-        >
-          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+
+    {/* HOVER OVERLAY */}
+    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-end justify-center pb-6">
+      {video.youtube_url && (
+        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 px-5 py-2 bg-black/80 border border-gold text-gold text-xs uppercase tracking-widest">
+          <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
             <path d="M8 5v14l11-7z" />
           </svg>
           Watch Trailer
-        </button>
-      </div>
-    )}
+        </span>
+      )}
+    </div>
   </div>
 ))}
 
