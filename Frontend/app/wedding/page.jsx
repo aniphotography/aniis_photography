@@ -159,7 +159,18 @@ export default function WeddingPage() {
   const [loading, setLoading] = useState(true)
   const [bgImage, setBgImage] = useState('')
   const [heroData, setHeroData] = useState([]);
-const [testimonials, setTestimonials] = useState([])
+const [testimonials, setTestimonials] = useState([]);
+const [currentIndex, setCurrentIndex] = useState(0);
+
+const nextSlide = () => {
+  setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+};
+
+const prevSlide = () => {
+  setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+};
+
+const item = testimonials[currentIndex] || {};
   useEffect(() => {
     Promise.all([
      fetch(`${API}/api/collections?category=wedding&section=featured`),
@@ -357,47 +368,83 @@ async function getTestimonials() {
           </div>
         </div>
         </section>
-<section className="py-24 px-8 max-w-7xl mx-auto bg-[#1a1a1a]">
-  {/* The container with the subtle border from your photo */}
-  <div className="border border-white/10 p-8 bg-black/30 rounded-2xl shadow-2xl">
-    
-    <h4 className="text-center tracking-[0.3em] text-xs mb-4 text-gray-400 uppercase">HERE'S WHAT OUR COUPLES HAVE TO SAY</h4>
-      <h2 className="text-center text-5xl font-display mb-20 uppercase tracking-tight">Notes of <span className="text-gold">Gratitude</span></h2>
 
-    {/* Exact spacing from your first code: space-y-16 */}
-    <div className="space-y-10">
-      {testimonials.map((item, index) => (
-        <div 
-          key={index} 
-          className={`flex flex-col md:items-center gap-8 ${
-            index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'
-          }`}
-        >
-          {/* Text Side - Exact text-base and font-serif styles */}
-        {/* Change item.author to item.author_name and fix the img src line */}
-
-<div className="flex-1 text-center md:text-left px-4">
-  <p className="text-xl italic font-light leading-[1.8] mb-8 text-gray-200 font-serif">"{item.quote}"</p>
-  <div className="space-y-1">
-    {/* FIXED: Changed item.author to item.author_name */}
-    <p className="font-bold tracking-[0.2em] text-sm text-gold">- {item.author_name}</p> 
-  </div>
-</div>
-
-{/* Image Side */}
-<div className="flex-1 max-w-sm mx-auto w-full">
-  <img 
-   
-    src={getMediaUrl(item.image_url || item.image_path || item.image)} 
-    alt={item.author_name} 
-    className="rounded-[2.5rem] w-full aspect-[4/3] object-cover shadow-2xl border border-white/5"
-  />
-</div>
-        </div>
-      ))}
+<section className="py-24 px-8 max-w-[1600px] mx-auto bg-[#1a1a1a] text-white">
+    {/* Header Section */}
+    <div className="text-center mb-16">
+      <h4 className="tracking-[0.3em] text-[10px] mb-4 text-gray-400 uppercase font-medium">
+        HERE'S WHAT OUR COUPLES HAVE TO SAY
+      </h4>
+      <h2 className="text-5xl md:text-6xl font-serif tracking-tight uppercase">
+        Notes of <span className="text-[#D4AF37]">Gratitude</span>
+      </h2>
     </div>
-  </div>
-</section>
+
+    {/* Slider Container */}
+    <div className="relative max-w-7xl mx-auto border border-white/5 p-8 md:p-16 bg-black/20 rounded-[2.5rem] shadow-2xl">
+      
+      {/* NAVIGATION BUTTONS */}
+      <button 
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-10 p-2 text-white/40 hover:text-white transition-colors"
+        aria-label="Previous slide"
+      >
+        <span className="text-3xl font-light">←</span>
+      </button>
+
+      <button 
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-10 p-2 text-white/40 hover:text-white transition-colors"
+        aria-label="Next slide"
+      >
+        <span className="text-3xl font-light">→</span>
+      </button>
+
+      {/* ACTIVE SLIDE CONTENT */}
+      <div className="grid grid-cols-1 md:grid-cols-2 items-center gap-12 lg:gap-24 transition-all duration-500">
+        
+        {/* Left Side: Text */}
+        <div className="flex flex-col items-center text-center px-4 md:px-8">
+          <p className="text-lg md:text-xl font-serif leading-[1.9] mb-10 text-gray-200 italic">
+            "{item.quote}"
+          </p>
+          <div className="space-y-1">
+            <p className="font-bold tracking-[0.2em] text-xs text-[#D4AF37] uppercase">
+              - {item.author_name}
+            </p>
+            <p className="text-[10px] tracking-widest text-gray-500 uppercase font-medium">
+              {item.role || "TWF Couple"}
+            </p>
+          </div>
+        </div>
+
+        {/* Right Side: Image */}
+        <div className="w-full overflow-hidden rounded-[2.5rem] shadow-2xl">
+          <img 
+            src={getMediaUrl(item.image_url || item.image_path || item.image)} 
+            alt={item.author_name} 
+            className="w-full aspect-[3/2] object-cover hover:scale-105 transition-transform duration-1000"
+          />
+        </div>
+      </div>
+
+      {/* PAGINATION DOTS (The bar seen in the photo) */}
+      <div className="flex justify-center items-center gap-2 mt-16">
+        {testimonials.map((_, i) => (
+          <div 
+            key={i} 
+            onClick={() => setCurrentIndex(i)}
+            className={`cursor-pointer transition-all duration-300 ${
+              currentIndex === i 
+                ? 'h-[2px] w-12 bg-[#D4AF37]' 
+                : 'h-1 w-1 bg-gray-700 rounded-full hover:bg-gray-500'
+            }`}
+          ></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
 <section className="bg-black text-white py-20 px-6">
       <div className="max-w-7xl mx-auto">
         <h2 className="text-center text-4xl md:text-5xl font-light mb-20 tracking-wide">
