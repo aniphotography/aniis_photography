@@ -412,9 +412,9 @@ async function getTestimonials() {
             <p className="font-bold tracking-[0.2em] text-xs text-[#D4AF37] uppercase">
               - {item.author_name}
             </p>
-            <p className="text-[10px] tracking-widest text-gray-500 uppercase font-medium">
+            {/* <p className="text-[10px] tracking-widest text-gray-500 uppercase font-medium">
               {item.role || "TWF Couple"}
-            </p>
+            </p> */}
           </div>
         </div>
 
