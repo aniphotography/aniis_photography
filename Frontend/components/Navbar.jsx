@@ -179,7 +179,7 @@ export default function Navbar() {
 
   // New Social Links
   const socialLinks = [
-    { href: 'https://youtube.com/@AniiPhotography', icon: <FaYoutube />, label: 'YouTube' },
+    { href: 'https://www.youtube.com/@Anii_Photography', icon: <FaYoutube />, label: 'YouTube' },
     { href: 'https://www.instagram.com/anii_filmy', icon: <FaInstagram />, label: 'Instagram' },
     { href: 'https://www.facebook.com/the.anii.photography', icon: <FaFacebook />, label: 'Facebook' },
     { href: 'https://www.behance.net/aniruddha.das08', icon: <FaBehance />, label: 'Behance' },

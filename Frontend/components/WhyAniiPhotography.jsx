@@ -170,7 +170,7 @@ export default function WhyAniiSection() {
       {/* Years Experience */}
       <div>
         <p className="text-5xl font-display text-gold mb-2">
-          <CountUp end={8} />+
+          <CountUp end={10} />+
         </p>
         <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
           Years Experience
@@ -180,13 +180,21 @@ export default function WhyAniiSection() {
       {/* Satisfaction */}
       <div className="sm:col-span-2 md:col-span-1"> {/* Centers on mobile/tablet if needed */}
         <p className="text-5xl font-display text-gold mb-2">
-          <CountUp end={98} />%
+          <CountUp end={99} />%
         </p>
         <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
           Client Satisfaction
         </p>
       </div>
-      
+      {/* Fashion & Brands */}
+      <div className="sm:col-span-2 md:col-span-1"> {/* Centers on mobile/tablet if needed */}
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={250} />+
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Fashion & brands
+        </p>
+      </div>
     </div>
   </div>
 </section>
