@@ -3,8 +3,26 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-
+import { useState, useEffect } from 'react';
 export default function AboutPage() {
+  const CountUp = ({ end, duration = 2000 }) => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let startTime = null;
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    requestAnimationFrame(animate);
+  }, [end, duration]);
+
+  return <span>{count}</span>;
+};
   const team = [
     {
       id: 1,
@@ -70,7 +88,7 @@ export default function AboutPage() {
       {/* Hero Section */}
       <section className="pt-32 pb-16 px-6 text-center">
         <h1 className="text-6xl md:text-7xl font-display mb-4">
-          About <span className="text-gold">LUXE</span>
+          About <span className="text-gold">ANII</span>
         </h1>
         <p className="text-gray-400 font-lato max-w-2xl mx-auto text-lg">
           Meet the passionate team behind the lens dedicated to capturing your timeless moments
@@ -78,22 +96,30 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="py-20 px-6 bg-black/50">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-display text-center mb-8">
-            Our <span className="text-gold">Story</span>
-          </h2>
-          <p className="text-gray-300 font-lato text-lg leading-relaxed mb-6">
-            Founded in 2012, LUXE emerged from a simple yet powerful vision: to capture the most precious moments in life with unparalleled artistry and sophistication. What began as a passion project has evolved into one of the most sought-after photography studios, serving clients across the globe.
-          </p>
-          <p className="text-gray-300 font-lato text-lg leading-relaxed mb-6">
-            Our journey has been defined by countless weddings, celebrations, and commercial projects that have challenged us to push boundaries and innovate. Each project teaches us something new, and we apply that knowledge to make every client's experience extraordinary.
-          </p>
-          <p className="text-gray-300 font-lato text-lg leading-relaxed">
-            Today, LUXE stands as a testament to the power of creativity, dedication, and genuine connection with our clients. We don't just take photographs – we create memories that will be cherished for generations to come.
-          </p>
-        </div>
-      </section>
+     
+ <section className="py-20 px-6 bg-black/50">
+  <div className="max-w-4xl mx-auto">
+    <h2 className="text-4xl font-display text-center mb-8">
+      Our <span className="text-gold">Story</span>
+    </h2>
+    
+    <p className="text-gray-300 font-lato text-lg leading-relaxed mb-6 text-center">
+      It all started with a Master’s degree, a steady job, and a nagging feeling that life needed a little more creative flair. After completion of Masters from <strong>National Institute of Technology (NIT) Durgapur</strong>, Aniruddha realized the traditional path wasn't his jam. His true calling? Freezing time.
+    </p>
+
+    <p className="text-gray-300 font-lato text-lg leading-relaxed mb-6 text-center">
+      What began as a one-man freelance gig fueled by a love for capturing raw, unfiltered moments officially leveled up into <strong>Anii Photography</strong> in 2018. Fast forward to today, and he is no longer just a solo act. He has built a powerhouse team of visual storytellers who take their craft seriously—but never themselves.
+    </p>
+
+    <p className="text-gray-300 font-lato text-lg leading-relaxed mb-6 text-center">
+      From the cinematic magic of weddings and pre-weddings to high-end fashion, brand campaigns, dynamic influencer content, dazzling jewellery and striking product shoots, we bring passion, precision, and a whole lot of fun to every single set. Each project teaches us something new, and we apply that knowledge to make every client's experience extraordinary.
+    </p>
+
+    <p className="text-gray-300 font-lato text-lg leading-relaxed text-center">
+      Today, Anii Photography stands as a testament to the power of creativity, dedication, and genuine connection with our clients. We don't just take photographs – we create memories that will be cherished for generations to come.
+    </p>
+  </div>
+</section>
 
       {/* Core Values Section */}
       <section className="py-20 px-6">
@@ -150,28 +176,44 @@ export default function AboutPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <p className="text-5xl font-display text-gold mb-2">500+</p>
-              <p className="text-gray-300 font-lato">Weddings Captured</p>
-            </div>
-            <div>
-              <p className="text-5xl font-display text-gold mb-2">12+</p>
-              <p className="text-gray-300 font-lato">Years Experience</p>
-            </div>
-            <div>
-              <p className="text-5xl font-display text-gold mb-2">50+</p>
-              <p className="text-gray-300 font-lato">International Awards</p>
-            </div>
-            <div>
-              <p className="text-5xl font-display text-gold mb-2">98%</p>
-              <p className="text-gray-300 font-lato">Client Satisfaction</p>
-            </div>
-          </div>
-        </div>
-      </section>
+     <section className="py-20 px-6">
+  <div className="max-w-6xl mx-auto">
+    {/* Updated from md:grid-cols-4 to md:grid-cols-3 to center the 3 items */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
+      
+      {/* Weddings */}
+      <div>
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={500} />+
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Weddings Captured
+        </p>
+      </div>
+
+      {/* Years Experience */}
+      <div>
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={8} />+
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Years Experience
+        </p>
+      </div>
+
+      {/* Satisfaction */}
+      <div className="sm:col-span-2 md:col-span-1"> {/* Centers on mobile/tablet if needed */}
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={98} />%
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Client Satisfaction
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</section>
 
       {/* CTA Section */}
       <section className="py-20 px-6 bg-black/50 text-center">

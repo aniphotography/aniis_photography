@@ -8,7 +8,24 @@ export default function WhyAniiSection() {
   const [dbData, setDbData] = useState([])
   const [loading, setLoading] = useState(true)
   const accentColor = "#d4af37" // Your signature gold
+  const CountUp = ({ end, duration = 2000 }) => {
+  const [count, setCount] = useState(0);
 
+  useEffect(() => {
+    let startTime = null;
+    const animate = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * end));
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      }
+    };
+    requestAnimationFrame(animate);
+  }, [end, duration]);
+
+  return <span>{count}</span>;
+};
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,6 +101,7 @@ export default function WhyAniiSection() {
   if (loading) return <div className="py-20 bg-black text-center" style={{ color: accentColor }}>Loading...</div>
 
   return (
+    <section>
    <section className="bg-black text-white py-20 px-6">
   <div className="max-w-7xl mx-auto">
     {/* Title - Matches Wedding section spacing */}
@@ -133,6 +151,45 @@ export default function WhyAniiSection() {
       </div>
     </div>
   </div>
+</section>
+ <section className="py-20 px-6">
+  <div className="max-w-6xl mx-auto">
+    {/* Updated from md:grid-cols-4 to md:grid-cols-3 to center the 3 items */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
+      
+      {/* Weddings */}
+      <div>
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={500} />+
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Weddings Captured
+        </p>
+      </div>
+
+      {/* Years Experience */}
+      <div>
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={8} />+
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Years Experience
+        </p>
+      </div>
+
+      {/* Satisfaction */}
+      <div className="sm:col-span-2 md:col-span-1"> {/* Centers on mobile/tablet if needed */}
+        <p className="text-5xl font-display text-gold mb-2">
+          <CountUp end={98} />%
+        </p>
+        <p className="text-gray-300 font-lato uppercase tracking-widest text-sm">
+          Client Satisfaction
+        </p>
+      </div>
+      
+    </div>
+  </div>
+</section>
 </section>
   )
 }

@@ -101,6 +101,7 @@ export default function Footer() {
               { icon: 'f', label: 'Facebook', href: 'https://www.facebook.com/the.anii.photography' },
               { icon: 'i', label: 'Instagram', href: 'https://www.instagram.com/anii_film' },
               { icon: 'b', label: 'Behance', href: 'https://www.behance.net/aniruddha.das08' },
+              { icon: 'y', label: 'YouTube', href: 'https://www.youtube.com/@AniiPhotography' },
             ].map((social) => (
               <a
                 key={social.icon}
