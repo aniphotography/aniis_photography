@@ -128,8 +128,8 @@ export default function AlbumDesignPage() {
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
-      width={1200}
-      height={400}
+      width={900}
+      height={600}
       size="stretch" // Allows the book to scale properly
       minWidth={300}
       maxWidth={1500}
@@ -145,14 +145,10 @@ export default function AlbumDesignPage() {
         {previewPages.length > 0 && (
           <img
             src={getMediaUrl(previewPages[0].image_url)}
-            className="w-full h-full object-cover opacity-60"
+            className="w-full h-full object-cover opacity-100"
           />
         )}
-        <div className="absolute inset-0 flex items-center justify-center p-10 bg-black/20">
-          <h2 className="text-gold text-4xl md:text-5xl font-display leading-tight uppercase tracking-[0.2em]">
-            PREMIUM COLLECTION
-          </h2>
-        </div>
+       
       </div>
 
       {/* INNER PAGES (Middle of the deck) */}
@@ -170,18 +166,10 @@ export default function AlbumDesignPage() {
         {previewPages.length > 1 && (
           <img
             src={getMediaUrl(previewPages[previewPages.length - 1].image_url)}
-            className="w-full h-full object-cover opacity-60"
+            className="w-full h-full object-cover opacity-100"
           />
         )}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-black/30">
-          <h3 className="text-yellow-400 text-4xl font-display mb-3 tracking-widest uppercase">
-            Explore More
-          </h3>
-          <div className="w-24 h-[1px] bg-gold/50 mb-6" />
-          <p className="text-yellow-500/80 text-xs tracking-[0.8em] uppercase font-medium">
-            Anii Photography
-          </p>
-        </div>
+       
       </div>
     </HTMLFlipBook>
   )}
