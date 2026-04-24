@@ -105,7 +105,7 @@ const handleSubmit = async (e) => {
                     href="mailto:contact@aniiphotography.com"
                     className="text-gray-300 hover-gold-text font-lato"
                   >
-                    contact@aniiphotography.com
+                   contact@aniiphotography.com
                   </a>
                 </div>
 

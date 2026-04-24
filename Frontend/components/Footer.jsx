@@ -64,8 +64,8 @@ export default function Footer() {
             </h4>
             <ul className="space-y-4 font-lato text-sm text-gray-400">
               <li className="hover:text-gold transition-colors duration-300">
-                <a href="mailto:mailaniiphotography@gmail.com">
-                  mailaniiphotography@gmail.com
+                <a href="mailto:contact@aniiphotography@gmail.com">
+                  contact@aniiphotography.com
                 </a>
               </li>
               <li className="hover:text-gold transition-colors duration-300 cursor-default">
