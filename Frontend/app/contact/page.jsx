@@ -8,6 +8,7 @@ export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+       phone: '', 
     eventType: '',
     message: '',
   })
@@ -65,7 +66,7 @@ const handleSubmit = async (e) => {
 
     if (res.ok) {
       setSubmitted(true);
-      setFormData({ name: '', email: '', eventType: '', message: '' });
+      setFormData({ name: '', email: '',  phone: '', eventType: '', message: '' });
     } else {
       console.error(data);
       alert("Failed to send message");
@@ -181,7 +182,21 @@ const handleSubmit = async (e) => {
                       placeholder="your@email.com"
                     />
                   </div>
-
+                  <div>
+  <label htmlFor="phone" className="block text-sm font-lato text-gold mb-2">
+    Mobile Number
+  </label>
+  <input
+    type="tel"
+    id="phone"
+    name="phone"
+    value={formData.phone}
+    onChange={handleChange}
+    required
+    className="w-full bg-black/50 border border-white/20 px-4 py-3 font-lato text-white placeholder-gray-500 focus:border-gold focus:outline-none transition-colors"
+    placeholder="+91 XXXXXXXXXX"
+  />
+</div>
                   <div>
                     <label htmlFor="eventType" className="block text-sm font-lato text-gold mb-2">
                       Event Type
