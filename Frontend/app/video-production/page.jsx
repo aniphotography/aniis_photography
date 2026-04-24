@@ -12,7 +12,23 @@ export default function VideoProductionPage() {
   const [projects, setProjects] = useState([])
   const [videoLogos, setVideoLogos] = useState([])
   const [loading, setLoading] = useState(true)
-
+const [videoHeader, setVideoHeader] = useState(null);
+// ✅ DEDICATED FETCH FOR HEADER BACKGROUND
+useEffect(() => {
+  fetch(`${API}/api/home-content`)
+    .then(res => {
+      if (!res.ok) throw new Error(`Header fetch failed: ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      // Look specifically for the video production background slot
+      const headerData = data.find(item => item.slot === 'video_production_bg');
+      if (headerData) {
+        setVideoHeader(headerData);
+      }
+    })
+    .catch(err => console.error("Error loading video header:", err));
+}, []);
   // ✅ FETCH VIDEO PROJECTS
   useEffect(() => {
     fetch(`${API}/api/collections?category=video-production`)
@@ -63,21 +79,34 @@ export default function VideoProductionPage() {
       </div>
     )
   }
-
+const bgImage = videoHeader?.image_path 
+    ? (videoHeader.image_path.startsWith('http') 
+        ? videoHeader.image_path 
+        : `${API}${videoHeader.image_path}`) 
+    : null;
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
 
       <Navbar />
 
       {/* HEADER */}
-      <section className="pt-32 pb-16 text-center">
+    <section 
+      className="relative h-[500px] overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
+    >
+      {/* Dark Cinematic Overlay */}
+      <div className="absolute inset-0 bg-black/70" />
+      
+      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
         <h1 className="text-6xl md:text-7xl font-display mb-4">
-          <span className="text-gold">Video</span> Production
+          <span className="text-gold italic">Video</span> Production
         </h1>
-        <p className="text-gray-400">
-          Professional video production services that bring your vision to life
+        <p className="text-gray-300 font-lato max-w-2xl text-lg tracking-[0.4em] ">
+        Professional video production services that bring your vision to life
         </p>
-      </section>
+      </div>
+    </section>
+       
 
       {/* ✅ VIDEO LOGO SLIDER */}
       {/* <div className="overflow-hidden bg-black py-6">

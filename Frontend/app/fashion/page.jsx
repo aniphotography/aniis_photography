@@ -281,21 +281,40 @@ export default function FashionPage() {
   const [recentWork, setRecentWork] = useState([])
   const [brandLogos, setBrandLogos] = useState([])
   const [isAdmin, setIsAdmin] = useState(false)
+const [homeData, setHomeData] = useState([]);
+const [fashionHeader, setFashionHeader] = useState(null);
+useEffect(() => {
+  Promise.all([
+    fetch(`${API}/api/collections?category=fashion&section=featured`),
+    fetch(`${API}/api/collections?category=fashion&section=recent`),
+    fetch(`${API}/api/home-content`) // Fetch all to find the specific slot
+  ])
+    .then(async (responses) => {
+      // 1. Safety Check
+      if (responses.some(res => !res.ok)) {
+        throw new Error('One or more Fashion API requests failed');
+      }
 
-  useEffect(() => {
-    Promise.all([
-      fetch(`${API}/api/collections?category=fashion&section=featured`),
-      fetch(`${API}/api/collections?category=fashion&section=recent`)
-    ])
-      .then(async ([fRes, rRes]) => {
-        const fData = await fRes.json()
-        const rData = await rRes.json()
-        setFeaturedGallery(fData)
-        setRecentWork(rData)
-      })
-      .catch(err => console.error(err))
-  }, [])
+      // 2. Parse all JSON in parallel
+      const [fData, rData, hData] = await Promise.all(
+        responses.map(res => res.json())
+      );
 
+      // 3. Update Gallery States
+      setFeaturedGallery(fData);
+      setRecentWork(rData);
+
+      // 4. Find the Fashion Header Slot
+      const fashionBg = hData.find(item => 
+        item.section === 'services' && item.slot === 'fashion_bg'
+      );
+
+      if (fashionBg) {
+        setFashionHeader(fashionBg);
+      }
+    })
+    .catch(err => console.error('Fashion fetch error:', err));
+}, []);
   // Check admin status
   useEffect(() => {
     const token = localStorage.getItem('adminToken')
@@ -313,28 +332,44 @@ export default function FashionPage() {
 
   useEffect(() => {
     fetch(`${API}/api/media?tag=logo`)
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`Media fetch failed: ${res.status}`)
+        return res.json()
+      })
       .then(data => {
         if (Array.isArray(data) && data.length > 0) {
           setBrandLogos(data)
         }
       })
-      .catch(() => {})
+      .catch(err => console.error('Brand logos fetch error:', err))
   }, [])
-
+const bgImage = fashionHeader?.image_path 
+  ? (fashionHeader.image_path.startsWith('http') 
+      ? fashionHeader.image_path 
+      : `${API}${fashionHeader.image_path}`) 
+  : null;
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar />
 
       {/* HEADER */}
-      <section className="pt-36 pb-12 px-6 text-center">
-        <h1 className="text-5xl md:text-7xl font-display mb-4">
-          <span className="text-gold italic">Fashion</span> Collections
-        </h1>
-        <p className="text-gray-500 text-xs tracking-[0.4em] uppercase">
-          The Motion Collection
-        </p>
-      </section>
+ <section 
+        className="relative h-[500px] overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
+      >
+
+  {/* 2. The Dark Overlay - Keeps the "Fashion Collections" text readable */}
+  
+   <div className="absolute inset-0 bg-black/70" />
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+          <h1 className="text-6xl md:text-7xl font-display mb-4">
+      <span className="text-gold italic">Fashion</span> Collections
+    </h1>
+    <p className="text-gray-300 text-xs tracking-[0.4em] uppercase">
+      The Motion Collection
+    </p>
+  </div>
+</section>
 
       {/* FEATURED */}
       <section className="py-10 px-6">

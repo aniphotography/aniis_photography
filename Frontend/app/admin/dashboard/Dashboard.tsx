@@ -684,6 +684,8 @@ const renderCreateInputs = () => {
                   <option value="album-design">Album Design</option>
                   <option value="wedding_bg">Wedding Page (Header Background)</option>
                   <option value="pre-wedding_bg">Pre-Wedding Page (Header Background)</option>
+                  <option value="fashion_bg">Fashion Page Header</option>
+        <option value="video_production_bg">Video Production Page Header</option>
                 </>
               )}
               {homeSection === 'featured' && (
