@@ -87,9 +87,9 @@ exports.uploadMultiple = async (req, res) => {
     const content = req.body?.content
     const youtube_url = req.body?.youtube_url
     // ❌ prevent crash
-    if (!collection_id) {
-      return res.status(400).json({ message: "collection_id missing" })
-    }
+   if (!collection_id && !tag) {
+  return res.status(400).json({ message: "collection_id or tag required" })
+}
 
     // ✅ 1. INSERT TEXT
     if (content && content.trim() !== '') {
@@ -106,7 +106,7 @@ exports.uploadMultiple = async (req, res) => {
         await pool.query(
           `INSERT INTO media (collection_id, image_url, tag, youtube_url)
             VALUES ($1,$2,$3,$4)`,
-          [collection_id, file.path, tag, youtube_url || null]
+          [collection_id || null, file.path, tag, youtube_url || null]
         )
       }
     }

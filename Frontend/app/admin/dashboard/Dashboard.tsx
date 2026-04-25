@@ -714,7 +714,16 @@ const renderCreateInputs = () => {
           </button>
         </form>
       </div>
+            {/* ALBUM DESIGN FLIPBOOK PREVIEW */}
+<div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
+  <h2 className="text-2xl text-gold mb-2 font-serif">Album Design — Flipbook Preview</h2>
+  <p className="text-gray-400 text-sm mb-6">
+    Upload images that appear in the flipbook on the Album Design page. 
+    First image = Front Cover, Last image = Back Cover, Middle = Inner Pages.
+  </p>
 
+  <AlbumPreviewUploader API={API} token={token} getMediaUrl={getMediaUrl} />
+</div>
       {/* BRAND LOGOS */}
       <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
         <h2 className="text-2xl text-gold mb-6 font-serif">Brand Logos (Fashion Slider)</h2>
@@ -999,4 +1008,95 @@ const renderCreateInputs = () => {
       </div>
     </div>
   )
+  function AlbumPreviewUploader({ API, token, getMediaUrl }) {
+  const [previewImages, setPreviewImages] = useState([])
+  const [newFiles, setNewFiles] = useState(null)
+
+  useEffect(() => {
+    fetch(`${API}/api/media?tag=album-preview`)
+      .then(res => res.json())
+      .then(data => { if (Array.isArray(data)) setPreviewImages(data) })
+      .catch(err => console.error(err))
+  }, [])
+
+  const uploadPreview = async (e) => {
+    e.preventDefault()
+    if (!newFiles || newFiles.length === 0) return alert('Select images first')
+
+    const formData = new FormData()
+    formData.append('collection_id', '1') // dummy - not used for preview
+    formData.append('tag', 'album-preview')
+    Array.from(newFiles).forEach(f => formData.append('images', f))
+
+    const currentToken = localStorage.getItem('adminToken')
+    const res = await fetch(`${API}/api/media/multiple`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${currentToken}` },
+      body: formData
+    })
+
+    if (res.ok) {
+      alert('Preview images uploaded!')
+      fetch(`${API}/api/media?tag=album-preview`)
+        .then(r => r.json())
+        .then(data => { if (Array.isArray(data)) setPreviewImages(data) })
+    } else {
+      alert('Upload failed')
+    }
+  }
+
+  const deletePreview = async (id) => {
+    if (!confirm('Delete this preview image?')) return
+    const currentToken = localStorage.getItem('adminToken')
+    await fetch(`${API}/api/media/${id}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${currentToken}` }
+    })
+    setPreviewImages(prev => prev.filter(p => p.id !== id))
+  }
+
+  return (
+    <div>
+      <form onSubmit={uploadPreview} className="flex gap-4 items-end mb-6">
+        <div className="flex-1">
+          <label className="text-gold/70 text-sm uppercase block mb-2">Select Images (multiple)</label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            className="w-full p-2 bg-gray-800 border border-gold/20"
+            onChange={e => setNewFiles(e.target.files)}
+          />
+        </div>
+        <button className="bg-gold text-black px-6 py-3 font-bold whitespace-nowrap">
+          Upload to Flipbook
+        </button>
+      </form>
+
+      <div className="grid grid-cols-6 gap-3">
+        {previewImages.map((img, i) => (
+          <div key={img.id} className="relative group">
+            <img
+              src={getMediaUrl(img.image_url)}
+              className="w-full h-20 object-cover border border-white/10"
+            />
+            <div className="absolute top-0 left-0 bg-black/60 text-white text-[9px] px-1">
+              {i === 0 ? 'Cover' : i === previewImages.length - 1 ? 'Back' : `Page ${i}`}
+            </div>
+            <button
+              onClick={() => deletePreview(img.id)}
+              className="absolute top-1 right-1 bg-red-600 text-white text-xs px-1 opacity-0 group-hover:opacity-100 transition"
+            >
+              ✕
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {previewImages.length === 0 && (
+        <p className="text-gray-600 text-sm">No preview images uploaded yet.</p>
+      )}
+    </div>
+  )
+}
 }

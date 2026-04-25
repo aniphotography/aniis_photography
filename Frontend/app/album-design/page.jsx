@@ -43,7 +43,7 @@ export default function AlbumDesignPage() {
 
     const fetchData = async () => {
       try {
-        const previewRes = await fetch(`${API}/api/media?type=album-preview`, {
+        const previewRes = await fetch(`${API}/api/media?tag=album-preview`, {
           signal: abortControllerRef.current.signal
         })
         if (previewRes.ok) {
