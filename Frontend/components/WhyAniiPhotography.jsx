@@ -1,31 +1,37 @@
 'use client'
 import { useState, useEffect } from 'react'
 import { getMediaUrl } from '@/lib/utils'
-
+import { useInView } from 'react-intersection-observer';
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-
-export default function WhyAniiSection() {
-  const [dbData, setDbData] = useState([])
-  const [loading, setLoading] = useState(true)
-  const accentColor = "#d4af37" // Your signature gold
-  const CountUp = ({ end, duration = 2000 }) => {
+function CountUp({ end, duration = 2000 }) {
   const [count, setCount] = useState(0);
+  const { ref, inView } = useInView({ triggerOnce: true });
 
   useEffect(() => {
+    if (!inView) return;
+
     let startTime = null;
+
     const animate = (timestamp) => {
       if (!startTime) startTime = timestamp;
       const progress = Math.min((timestamp - startTime) / duration, 1);
       setCount(Math.floor(progress * end));
+
       if (progress < 1) {
         requestAnimationFrame(animate);
       }
     };
-    requestAnimationFrame(animate);
-  }, [end, duration]);
 
-  return <span>{count}</span>;
-};
+    requestAnimationFrame(animate);
+  }, [inView, end, duration]);
+
+  return <span ref={ref}>{count}</span>;
+}
+export default function WhyAniiSection() {
+  const [dbData, setDbData] = useState([])
+  const [loading, setLoading] = useState(true)
+  const accentColor = "#d4af37" // Your signature gold
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -101,7 +107,7 @@ export default function WhyAniiSection() {
   if (loading) return <div className="py-20 bg-black text-center" style={{ color: accentColor }}>Loading...</div>
 
   return (
-    <section>
+    <>
    <section className="bg-black text-white py-20 px-6">
   <div className="max-w-7xl mx-auto">
     {/* Title - Matches Wedding section spacing */}
@@ -155,7 +161,7 @@ export default function WhyAniiSection() {
  <section className="py-20 px-6">
   <div className="max-w-6xl mx-auto">
     {/* Updated from md:grid-cols-4 to md:grid-cols-3 to center the 3 items */}
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 text-center">
+   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 text-center">
       
       {/* Weddings */}
       <div>
@@ -178,7 +184,7 @@ export default function WhyAniiSection() {
       </div>
 
       {/* Satisfaction */}
-      <div className="sm:col-span-2 md:col-span-1"> {/* Centers on mobile/tablet if needed */}
+      <div > {/* Centers on mobile/tablet if needed */}
         <p className="text-5xl font-display text-gold mb-2">
           <CountUp end={99} />%
         </p>
@@ -187,7 +193,7 @@ export default function WhyAniiSection() {
         </p>
       </div>
       {/* Fashion & Brands */}
-      <div className="sm:col-span-2 md:col-span-1"> {/* Centers on mobile/tablet if needed */}
+      <div > {/* Centers on mobile/tablet if needed */}
         <p className="text-5xl font-display text-gold mb-2">
           <CountUp end={250} />+
         </p>
@@ -198,6 +204,6 @@ export default function WhyAniiSection() {
     </div>
   </div>
 </section>
-</section>
-  )
+</>
+  );
 }
