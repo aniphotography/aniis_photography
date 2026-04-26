@@ -141,7 +141,7 @@ export default function AboutPage() {
       <Navbar />
 
       {/* Hero Section */}
-      <section 
+ <section 
   className="relative min-h-[36vh] flex flex-col items-center justify-center text-center overflow-hidden"
 >
         <div className="relative z-15 px-2 w-full max-w-5xl">
@@ -172,6 +172,18 @@ export default function AboutPage() {
 
   {/* Content Layer */}
   
+</section>
+<section 
+  className="relative min-h-[25vh] md:min-h-[50vh] flex flex-col items-center justify-center text-center overflow-hidden"
+>
+  {/* Background Image Layer */}
+  <div 
+    className="absolute inset-0 z-0 bg-no-repeat bg-contain md:bg-cover bg-center"
+    style={{ 
+      backgroundImage: "url('/images/teamPhoto.jpeg')",
+      backgroundColor: "#000" 
+    }}
+  />
 </section>
       {/* Our Story Section */}
      
