@@ -159,12 +159,13 @@ export default function AboutPage() {
 >
 
   {/* Background Image Layer */}
-  <div 
-    className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center"
-    style={{ 
-      backgroundImage: "url('/images/teamPhoto.jpeg')",
-    }}
-  />
+<div 
+  className="absolute inset-0 z-0 bg-no-repeat bg-contain md:bg-cover bg-center"
+  style={{ 
+    backgroundImage: "url('/images/teamPhoto.jpeg')",
+    backgroundColor: "#000" // Fills the gaps created by bg-contain
+  }}
+/>
   
   {/* Dark Tint Overlay (Optional, helps text readability) */}
   
