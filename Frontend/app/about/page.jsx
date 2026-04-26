@@ -154,6 +154,24 @@ export default function AboutPage() {
     </p>
   </div>
   </section>
+{/* <section 
+  className="relative min-h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden"
+> */}
+
+  {/* Background Image Layer */}
+{/* <div 
+  className="absolute inset-0 z-0 bg-no-repeat bg-contain md:bg-cover "
+  style={{ 
+    backgroundImage: "url('/images/teamPhoto.jpeg')",
+    backgroundColor: "#000" 
+  }}
+/> */}
+  
+  {/* Dark Tint Overlay (Optional, helps text readability) */}
+  
+
+  {/* Content Layer */}
+
 <section 
   className="relative min-h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden"
 >
@@ -172,18 +190,6 @@ export default function AboutPage() {
 
   {/* Content Layer */}
   
-</section>
-<section 
-  className="relative min-h-[25vh] md:min-h-[50vh] flex flex-col items-center justify-center text-center overflow-hidden"
->
-  {/* Background Image Layer */}
-  <div 
-    className="absolute inset-0 z-0 bg-no-repeat bg-contain md:bg-cover bg-center"
-    style={{ 
-      backgroundImage: "url('/images/teamPhoto.jpeg')",
-      backgroundColor: "#000" 
-    }}
-  />
 </section>
       {/* Our Story Section */}
      
