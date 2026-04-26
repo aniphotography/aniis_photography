@@ -1019,21 +1019,34 @@ const renderCreateInputs = () => {
       .catch(err => console.error(err))
   }, [])
 
-  const uploadPreview = async (e) => {
-    e.preventDefault()
-    if (!newFiles || newFiles.length === 0) return alert('Select images first')
+  // Replace the uploadPreview function in AlbumPreviewUploader
+const uploadPreview = async (e) => {
+  e.preventDefault()
+  if (!newFiles || newFiles.length === 0) return alert('Select images first')
 
-    const formData = new FormData()
-    formData.append('collection_id', '1') // dummy - not used for preview
-    formData.append('tag', 'album-preview')
-    Array.from(newFiles).forEach(f => formData.append('images', f))
+  const formData = new FormData()
+  // REMOVED: formData.append('collection_id', '1') ← this caused the 500
+  formData.append('tag', 'album-preview')
+  Array.from(newFiles).forEach(f => formData.append('images', f))
 
-    const currentToken = localStorage.getItem('adminToken')
-    const res = await fetch(`${API}/api/media/multiple`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${currentToken}` },
-      body: formData
-    })
+  const currentToken = localStorage.getItem('adminToken')
+  const res = await fetch(`${API}/api/media/multiple`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${currentToken}` },
+    body: formData
+  })
+
+  if (res.ok) {
+    alert('Preview images uploaded!')
+    fetch(`${API}/api/media?tag=album-preview`)
+      .then(r => r.json())
+      .then(data => { if (Array.isArray(data)) setPreviewImages(data) })
+  } else {
+    const errText = await res.text()
+    console.error('Upload error:', errText)
+    alert('Upload failed — check backend terminal')
+  }
+}
 
     if (res.ok) {
       alert('Preview images uploaded!')
@@ -1043,7 +1056,7 @@ const renderCreateInputs = () => {
     } else {
       alert('Upload failed')
     }
-  }
+  
 
   const deletePreview = async (id) => {
     if (!confirm('Delete this preview image?')) return
