@@ -141,50 +141,37 @@ export default function AboutPage() {
       <Navbar />
 
       {/* Hero Section */}
-<section 
-// className="relative pt-32 pb-16 px-6 text-center bg-cover bg-center"
-//   style={{ backgroundImage: "url('/images/teamPhoto.jpeg')" }}
-// > 
-  className="relative pt-32 pb-16 px-6 text-center bg-no-repeat bg-center bg-contain md:bg-cover"
-  style={{ 
-    backgroundImage: "url('/images/teamPhoto.jpeg')",
-    backgroundColor: "#000" // Fills any gaps with black if the image is shorter than the section
-  }}
+      <section 
+  className="relative min-h-[36vh] flex flex-col items-center justify-center text-center overflow-hidden"
 >
-  {/* Overlay */}
-  <div className="absolute inset-0 bg-black/30"></div>
-
-  {/* Content */}
-  {/* <div className="relative z-10">
-    <h1 className="text-5xl md:text-7xl font-display mb-4 text-white">
+        <div className="relative z-15 px-2 w-full max-w-5xl">
+    <h1 className="text-4xl md:text-7xl font-display mb-4 text-white">
       About <span className="text-gold">ANII</span>
     </h1>
-    <p className="text-gray-200 font-lato max-w-2xl mx-auto text-lg">
+
+    <p className="text-gray-100 font-lato text-sm md:text-xl whitespace-nowrap overflow-hidden text-ellipsis">
       Meet the passionate team behind the lens dedicated to capturing your timeless moments
     </p>
-  </div> */}
+  </div>
+  </section>
+<section 
+  className="relative min-h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden"
+>
 
-{/* <div className="absolute bottom-2 md:bottom-auto md:relative z-10 px-4 w-full">
-    <h1 className="text-3xl sm:text-4xl md:text-7xl font-display mb-1 md:mb-4 text-white">
-      About <span className="text-gold">ANII</span>
-    </h1>
-    <p className="text-gray-200 font-lato max-w-[90%] md:max-w-2xl mx-auto text-sm sm:text-base md:text-xl leading-normal md:leading-relaxed">
-  Meet the passionate team behind the lens dedicated to capturing your timeless moments
-</p>
-  </div> */}
-  <div className="absolute bottom-2 md:bottom-auto md:relative z-10 px-4 w-full text-center md:text-left">
-    
-    <h1 className="text-3xl sm:text-4xl md:text-7xl font-display mb-1 md:mb-4 text-white">
-      About <span className="text-gold">ANII</span>
-    </h1>
+  {/* Background Image Layer */}
+  <div 
+    className="absolute inset-0 z-0 bg-no-repeat bg-cover bg-center"
+    style={{ 
+      backgroundImage: "url('/images/teamPhoto.jpeg')",
+    }}
+  />
+  
+  {/* Dark Tint Overlay (Optional, helps text readability) */}
+  
 
-    <p className="text-gray-200 font-lato max-w-[90%] md:max-w-2xl mx-auto md:mx-0 text-sm sm:text-base md:text-xl leading-normal md:leading-relaxed">
-      Meet the passionate team behind the lens dedicated to capturing your timeless moments
-    </p>
-
-</div>
+  {/* Content Layer */}
+  
 </section>
-
       {/* Our Story Section */}
      
  <section className="py-20 px-6 bg-black/50">
