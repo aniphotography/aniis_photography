@@ -135,7 +135,9 @@ export default function AboutPage() {
   ]
 
   return (
-    <main className="min-h-screen bg-[#1a1a1a] text-white">
+   <main className="min-h-screen bg-[#1a1a1a] text-white overflow-x-hidden">
+  {/* Your content */}
+
       <Navbar />
 
       {/* Hero Section */}
@@ -161,22 +163,26 @@ export default function AboutPage() {
       Meet the passionate team behind the lens dedicated to capturing your timeless moments
     </p>
   </div> */}
- {/* <div className="relative z-10 px-4">
-    <h1 className="text-3xl sm:text-4xl md:text-7xl font-display mb-2 text-white">
-      About <span className="text-gold">ANII</span>
-    </h1>
-    <p className="text-gray-200 font-lato max-w-[85%] md:max-w-2xl mx-auto text-xs sm:text-sm md:text-lg">
-      Meet the passionate team behind the lens dedicated to capturing your timeless moments
-    </p>
-  </div> */}
-<div className="absolute bottom-2 md:bottom-auto md:relative z-10 px-4 w-full">
+
+{/* <div className="absolute bottom-2 md:bottom-auto md:relative z-10 px-4 w-full">
     <h1 className="text-3xl sm:text-4xl md:text-7xl font-display mb-1 md:mb-4 text-white">
       About <span className="text-gold">ANII</span>
     </h1>
     <p className="text-gray-200 font-lato max-w-[90%] md:max-w-2xl mx-auto text-sm sm:text-base md:text-xl leading-normal md:leading-relaxed">
   Meet the passionate team behind the lens dedicated to capturing your timeless moments
 </p>
-  </div>
+  </div> */}
+  <div className="absolute bottom-2 md:bottom-auto md:relative z-10 px-4 w-full text-center md:text-left">
+    
+    <h1 className="text-3xl sm:text-4xl md:text-7xl font-display mb-1 md:mb-4 text-white">
+      About <span className="text-gold">ANII</span>
+    </h1>
+
+    <p className="text-gray-200 font-lato max-w-[90%] md:max-w-2xl mx-auto md:mx-0 text-sm sm:text-base md:text-xl leading-normal md:leading-relaxed">
+      Meet the passionate team behind the lens dedicated to capturing your timeless moments
+    </p>
+
+</div>
 </section>
 
       {/* Our Story Section */}
