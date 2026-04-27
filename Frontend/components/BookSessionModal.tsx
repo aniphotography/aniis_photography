@@ -158,7 +158,7 @@ export default function BookSessionModal() {
               name="message"
               value={formData.message}
               onChange={handleChange}
-              rows={3}
+              rows={2}
               placeholder="Tell us about your event..."
               required
               className="w-full bg-black border border-white/20 px-4 py-3 rounded-md text-white resize-none"
