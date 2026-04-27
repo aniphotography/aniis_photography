@@ -171,25 +171,12 @@ export default function AboutPage() {
   
 
   {/* Content Layer */}
-
-<section 
-  className="relative min-h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden"
->
-
-  {/* Background Image Layer */}
-<div 
-  className="absolute inset-0 z-0 bg-no-repeat bg-contain md:bg-cover bg-center"
-  style={{ 
-    backgroundImage: "url('/images/teamPhoto.jpeg')",
-    backgroundColor: "#000" // Fills the gaps created by bg-contain
-  }}
-/>
-  
-  {/* Dark Tint Overlay (Optional, helps text readability) */}
-  
-
-  {/* Content Layer */}
-  
+<section className="w-full">
+  <img
+    src="/images/teamPhoto.jpeg"
+    alt="ANII Team"
+    className="w-full h-auto object-cover"
+  />
 </section>
       {/* Our Story Section */}
      
