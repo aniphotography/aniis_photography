@@ -149,7 +149,7 @@ export default function AboutPage() {
       About <span className="text-gold">ANII</span>
     </h1>
 
-    <p className="text-gray-100 font-lato text-sm md:text-xl whitespace-nowrap overflow-hidden text-ellipsis">
+    <p className="text-gray-100 font-lato text-sm md:text-xl px-4">
       Meet the passionate team behind the lens dedicated to capturing your timeless moments
     </p>
   </div>
