@@ -106,14 +106,16 @@ export default function PreWeddingPage() {
                 </div>
               ))
             ) : (
-              <div
-                onClick={handleAddClick}
-                className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
-              >
-                <span className="text-5xl text-gold">+</span>
-              </div>
-            )}
-          </div>
+              isAdmin && (
+      <div
+        onClick={handleAddClick}
+        className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+      >
+        <span className="text-5xl text-gold">+</span>
+      </div>
+    )
+  )}
+</div>
         </div>
       </section>
 {/* Quote */}
@@ -159,14 +161,16 @@ export default function PreWeddingPage() {
                 </div>
               ))
             ) : (
-              <div
-                onClick={handleAddClick}
-                className="flex items-center justify-center h-[300px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
-              >
-                <span className="text-5xl text-gold">+</span>
-              </div>
-            )}
-          </div>
+             isAdmin && (
+      <div
+        onClick={handleAddClick}
+        className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+      >
+        <span className="text-5xl text-gold">+</span>
+      </div>
+    )
+  )}
+</div>
         </div>
       </section>
 
