@@ -16,10 +16,17 @@ export default function PreWeddingPage() {
   const [bgImage, setBgImage] = useState('')
   const [isAdmin, setIsAdmin] = useState(false)
 
-  useEffect(() => {
-    const token = localStorage.getItem('adminToken')
-    setIsAdmin(!!token)
-  }, [])
+ useEffect(() => {
+  const token = localStorage.getItem('adminToken');
+
+  const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    setIsAdmin(false); // force logout on mobile
+  } else {
+    setIsAdmin(!!token);
+  }
+}, []);
 
   useEffect(() => {
     Promise.all([

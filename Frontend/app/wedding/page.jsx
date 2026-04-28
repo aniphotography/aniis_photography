@@ -172,10 +172,17 @@ const prevSlide = () => {
 };
 
 const item = testimonials[currentIndex] || {};
-  useEffect(() => {
-    const token = localStorage.getItem('adminToken')
-    setIsAdmin(!!token)
-  }, [])
+useEffect(() => {
+  const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    localStorage.removeItem('adminToken'); // optional but recommended
+    setIsAdmin(false);
+  } else {
+    const token = localStorage.getItem('adminToken');
+    setIsAdmin(!!token);
+  }
+}, []);
 
   useEffect(() => {
     Promise.all([

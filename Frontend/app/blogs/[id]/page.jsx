@@ -31,12 +31,20 @@ const [showTrailer, setShowTrailer] = useState(false)
       .then(res => res.json())
       .then(data => setMedia(data))
       .catch(err => console.error(err))
-
-    // ✅ NEW: check admin login
-    const token = localStorage.getItem('adminToken')
-    setIsAdmin(!!token)
-
   }, [id])
+
+  // ✅ NEW: check admin login
+  useEffect(() => {
+    const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      localStorage.removeItem('adminToken'); // optional but recommended
+      setIsAdmin(false);
+    } else {
+      const token = localStorage.getItem('adminToken');
+      setIsAdmin(!!token);
+    }
+  }, []);
 
   const handleAddClick = (type) => {
     const token = localStorage.getItem('adminToken')
