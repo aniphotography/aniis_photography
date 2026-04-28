@@ -159,8 +159,9 @@ export default function WeddingPage() {
   const [loading, setLoading] = useState(true)
   const [bgImage, setBgImage] = useState('')
   const [heroData, setHeroData] = useState([]);
-const [testimonials, setTestimonials] = useState([]);
-const [currentIndex, setCurrentIndex] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
 const nextSlide = () => {
   setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
@@ -171,6 +172,11 @@ const prevSlide = () => {
 };
 
 const item = testimonials[currentIndex] || {};
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken')
+    setIsAdmin(!!token)
+  }, [])
+
   useEffect(() => {
     Promise.all([
      fetch(`${API}/api/collections?category=wedding&section=featured`),

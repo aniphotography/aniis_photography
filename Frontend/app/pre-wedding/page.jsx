@@ -14,6 +14,12 @@ export default function PreWeddingPage() {
   const [recentWorks, setRecentWorks] = useState([])
   const [loading, setLoading] = useState(true)
   const [bgImage, setBgImage] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken')
+    setIsAdmin(!!token)
+  }, [])
 
   useEffect(() => {
     Promise.all([
