@@ -1008,7 +1008,7 @@ const renderCreateInputs = () => {
       </div>
     </div>
   )
-  function AlbumPreviewUploader({ API, token, getMediaUrl }) {
+ function AlbumPreviewUploader({ API, token, getMediaUrl }) {
   const [previewImages, setPreviewImages] = useState([])
   const [newFiles, setNewFiles] = useState(null)
 
@@ -1024,7 +1024,6 @@ const renderCreateInputs = () => {
     if (!newFiles || newFiles.length === 0) return alert('Select images first')
 
     const formData = new FormData()
-    formData.append('collection_id', '1') // dummy - not used for preview
     formData.append('tag', 'album-preview')
     Array.from(newFiles).forEach(f => formData.append('images', f))
 
@@ -1041,7 +1040,9 @@ const renderCreateInputs = () => {
         .then(r => r.json())
         .then(data => { if (Array.isArray(data)) setPreviewImages(data) })
     } else {
-      alert('Upload failed')
+      const errText = await res.text()
+      console.error('Upload error:', errText)
+      alert('Upload failed — check backend terminal')
     }
   }
 

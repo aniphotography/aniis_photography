@@ -151,7 +151,7 @@ exports.updateFeaturedStatus = async (req, res) => {
 exports.getFeaturedCollections = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, title, category, cover_image, youtube_url, featured_slot 
+      `SELECT id, title, category, cover_image, cover_video, video_url, youtube_url, featured_slot 
        FROM collections 
        WHERE is_featured = TRUE 
        ORDER BY featured_slot ASC`

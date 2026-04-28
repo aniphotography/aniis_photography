@@ -149,7 +149,7 @@ export default function AboutPage() {
       About <span className="text-gold">ANII</span>
     </h1>
 
-    <p className="text-gray-100 font-lato text-sm md:text-xl whitespace-nowrap overflow-hidden text-ellipsis">
+    <p className="text-gray-100 font-lato text-sm md:text-xl px-4">
       Meet the passionate team behind the lens dedicated to capturing your timeless moments
     </p>
   </div>
@@ -171,25 +171,12 @@ export default function AboutPage() {
   
 
   {/* Content Layer */}
-
-<section 
-  className="relative min-h-[60vh] flex flex-col items-center justify-center text-center overflow-hidden"
->
-
-  {/* Background Image Layer */}
-<div 
-  className="absolute inset-0 z-0 bg-no-repeat bg-contain md:bg-cover bg-center"
-  style={{ 
-    backgroundImage: "url('/images/teamPhoto.jpeg')",
-    backgroundColor: "#000" // Fills the gaps created by bg-contain
-  }}
-/>
-  
-  {/* Dark Tint Overlay (Optional, helps text readability) */}
-  
-
-  {/* Content Layer */}
-  
+<section className="w-full">
+  <img
+    src="/images/teamPhoto.jpeg"
+    alt="ANII Team"
+    className="w-full h-auto object-cover"
+  />
 </section>
       {/* Our Story Section */}
      
