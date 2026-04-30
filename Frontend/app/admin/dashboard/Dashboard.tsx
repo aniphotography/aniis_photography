@@ -1005,6 +1005,7 @@ const renderCreateInputs = () => {
       </div>
     </div>
   )
+}
  function AlbumPreviewUploader({ API, token, getMediaUrl }) {
   const [previewImages, setPreviewImages] = useState([])
   const [newFiles, setNewFiles] = useState(null)
@@ -1042,7 +1043,6 @@ const renderCreateInputs = () => {
       alert('Upload failed — check backend terminal')
     }
   }
-
   const deletePreview = async (id) => {
     if (!confirm('Delete this preview image?')) return
     const currentToken = localStorage.getItem('adminToken')
@@ -1096,5 +1096,4 @@ const renderCreateInputs = () => {
       )}
     </div>
   )
-}
 }
