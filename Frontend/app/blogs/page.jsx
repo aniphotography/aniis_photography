@@ -15,10 +15,17 @@ export default function BlogsPage() {
   const [isAdmin, setIsAdmin] = useState(false)
 
   // Check admin status
-  useEffect(() => {
-    const token = localStorage.getItem('adminToken')
-    setIsAdmin(!!token)
-  }, [])
+useEffect(() => {
+  const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    localStorage.removeItem('adminToken'); // optional but recommended
+    setIsAdmin(false);
+  } else {
+    const token = localStorage.getItem('adminToken');
+    setIsAdmin(!!token);
+  }
+}, []);
 
   // 🔥 FETCH BLOGS FROM COLLECTIONS
   const fetchBlogs = () => {

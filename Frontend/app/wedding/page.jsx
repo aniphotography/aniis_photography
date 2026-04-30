@@ -19,8 +19,9 @@ export default function WeddingPage() {
   const [loading, setLoading] = useState(true)
   const [bgImage, setBgImage] = useState('')
   const [heroData, setHeroData] = useState([]);
-const [testimonials, setTestimonials] = useState([]);
-const [currentIndex, setCurrentIndex] = useState(0);
+  const [testimonials, setTestimonials] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
 
 const nextSlide = () => {
   setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
@@ -31,6 +32,18 @@ const prevSlide = () => {
 };
 
 const item = testimonials[currentIndex] || {};
+useEffect(() => {
+  const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    localStorage.removeItem('adminToken'); // optional but recommended
+    setIsAdmin(false);
+  } else {
+    const token = localStorage.getItem('adminToken');
+    setIsAdmin(!!token);
+  }
+}, []);
+
   useEffect(() => {
     Promise.all([
      fetch(`${API}/api/collections?category=wedding&section=featured`),
@@ -178,14 +191,16 @@ async function getTestimonials() {
                 </div>
               ))
             ) : (
-              <div
-                onClick={handleAddClick}
-                className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
-              >
-                <span className="text-5xl text-gold">+</span>
-              </div>
-            )}
-          </div>
+             isAdmin && (
+      <div
+        onClick={handleAddClick}
+        className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+      >
+        <span className="text-5xl text-gold">+</span>
+      </div>
+    )
+  )}
+</div>
         </div>
       </section>
 {/* Qoute */}
@@ -231,14 +246,16 @@ async function getTestimonials() {
                 </div>
               ))
             ) : (
-              <div
-                onClick={handleAddClick}
-                className="flex items-center justify-center h-[300px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
-              >
-                <span className="text-5xl text-gold">+</span>
-              </div>
-            )}
-          </div>
+              isAdmin && (
+      <div
+        onClick={handleAddClick}
+        className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+      >
+        <span className="text-5xl text-gold">+</span>
+      </div>
+    )
+  )}
+</div>
         </div>
         </section>
 

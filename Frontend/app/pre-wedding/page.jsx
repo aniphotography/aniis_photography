@@ -14,6 +14,19 @@ export default function PreWeddingPage() {
   const [recentWorks, setRecentWorks] = useState([])
   const [loading, setLoading] = useState(true)
   const [bgImage, setBgImage] = useState('')
+  const [isAdmin, setIsAdmin] = useState(false)
+
+ useEffect(() => {
+  const token = localStorage.getItem('adminToken');
+
+  const isMobile = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    setIsAdmin(false); // force logout on mobile
+  } else {
+    setIsAdmin(!!token);
+  }
+}, []);
 
   useEffect(() => {
     Promise.all([
@@ -113,14 +126,16 @@ export default function PreWeddingPage() {
                 </div>
               ))
             ) : (
-              <div
-                onClick={handleAddClick}
-                className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
-              >
-                <span className="text-5xl text-gold">+</span>
-              </div>
-            )}
-          </div>
+              isAdmin && (
+      <div
+        onClick={handleAddClick}
+        className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+      >
+        <span className="text-5xl text-gold">+</span>
+      </div>
+    )
+  )}
+</div>
         </div>
       </section>
 {/* Quote */}
@@ -166,14 +181,16 @@ export default function PreWeddingPage() {
                 </div>
               ))
             ) : (
-              <div
-                onClick={handleAddClick}
-                className="flex items-center justify-center h-[300px] border-2 border-dashed border-gold rounded-xl cursor-pointer hover:bg-white/5 transition"
-              >
-                <span className="text-5xl text-gold">+</span>
-              </div>
-            )}
-          </div>
+             isAdmin && (
+      <div
+        onClick={handleAddClick}
+        className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition"
+      >
+        <span className="text-5xl text-gold">+</span>
+      </div>
+    )
+  )}
+</div>
         </div>
       </section>
 
