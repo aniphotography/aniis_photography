@@ -1007,6 +1007,7 @@ const renderCreateInputs = () => {
       </div>
     </div>
   )
+}
  function AlbumPreviewUploader({ API, token, getMediaUrl }) {
   const [previewImages, setPreviewImages] = useState([])
   const [newFiles, setNewFiles] = useState(null)
