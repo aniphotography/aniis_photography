@@ -711,12 +711,6 @@ const renderCreateInputs = () => {
   <label className="text-gold/70 text-sm uppercase">New Image / Video File</label>
   <input key={homeSlot} type="file" accept="image/*,video/*" className="p-2 bg-gray-800 border border-gold/20 cursor-pointer" onChange={e => setHomePhoto(e.target.files[0])} />
 </div>
-
-          <button className="md:col-span-3 bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-colors">
-            Update Home Content
-          </button>
-        </form>
-      </div>
             {/* ALBUM DESIGN FLIPBOOK PREVIEW */}
 <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
   <h2 className="text-2xl text-gold mb-2 font-serif">Album Design — Flipbook Preview</h2>
