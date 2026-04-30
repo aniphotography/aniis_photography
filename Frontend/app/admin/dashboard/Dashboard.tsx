@@ -710,6 +710,12 @@ const renderCreateInputs = () => {
           <div className="flex flex-col space-y-2">
   <label className="text-gold/70 text-sm uppercase">New Image / Video File</label>
   <input key={homeSlot} type="file" accept="image/*,video/*" className="p-2 bg-gray-800 border border-gold/20 cursor-pointer" onChange={e => setHomePhoto(e.target.files[0])} />
+     <button 
+    type="submit" 
+    className="mt-4 bg-gold text-black px-6 py-2 font-bold hover:bg-white transition-all uppercase text-xs tracking-widest"
+  >
+    Upload to {homeSlot || 'Home'}
+  </button>
 </div>
 </form>
         </div>

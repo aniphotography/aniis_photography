@@ -61,7 +61,7 @@ export default function HeroSection() {
       {hasImage && (
         <div
           className="absolute inset-0 bg-cover bg-center opacity-70 z-0 transition-opacity duration-1000"
-          style={{ backgroundImage: `url(${heroData.image})` }}
+          style={{ backgroundImage: `url("${heroData.image}")` }}
         />
       )}
 
