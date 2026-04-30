@@ -57,26 +57,33 @@ export default function PreWeddingPage() {
     <main className="min-h-screen bg-[#1a1a1a] text-white">
       <Navbar />
 
-      {/* ===== HERO SECTION (Dynamic Background) ===== */}
-      <section 
-        className="relative h-[500px] overflow-hidden bg-cover bg-center transition-all duration-1000"
-        style={{ 
-          backgroundImage: bgImage ? `url(${bgImage})` : 'none',
-          backgroundColor: '#1a1a1a' 
-        }}
-      >
-        {/* Overlay for text contrast */}
-        <div className="absolute inset-0 bg-black/70" />
-
-        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-          <h1 className="text-6xl md:text-7xl font-display mb-4">
-            <span className="text-gold">Pre-Wedding</span> Moments
-          </h1>
-          <p className="text-gray-300 font-lato max-w-2xl text-lg">
-            Romantic storytelling through cinematic pre-wedding artistry
-          </p>
-        </div>
-      </section>
+    {/* ===== HERO SECTION ===== */}
+<section className="relative h-[500px] overflow-hidden">
+  {bgImage && bgImage.match(/\.(mp4|webm|mov)($|\?)/i) ? (
+    <video
+      src={bgImage}
+      autoPlay
+      loop
+      muted
+      playsInline
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+  ) : (
+    <div
+      className="absolute inset-0 bg-cover bg-center"
+      style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
+    />
+  )}
+  <div className="absolute inset-0 bg-black/70" />
+  <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+    <h1 className="text-6xl md:text-7xl font-display mb-4">
+      <span className="text-gold">Pre-Wedding</span> Moments
+    </h1>
+    <p className="text-gray-300 font-lato max-w-2xl text-lg">
+      Romantic storytelling through cinematic pre-wedding artistry
+    </p>
+  </div>
+</section>
 
       {/* ===== FEATURED LOVE STORIES ===== */}
       <section className="py-20 px-6">

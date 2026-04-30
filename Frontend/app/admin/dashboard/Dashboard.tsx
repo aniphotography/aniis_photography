@@ -696,18 +696,21 @@ const renderCreateInputs = () => {
                 </>
               )}
             </select>
-            {homeSlot && homeData[homeSlot] && (
-              <div className="mt-2 border border-gold/20 p-2 bg-black/50">
-                <p className="text-[10px] uppercase text-gray-500 mb-1">Active Image:</p>
-                <img src={getMediaUrl(homeData[homeSlot])} className="h-16 w-full object-cover" alt="preview" />
-              </div>
-            )}
-          </div>
+          {homeSlot && homeData[homeSlot] && (
+  <div className="mt-2 border border-gold/20 p-2 bg-black/50">
+    <p className="text-[10px] uppercase text-gray-500 mb-1">Active Media:</p>
+    {homeData[homeSlot]?.includes('/video/upload/') ? (
+      <video src={getMediaUrl(homeData[homeSlot])} className="h-16 w-full object-cover" muted />
+    ) : (
+      <img src={getMediaUrl(homeData[homeSlot])} className="h-16 w-full object-cover" alt="preview" />
+    )}
+  </div>
+)}
 
           <div className="flex flex-col space-y-2">
-            <label className="text-gold/70 text-sm uppercase">New Image File</label>
-            <input key={homeSlot} type="file" className="p-2 bg-gray-800 border border-gold/20 cursor-pointer" onChange={e => setHomePhoto(e.target.files[0])} />
-          </div>
+  <label className="text-gold/70 text-sm uppercase">New Image / Video File</label>
+  <input key={homeSlot} type="file" accept="image/*,video/*" className="p-2 bg-gray-800 border border-gold/20 cursor-pointer" onChange={e => setHomePhoto(e.target.files[0])} />
+</div>
 
           <button className="md:col-span-3 bg-gold text-black py-4 font-bold uppercase tracking-widest hover:bg-white transition-colors">
             Update Home Content
