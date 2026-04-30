@@ -705,12 +705,14 @@ const renderCreateInputs = () => {
       <img src={getMediaUrl(homeData[homeSlot])} className="h-16 w-full object-cover" alt="preview" />
     )}
   </div>
-)}
+)}</div>
 
           <div className="flex flex-col space-y-2">
   <label className="text-gold/70 text-sm uppercase">New Image / Video File</label>
   <input key={homeSlot} type="file" accept="image/*,video/*" className="p-2 bg-gray-800 border border-gold/20 cursor-pointer" onChange={e => setHomePhoto(e.target.files[0])} />
 </div>
+</form>
+        </div>
             {/* ALBUM DESIGN FLIPBOOK PREVIEW */}
 <div className="border-2 border-gold/30 p-8 bg-gray-900/30 rounded-xl shadow-2xl mb-10">
   <h2 className="text-2xl text-gold mb-2 font-serif">Album Design — Flipbook Preview</h2>
@@ -1005,7 +1007,6 @@ const renderCreateInputs = () => {
       </div>
     </div>
   )
-}
  function AlbumPreviewUploader({ API, token, getMediaUrl }) {
   const [previewImages, setPreviewImages] = useState([])
   const [newFiles, setNewFiles] = useState(null)
