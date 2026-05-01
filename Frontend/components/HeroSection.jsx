@@ -58,15 +58,15 @@ export default function HeroSection() {
     <section className="relative w-full h-screen bg-[#000] flex items-center justify-center overflow-hidden">
       
       {/* 1. BACKGROUND IMAGE LAYER */}
-      {hasImage && (
+      {/* {hasImage && (
         <div
           className="absolute inset-0 bg-cover bg-center opacity-70 z-0 transition-opacity duration-1000"
           style={{ backgroundImage: `url("${heroData.image}")` }}
         />
-      )}
+      )} */}
 
       {/* 2. BIG CENTER PLUS BUTTON (Visible only if no image) */}
-      {!hasImage && (
+      {/* {!hasImage && (
         <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
           <button
             onClick={handleAddClick}
@@ -80,7 +80,44 @@ export default function HeroSection() {
             </span>
           </button>
         </div>
-      )}
+      )} */}
+      {/* 1. MEDIA BACKGROUND (Video or Image) */}
+{heroData.image && (
+  <div className="absolute inset-0 z-0 overflow-hidden">
+    {heroData.image.match(/\.(mp4|webm|mov)($|\?)/i) ? (
+      <video
+        src={heroData.image}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover opacity-70 transition-opacity duration-1000"
+      />
+    ) : (
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-70 transition-opacity duration-1000"
+        style={{ backgroundImage: `url("${heroData.image}")` }}
+      />
+    )}
+  </div>
+)}
+
+{/* 2. BIG CENTER PLUS BUTTON (Visible ONLY if heroData.image is empty/null) */}
+{!heroData.image && (
+  <div className="absolute inset-0 z-20 flex flex-col items-center justify-center">
+    <button
+      onClick={handleAddClick}
+      className="group flex flex-col items-center justify-center gap-6 transition-all duration-300"
+    >
+      <div className="w-32 h-32 md:w-40 md:h-40 flex items-center justify-center border-4 border-dashed border-gold text-gold text-7xl rounded-full bg-black/40 hover:bg-gold hover:text-black hover:border-solid transition-all transform hover:scale-110 shadow-2xl">
+        +
+      </div>
+      <span className="text-gold font-display tracking-[0.2em] uppercase text-sm bg-black/60 px-4 py-1 rounded">
+        Add Hero Media
+      </span>
+    </button>
+  </div>
+)}
 
       {/* 3. MAIN CONTENT */}
       <div className="relative z-10 text-center max-w-4xl mx-auto px-6 pt-20 pointer-events-none">
