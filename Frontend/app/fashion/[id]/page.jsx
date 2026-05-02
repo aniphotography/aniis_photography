@@ -19,6 +19,17 @@ export default function FashionDetailPage() {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
 const [trailerUrl, setTrailerUrl] = useState(null)
+const getEmbedUrl = (url) => {
+  if (!url) return "";
+  
+  // This regex handles: watch?v=, shorts/, and youtu.be/
+  const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  const videoId = (match && match[1].length === 11) ? match[1] : null;
+
+  // Converting to /embed/ allows BOTH Shorts and Videos to play in your modal
+  return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : url;
+};
   useEffect(() => {
     setIsMounted(true)
     
@@ -172,7 +183,7 @@ const [trailerUrl, setTrailerUrl] = useState(null)
         </div>
       </section>
 {/* TRAILER MODAL */}
-{trailerUrl && (
+{/* {trailerUrl && (
   <div
     className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200] flex flex-col items-center justify-center p-6"
     onClick={() => setTrailerUrl(null)}
@@ -198,6 +209,44 @@ const [trailerUrl, setTrailerUrl] = useState(null)
       />
     </div>
     <p className="text-gray-500 text-xs mt-4 uppercase tracking-widest">Click outside to close</p>
+  </div>
+)} */}
+{trailerUrl && (
+  <div
+    className="fixed inset-0 bg-black/95 backdrop-blur-md z-[200] flex flex-col items-center justify-center p-6"
+    onClick={() => setTrailerUrl(null)}
+  >
+    <button
+      onClick={() => setTrailerUrl(null)}
+      className="absolute top-6 right-8 text-gold text-3xl hover:text-white transition"
+    >
+      ✕
+    </button>
+    
+    {/* 
+      Pro Tip: If you want Shorts to look "vertical", 
+      you can change "aspect-video" to "aspect-[9/16] max-w-sm" 
+      if trailerUrl.includes('shorts') 
+    */}
+    <div
+      className={`w-full max-w-4xl ${trailerUrl.includes('shorts') ? 'aspect-[9/16] max-w-sm' : 'aspect-video'}`}
+      onClick={e => e.stopPropagation()}
+    >
+      <iframe
+        src={(() => {
+          // New Regex: Supports watch?v=, youtu.be/, and shorts/
+          const regExp = /^.*(?:(?:youtu\.be\/|v\/|vi\/|u\/\w\/|embed\/|shorts\/)|(?:(?:watch)?\?v(?:i)?=|\&v(?:i)?=))([^#\&\?]*).*/;
+          const match = trailerUrl.match(regExp);
+          const videoId = (match && match[1].length === 11) ? match[1] : null;
+          
+          return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1` : trailerUrl;
+        })()}
+        className="w-full h-full border-0"
+        allowFullScreen
+        allow="autoplay; encrypted-media"
+      />
+    </div>
+    <p className="text-gray-500 text-[10px] mt-6 uppercase tracking-[0.3em]">Click outside to close</p>
   </div>
 )}
       <Footer />

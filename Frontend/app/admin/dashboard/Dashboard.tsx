@@ -57,7 +57,7 @@ const [recentYoutubeUrl, setRecentYoutubeUrl] = useState('')
   const [recentCoverVideo, setRecentCoverVideo] = useState(null)
   const [blogYoutubeUrl, setBlogYoutubeUrl] = useState('')
 const [fashionYoutubeUrl, setFashionYoutubeUrl] = useState('')
-
+const [videoYoutubeUrl, setVideoYoutubeUrl] = useState("");
 
 
 // Inside AdminDashboard function
@@ -389,9 +389,15 @@ const createRecentCollection = async (e) => {
     formData.append("collection_id", selectedCollection)
     formData.append("tag", tag)
 
-  if (fashionYoutubeUrl && category === 'fashion') {
-  formData.append("youtube_url", fashionYoutubeUrl)
-}
+  // Use the same backend field for trailer links in fashion and video-production uploads.
+  const trailerUrl = category === 'fashion'
+    ? fashionYoutubeUrl
+    : category === 'video-production'
+      ? videoYoutubeUrl
+      : ''
+  if (trailerUrl) {
+    formData.append("youtube_url", trailerUrl)
+  }
     if (images && images.length > 0) {
       Array.from(images).forEach(img => formData.append("images", img))
     }
@@ -598,6 +604,22 @@ const renderCreateInputs = () => {
             <label>Upload Video Production Files</label>
             <input type="file" multiple accept="image/*,video/*" onChange={e => setImages(e.target.files)} />
             <input placeholder="Tag (optional: still, video, thumbnail)" className="w-full p-3 bg-gray-800 mt-2" onChange={e => setTag(e.target.value)} />
+          {/* VIDEO PRODUCTION YOUTUBE LINK */}
+<div className="border border-gold/30 p-4 mt-6 bg-black/30 rounded">
+  <h4 className="text-gold text-sm mb-2 uppercase tracking-widest font-display">
+    Watch Trailer YouTube Link (Video Production)
+  </h4>
+  <input
+    type="text"
+    value={videoYoutubeUrl}
+    placeholder="Paste YouTube URL for this production..."
+    className="w-full p-3 bg-gray-900 border border-gold/20 text-white text-sm focus:border-gold outline-none transition"
+    onChange={e => setVideoYoutubeUrl(e.target.value)}
+  />
+  <p className="text-gray-500 text-[10px] mt-2 uppercase tracking-widest">
+    This link will appear on the "Watch Trailer" button in the project view.
+  </p>
+</div>
           </>
         )
       case "album-design":
