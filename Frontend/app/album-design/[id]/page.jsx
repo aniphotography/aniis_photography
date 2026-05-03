@@ -159,8 +159,8 @@ const showPrevImage = (e) => {
 
           {/* FLIPBOOK */}
 
-          <div className="flex flex-col items-center mb-20">
-
+          <div className="flex flex-col items-center mb-20 overflow-x-auto w-full">
+  <div className="min-w-[700px] w-full">
             <HTMLFlipBook
   /* 3:1 Ratio: Width 1200 / Height 400 */
  width={900} 
@@ -266,41 +266,7 @@ const showPrevImage = (e) => {
   </div>
 </div>
   </div>
-{/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[350px] gap-2">
-  {pages.map((page, idx) => {
-    const isLarge = idx % 7 === 0;
-    const isWide = idx % 7 === 3;
-
-    return (
-      <div
-        key={idx}
-        className={`group relative overflow-hidden cursor-pointer bg-black transition-all duration-500
-          ${isLarge ? 'md:row-span-2' : ''}
-          ${isWide ? 'md:col-span-2' : ''}
-        `}
-        onClick={() => setSelectedImageIndex(idx)}
-      >
-        <img
-          src={page}
-          alt={`Page ${idx + 1}`}
-          className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-105 group-hover:opacity-60"
-        />
-
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col items-center justify-center">
-          <div className="translate-y-4 group-hover:translate-y-0 transition-transform duration-500 flex flex-col items-center">
-            <span className="text-white text-xs tracking-[0.4em] uppercase border-b border-[#d4af37] pb-2 mb-2">
-              View Frame
-            </span>
-            <span className="text-[#d4af37] text-[10px] tracking-widest">
-              PAGE {idx + 1}
-            </span>
-          </div>
-        </div>
-      </div>
-    );
-  })}
-</div> */}
-
+</div>
       </section>
 
 

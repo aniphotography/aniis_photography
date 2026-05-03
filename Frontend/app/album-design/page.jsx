@@ -124,7 +124,8 @@ export default function AlbumDesignPage() {
 
       {/* ================= FLIPBOOK ================= */}
 
-     <section className="py-24 flex justify-center">
+     <section className="py-24 flex justify-center overflow-x-auto">
+  <div className="min-w-[700px]">
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
@@ -173,6 +174,7 @@ export default function AlbumDesignPage() {
       </div>
     </HTMLFlipBook>
   )}
+  </div>
 </section>
 
 <h6 className="text-3xl md:text-5xl font-display text-center py-20">
