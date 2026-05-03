@@ -135,9 +135,9 @@ const showPrevImage = (e) => {
 )}
 
   {/* EXISTING LAYERS (Overlay and Text) */}
-  <div className="absolute inset-0 bg-black/50" />
+  <div className="absolute inset-0 bg-black/50 z-10" />
 
-  <div className="relative h-full flex flex-col items-center justify-center text-center px-6">
+  <div className="relative z-20 h-full flex flex-col items-center justify-center text-center px-6">
     <h1 className="text-5xl md:text-6xl font-display mb-4 text-white">
       {album.title}
       <span className="text-gold"> Album</span>
