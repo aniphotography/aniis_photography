@@ -68,6 +68,12 @@ const [selectedImageIndex, setSelectedImageIndex] = useState(null);
     }
 
   }, [id])
+  
+useEffect(() => {
+    if (album?.title) {
+      document.title = `${album.title} | Anii Photography`
+    }
+  }, [album])
 
 
 
@@ -182,7 +188,7 @@ const showPrevImage = (e) => {
   </div>
 
   {/* INNER PHOTO PAGES - These will now appear as wide spreads */}
-  {pages.slice(1, -1).map((url, index) => (
+  {pages.slice(2, -1).map((url, index) => (
     <div key={index} className="page bg-white overflow-hidden">
       <img
         src={url}
