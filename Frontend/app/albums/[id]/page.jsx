@@ -41,9 +41,63 @@ export default function GalleryCategoryPage() {
       <Navbar />
 
       {/* TITLE */}
-      <section className="pt-40 text-center">
-        <h1 className="text-6xl text-gold">{collection.title}</h1>
-      </section>
+{/* <section className="pt-40 text-center flex flex-col items-center"> */}
+  {/* 1. The floating "Label" above the title */}
+  {/* <div className="flex items-center gap-4 mb-6">
+    <span className="h-[1px] w-8 bg-[#d4af37]"></span>
+    <span className="text-[10px] tracking-[0.5em] text-[#d4af37] uppercase font-light">
+      Selected Gallery
+    </span>
+    <span className="h-[1px] w-8 bg-[#d4af37]"></span>
+  </div> */}
+
+  {/* 2. The Main Title - Using a high-contrast Serif style */}
+ {/* <h1 className="text-5xl md:text-8xl font-sans font-extralight text-white uppercase tracking-[0.4em] leading-none mb-4">
+      {collection.title}
+    </h1> */}
+
+  {/* 3. The unique "Sub-title" that overlaps slightly */}
+  {/* <div className="mt-4 relative">
+    <span className="text-4xl md:text-5xl font-display text-[#d4af37]/10 absolute -top-12 left-1/2 -translate-x-1/2 uppercase tracking-[0.2em] whitespace-nowrap select-none">
+      {collection.title}
+    </span>
+    <p className="text-[11px] tracking-[0.3em] text-white/40 uppercase mt-2">
+      Anii Photography &copy; 2026
+    </p>
+  </div> */}
+{/* </section> */}
+<section className="pt-40 text-center">
+  {/* A tiny, very spaced out sub-header to set the mood */}
+  <p className="text-[#d4af37] text-[11px] tracking-[0.6em] uppercase mb-4 opacity-80">
+    The Collection
+  </p>
+
+  {/* THE MAIN TITLE: Mixing a thick bold font with a thin elegant italic */}
+  <div className="text-5xl md:text-8xl flex flex-wrap justify-center items-center gap-x-4 gap-y-2 uppercase leading-none px-4">
+    <span className="font-black text-white tracking-tighter">
+      {collection.title.split(' ')[0]}
+    </span>
+    
+    {collection.title.split(' ').length > 1 && (
+      <span className="font-serif italic font-light text-[#d4af37] tracking-normal lowercase first-letter:uppercase">
+        {collection.title.split(' ').slice(1).join(' ')}
+      </span>
+    )}
+  </div>
+
+  {/* A thin, focused divider */}
+  <div className="mt-12 flex items-center justify-center">
+    <div className="w-[1px] h-16 bg-gradient-to-b from-[#d4af37] via-[#d4af37]/20 to-transparent"></div>
+  </div>
+   <div className="mt-4 relative">
+    <span className="text-4xl md:text-5xl font-display text-[#d4af37]/10 absolute -top-12 left-1/2 -translate-x-1/2 uppercase tracking-[0.2em] whitespace-nowrap select-none">
+      {collection.title}
+    </span>
+    <p className="text-[11px] tracking-[0.3em] text-white/40 uppercase mt-2">
+      Anii Photography &copy; 2026
+    </p>
+  </div> 
+</section>
 
       {/* GRID */}
       <section className="p-10 grid grid-cols-3 gap-6">

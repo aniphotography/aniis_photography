@@ -121,11 +121,11 @@ const images = allMedia.filter(m =>
 							</video>
 							<div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-end justify-center pb-6">
 								{video.youtube_url && (
-									<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 px-5 py-2 bg-black/80 border border-gold text-gold text-xs uppercase tracking-widest">
-										<svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+									<span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
+      <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
 											<path d="M8 5v14l11-7z" />
 										</svg>
-										Watch Trailer
+										
 									</span>
 								)}
 							</div>

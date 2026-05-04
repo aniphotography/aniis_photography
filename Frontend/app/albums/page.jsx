@@ -66,9 +66,16 @@ export default function AlbumsPage() {
       <section className="py-16 px-6">
         <div className="max-w-7xl mx-auto">
 
-          <h2 className="text-3xl text-[#d4af37] mb-8 tracking-widest uppercase">
-            {title}
-          </h2>
+{/* <h2 className="relative text-xl md:text-2xl font-light tracking-[0.6em] uppercase text-white/90 mb-12 flex items-center gap-4">
+  <span className="w-12 h-[1px] bg-[#d4af37]"></span>
+  <span className="font-display text-[#d4af37] italic normal-case tracking-normal text-3xl mr-2">The</span>
+  {title}
+</h2> */}
+<h2 className="relative text-xl md:text-2xl font-light tracking-[0.2em] uppercase text-white/90 mb-12 flex items-center gap-4">
+  <span className="w-12 h-[1px] bg-[#d4af37]"></span>
+  <span className="font-display text-[#d4af37] italic normal-case tracking-normal text-3xl ">The</span>
+  {title}
+</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
