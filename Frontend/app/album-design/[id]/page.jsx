@@ -160,7 +160,7 @@ const showPrevImage = (e) => {
           {/* FLIPBOOK */}
 
           <div className="flex flex-col items-center mb-20 overflow-x-auto w-full">
-  <div className="min-w-[700px] w-full">
+  <div className="w-full flex justify-center">
             <HTMLFlipBook
   /* 3:1 Ratio: Width 1200 / Height 400 */
  width={900} 

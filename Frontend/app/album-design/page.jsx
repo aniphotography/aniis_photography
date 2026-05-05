@@ -35,6 +35,18 @@ export default function AlbumDesignPage() {
     }
   }, [])
 
+// Add this state near your other useState declarations
+const [bookWidth, setBookWidth] = useState(900)
+
+// Add this useEffect
+useEffect(() => {
+  const updateWidth = () => {
+    setBookWidth(window.innerWidth < 768 ? 340 : 900)
+  }
+  updateWidth()
+  window.addEventListener('resize', updateWidth)
+  return () => window.removeEventListener('resize', updateWidth)
+}, [])
 
   /* ================= FETCH PREVIEW IMAGES ================= */
 
@@ -125,11 +137,11 @@ export default function AlbumDesignPage() {
       {/* ================= FLIPBOOK ================= */}
 
      <section className="py-24 flex justify-center overflow-x-auto">
-  <div className="min-w-[700px]">
+  <div className="w-full flex justify-center">
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
-      width={900}
+      width={bookWidth}
       height={600}
       size="stretch" // Allows the book to scale properly
       minWidth={300}
