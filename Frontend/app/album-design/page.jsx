@@ -135,9 +135,22 @@ useEffect(() => {
 
 
       {/* ================= FLIPBOOK ================= */}
+      <section className="py-24 flex flex-col items-center">
+  {/* Fullscreen button */}
+  <div className="w-full max-w-7xl flex justify-end px-6 mb-4">
+    <button
+      onClick={() => {
+        const el = document.querySelector('.flipbook-container')
+        if (!document.fullscreenElement) el?.requestFullscreen()
+        else document.exitFullscreen()
+      }}
+      className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
+    >
+      ⛶ Fullscreen
+    </button>
+  </div>
 
-     <section className="py-24 flex justify-center overflow-x-auto">
-  <div className="w-full flex justify-center">
+  <div className="flipbook-container w-full flex justify-center overflow-x-auto">
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */

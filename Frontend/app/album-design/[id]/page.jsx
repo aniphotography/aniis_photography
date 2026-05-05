@@ -75,6 +75,29 @@ useEffect(() => {
     }
   }, [album])
 
+/* FLIPBOOK */
+const [bookWidth, setBookWidth] = useState(900)
+const [isFullscreen, setIsFullscreen] = useState(false)
+const flipbookContainerRef = useRef(null)
+
+useEffect(() => {
+  const updateWidth = () => {
+    setBookWidth(window.innerWidth < 768 ? 340 : 900)
+  }
+  updateWidth()
+  window.addEventListener('resize', updateWidth)
+  return () => window.removeEventListener('resize', updateWidth)
+}, [])
+
+const toggleFullscreen = () => {
+  if (!document.fullscreenElement) {
+    flipbookContainerRef.current?.requestFullscreen()
+    setIsFullscreen(true)
+  } else {
+    document.exitFullscreen()
+    setIsFullscreen(false)
+  }
+}
 
 
 
@@ -158,92 +181,73 @@ const showPrevImage = (e) => {
 
 
           {/* FLIPBOOK */}
-
-          <div className="flex flex-col items-center mb-20 overflow-x-auto w-full">
-  <div className="w-full flex justify-center">
-            <HTMLFlipBook
-  /* 3:1 Ratio: Width 1200 / Height 400 */
- width={900} 
-  height={600}
-  size="stretch" 
-  minWidth={300}
-  maxWidth={1800} // Increased to allow for the wide span
-  minHeight={100}
-  maxHeight={600}
-  showCover={true}
-  flippingTime={800}
-  ref={bookRef}
-  className="shadow-2xl"
->
-  {/* FRONT COVER */}
-  <div className="page relative bg-black overflow-hidden">
-    {pages.length > 1 && (
-      <img
-        src={pages[1]}
-        className="w-full h-full object-cover opacity-100"
-        alt="Cover"
-      />
-    )}
-   
+<div className="flex flex-col items-center mb-20 w-full">
+  
+  {/* Fullscreen button */}
+  <div className="w-full flex justify-end mb-4">
+    <button
+      onClick={toggleFullscreen}
+      className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
+    >
+      {isFullscreen ? 'Exit Fullscreen' : '⛶ Fullscreen'}
+    </button>
   </div>
 
-  {/* INNER PHOTO PAGES - These will now appear as wide spreads */}
-  {pages.slice(2, -1).map((url, index) => (
-    <div key={index} className="page bg-white overflow-hidden">
-      <img
-        src={url}
-        className="w-full h-full object-cover"
-        alt={`Page ${index + 1}`}
-      />
-    </div>
-  ))}
+  {/* Flipbook container */}
+  <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-x-auto bg-[#1a1a1a]">
+    <HTMLFlipBook
+      width={bookWidth}
+      height={600}
+      size="stretch"
+      minWidth={280}
+      maxWidth={1800}
+      minHeight={100}
+      maxHeight={600}
+      showCover={true}
+      flippingTime={800}
+      ref={bookRef}
+      className="shadow-2xl"
+    >
+      {/* FRONT COVER */}
+      <div className="page relative bg-black overflow-hidden">
+        {pages.length > 1 && (
+          <img src={pages[1]} className="w-full h-full object-cover" alt="Cover" />
+        )}
+      </div>
 
-  {/* BACK COVER */}
-  <div className="page relative bg-black overflow-hidden">
-    {pages.length > 1 && (
-      <img
-        src={pages[pages.length - 1]}
-        className="w-full h-full object-cover opacity-100"
-        alt="Back Cover"
-      />
-    )}
+      {/* INNER PAGES */}
+      {pages.slice(2, -1).map((url, index) => (
+        <div key={index} className="page bg-white overflow-hidden">
+          <img src={url} className="w-full h-full object-cover" alt={`Page ${index + 1}`} />
+        </div>
+      ))}
+
+      {/* BACK COVER */}
+      <div className="page relative bg-black overflow-hidden">
+        {pages.length > 1 && (
+          <img src={pages[pages.length - 1]} className="w-full h-full object-cover" alt="Back Cover" />
+        )}
+      </div>
+    </HTMLFlipBook>
   </div>
-</HTMLFlipBook>
 
-            {/* NAV BUTTONS */}
+  {/* NAV BUTTONS — now correctly below the flipbook */}
+  <div className="flex gap-6 mt-10">
+    <button
+      onClick={() => { try { bookRef.current?.pageFlip?.()?.flipPrev() } catch (err) {} }}
+      className="px-8 py-3 border border-gold text-gold"
+    >
+      PREVIOUS
+    </button>
+    <button
+      onClick={() => { try { bookRef.current?.pageFlip?.()?.flipNext() } catch (err) {} }}
+      className="px-8 py-3 bg-gold text-black"
+    >
+      NEXT PAGE
+    </button>
+  </div>
 
-            <div className="flex gap-6 mt-20">
-
-              <button
-                onClick={() => {
-                  try {
-                    bookRef.current?.pageFlip?.()?.flipPrev()
-                  } catch (err) {
-                    console.warn('Error flipping page:', err)
-                  }
-                }}
-                className="px-8 py-3 border border-gold text-gold"
-              >
-                PREVIOUS
-              </button>
-
-              <button
-                onClick={() => {
-                  try {
-                    bookRef.current?.pageFlip?.()?.flipNext()
-                  } catch (err) {
-                    console.warn('Error flipping page:', err)
-                  }
-                }}
-                className="px-8 py-3 bg-gold text-black"
-              >
-                NEXT PAGE
-              </button>
-
-            </div>
-
-          </div>
-
+</div>
 
           {/* GRID */}
 
@@ -266,7 +270,6 @@ const showPrevImage = (e) => {
   </div>
 </div>
   </div>
-</div>
       </section>
 
 
