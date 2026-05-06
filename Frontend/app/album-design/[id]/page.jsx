@@ -216,12 +216,14 @@ const showPrevImage = (e) => {
       onClick={toggleFullscreen}
       className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
     >
-      {isFullscreen ? 'Exit Fullscreen' : '⛶ Fullscreen'}
+      {/* {isFullscreen ? 'Exit Fullscreen' : '⛶ Fullscreen'} */}
+      ⛶ Fullscreen
     </button>
   </div>
 
   {/* Flipbook container */}
-  <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-hidden px-2 bg-[#1a1a1a]">
+  {/* <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-hidden px-2 bg-[#1a1a1a]"> */}
+  <div ref={flipbookContainerRef} className="w-full h-full flex justify-center items-center overflow-hidden px-2 bg-[#1a1a1a]">
     <HTMLFlipBook
       width={bookSize.width}
       height={bookSize.height}
@@ -242,7 +244,7 @@ const showPrevImage = (e) => {
       {/* FRONT COVER */}
       <div className="page relative bg-black overflow-hidden">
         {pages.length > 1 && (
-          <img src={pages[1]} className="w-full h-full object coantain bg-black opacity-100" alt="Cover" />
+          <img src={pages[1]} className="w-full h-full object contain bg-black opacity-100" alt="Cover" />
         )}
       </div>
 

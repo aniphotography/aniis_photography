@@ -164,18 +164,32 @@ useEffect(() => {
   {/* Fullscreen button */}
   <div className="w-full max-w-7xl flex justify-end px-6 mb-4">
     <button
+      // onClick={() => {
+      //   const el = document.querySelector('.flipbook-container')
+      //   if (!document.fullscreenElement) el?.requestFullscreen()
+      //   else document.exitFullscreen()
+      // }}
       onClick={() => {
-        const el = document.querySelector('.flipbook-container')
-        if (!document.fullscreenElement) el?.requestFullscreen()
-        else document.exitFullscreen()
-      }}
+  const el = document.querySelector('.flipbook-container')
+
+  if (!document.fullscreenElement) {
+    el?.requestFullscreen().then(() => {
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'))
+      }, 100) // small delay = important
+    })
+  } else {
+    document.exitFullscreen()
+  }
+}}
       className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
     >
       ⛶ Fullscreen
     </button>
   </div>
 
-  <div className="flipbook-container w-full flex justify-center overflow-hidden px-2">
+  {/* <div className="flipbook-container w-full flex justify-center overflow-hidden px-2"> */}
+  <div className="flipbook-container w-full h-full flex justify-center items-center overflow-hidden px-2">
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
@@ -196,11 +210,12 @@ useEffect(() => {
       className="shadow-2xl"
     >
       {/* FRONT COVER - First Image with Overlay */}
-      <div className="page relative bg-black overflow-hidden">
+      {/* <div className="page relative bg-black overflow-hidden"> */}
+      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
         {previewPages.length > 0 && (
           <img
             src={getMediaUrl(previewPages[0].image_url)}
-            className="w-full h-full object coantain bg-black opacity-100"
+            className="w-full h-full object-contain bg-black opacity-100"
           />
         )}
        
