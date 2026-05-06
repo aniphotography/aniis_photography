@@ -88,7 +88,7 @@ useEffect(() => {
     if (window.innerWidth < 768) {
 
       // Mobile
-      const mobileWidth = window.innerWidth * 0.92
+      const mobileWidth = window.innerWidth * 0.82
 
       setBookSize({
         width: mobileWidth,
@@ -242,7 +242,7 @@ const showPrevImage = (e) => {
       {/* FRONT COVER */}
       <div className="page relative bg-black overflow-hidden">
         {pages.length > 1 && (
-          <img src={pages[1]} className="w-full h-full object-cover" alt="Cover" />
+          <img src={pages[1]} className="w-full h-full object coantain bg-black opacity-100" alt="Cover" />
         )}
       </div>
 
@@ -256,7 +256,7 @@ const showPrevImage = (e) => {
       {/* BACK COVER */}
       <div className="page relative bg-black overflow-hidden">
         {pages.length > 1 && (
-          <img src={pages[pages.length - 1]} className="w-full h-full object-cover" alt="Back Cover" />
+          <img src={pages[pages.length - 1]} className="w-full h-full object coantain bg-black opacity-100" alt="Back Cover" />
         )}
       </div>
     </HTMLFlipBook>

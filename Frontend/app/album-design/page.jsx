@@ -47,7 +47,7 @@ useEffect(() => {
     if (window.innerWidth < 768) {
 
       // Mobile
-      const mobileWidth = window.innerWidth * 0.92
+      const mobileWidth = window.innerWidth * 0.82
 
       setBookSize({
         width: mobileWidth,
@@ -200,7 +200,7 @@ useEffect(() => {
         {previewPages.length > 0 && (
           <img
             src={getMediaUrl(previewPages[0].image_url)}
-            className="w-full h-full object-cover opacity-100"
+            className="w-full h-full object coantain bg-black opacity-100"
           />
         )}
        
@@ -221,7 +221,7 @@ useEffect(() => {
         {previewPages.length > 1 && (
           <img
             src={getMediaUrl(previewPages[previewPages.length - 1].image_url)}
-            className="w-full h-full object-cover opacity-100"
+            className="w-full h-full object-coantain bg-black opacity-100"
           />
         )}
        
