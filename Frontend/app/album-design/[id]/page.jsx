@@ -242,21 +242,21 @@ const showPrevImage = (e) => {
       className="shadow-2xl"
     >
       {/* FRONT COVER */}
-      <div className="page relative bg-black overflow-hidden">
+      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
         {pages.length > 1 && (
-          <img src={pages[1]} className="w-full h-full object contain bg-black opacity-100" alt="Cover" />
+          <img src={pages[1]} className="w-full h-full object-contain bg-black opacity-100" alt="Cover" />
         )}
       </div>
 
       {/* INNER PAGES */}
       {pages.slice(2, -1).map((url, index) => (
-        <div key={index} className="page bg-white overflow-hidden">
+        <div key={index} className="page h-full flex items-center justify-center bg-white overflow-hidden">
           <img src={url} className="w-full h-full object-cover" alt={`Page ${index + 1}`} />
         </div>
       ))}
 
       {/* BACK COVER */}
-      <div className="page relative bg-black overflow-hidden">
+      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
         {pages.length > 1 && (
           <img src={pages[pages.length - 1]} className="w-full h-full object coantain bg-black opacity-100" alt="Back Cover" />
         )}

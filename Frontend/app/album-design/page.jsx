@@ -211,7 +211,7 @@ useEffect(() => {
     >
       {/* FRONT COVER - First Image with Overlay */}
       {/* <div className="page relative bg-black overflow-hidden"> */}
-      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
+     <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
         {previewPages.length > 0 && (
           <img
             src={getMediaUrl(previewPages[0].image_url)}
@@ -223,7 +223,7 @@ useEffect(() => {
 
       {/* INNER PAGES (Middle of the deck) */}
       {previewPages.slice(1, -1).map((img, i) => (
-        <div key={i} className="page bg-white overflow-hidden">
+        <div key={i} className="page h-full flex items-center justify-center bg-white overflow-hidden">
           <img
             src={getMediaUrl(img.image_url)}
             className="w-full h-full object-cover"
@@ -232,7 +232,8 @@ useEffect(() => {
       ))}
 
       {/* BACK COVER - Last Image with Overlay */}
-      <div className="page relative bg-black overflow-hidden">
+      {/* <div className="page relative bg-black overflow-hidden"> */}
+      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
         {previewPages.length > 1 && (
           <img
             src={getMediaUrl(previewPages[previewPages.length - 1].image_url)}
