@@ -27,6 +27,7 @@ export default function AlbumDetailPage() {
 
   const [album, setAlbum] = useState(null)
   const [pages, setPages] = useState([])
+  const [isFullscreen, setIsFullscreen] = useState(false)
 const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 
   const bookRef = useRef(null)
@@ -225,6 +226,10 @@ const showPrevImage = (e) => {
       width={bookSize.width}
       height={bookSize.height}
       size="stretch"
+      usePortrait={false}
+      mobileScrollSupport={false}
+      drawShadow={false}
+      maxShadowOpacity={0}
       minWidth={280}
       maxWidth={1800}
       minHeight={100}
