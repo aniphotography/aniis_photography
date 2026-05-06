@@ -76,19 +76,45 @@ useEffect(() => {
   }, [album])
 
 /* FLIPBOOK */
-const [bookWidth, setBookWidth] = useState(900)
-const [isFullscreen, setIsFullscreen] = useState(false)
-const flipbookContainerRef = useRef(null)
+const [bookSize, setBookSize] = useState({
+  width: 900,
+  height: 600,
+})
 
 useEffect(() => {
-  const updateWidth = () => {
-    setBookWidth(window.innerWidth < 768 ? 340 : 900)
+  const updateBookSize = () => {
+
+    if (window.innerWidth < 768) {
+
+      // Mobile
+      const mobileWidth = window.innerWidth * 0.92
+
+      setBookSize({
+        width: mobileWidth,
+        height: mobileWidth * 0.66, // keeps same desktop ratio
+      })
+
+    } else {
+
+      // Desktop
+      setBookSize({
+        width: 900,
+        height: 600,
+      })
+
+    }
   }
-  updateWidth()
-  window.addEventListener('resize', updateWidth)
-  return () => window.removeEventListener('resize', updateWidth)
+
+  updateBookSize()
+
+  window.addEventListener('resize', updateBookSize)
+
+  return () =>
+    window.removeEventListener('resize', updateBookSize)
+
 }, [])
 
+const flipbookContainerRef = useRef(null)
 const toggleFullscreen = () => {
   if (!document.fullscreenElement) {
     flipbookContainerRef.current?.requestFullscreen()
@@ -196,8 +222,8 @@ const showPrevImage = (e) => {
   {/* Flipbook container */}
   <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-x-auto bg-[#1a1a1a]">
     <HTMLFlipBook
-      width={bookWidth}
-      height={600}
+      width={bookSize.width}
+      height={bookSize.height}
       size="stretch"
       minWidth={280}
       maxWidth={1800}

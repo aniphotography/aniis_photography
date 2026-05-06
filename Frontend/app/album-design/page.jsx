@@ -36,18 +36,43 @@ export default function AlbumDesignPage() {
   }, [])
 
 // Add this state near your other useState declarations
-const [bookWidth, setBookWidth] = useState(900)
+const [bookSize, setBookSize] = useState({
+  width: 900,
+  height: 600,
+})
 
-// Add this useEffect
 useEffect(() => {
-  const updateWidth = () => {
-    setBookWidth(window.innerWidth < 768 ? 340 : 900)
-  }
-  updateWidth()
-  window.addEventListener('resize', updateWidth)
-  return () => window.removeEventListener('resize', updateWidth)
-}, [])
+  const updateBookSize = () => {
 
+    if (window.innerWidth < 768) {
+
+      // Mobile
+      const mobileWidth = window.innerWidth * 0.92
+
+      setBookSize({
+        width: mobileWidth,
+        height: mobileWidth * 0.66, // keeps same desktop ratio
+      })
+
+    } else {
+
+      // Desktop
+      setBookSize({
+        width: 900,
+        height: 600,
+      })
+
+    }
+  }
+
+  updateBookSize()
+
+  window.addEventListener('resize', updateBookSize)
+
+  return () =>
+    window.removeEventListener('resize', updateBookSize)
+
+}, [])
   /* ================= FETCH PREVIEW IMAGES ================= */
 
   useEffect(() => {
@@ -154,8 +179,8 @@ useEffect(() => {
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
-      width={bookWidth}
-      height={600}
+      width={bookSize.width}
+      height={bookSize.height}
       size="stretch" // Allows the book to scale properly
       minWidth={300}
       maxWidth={1500}
