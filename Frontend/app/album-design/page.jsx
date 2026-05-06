@@ -47,7 +47,7 @@ useEffect(() => {
     if (window.innerWidth < 768) {
 
       // Mobile
-      const mobileWidth = window.innerWidth * 0.82
+      const mobileWidth = window.innerWidth * 0.76
 
       setBookSize({
         width: mobileWidth,
