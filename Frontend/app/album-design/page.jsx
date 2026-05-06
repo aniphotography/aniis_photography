@@ -47,7 +47,7 @@ useEffect(() => {
     if (window.innerWidth < 768) {
 
       // Mobile
-      const mobileWidth = window.innerWidth * 0.76
+      const mobileWidth = window.innerWidth * 0.82
 
       setBookSize({
         width: mobileWidth,
@@ -175,7 +175,7 @@ useEffect(() => {
     </button>
   </div>
 
-  <div className="flipbook-container w-full flex justify-center overflow-x-auto">
+  <div className="flipbook-container w-full flex justify-center overflow-hidden px-2">
   {mounted && previewLoaded && (
     <HTMLFlipBook
       /* 3:1 Page Ratio (Width 1200 / Height 400 = 3) */
@@ -186,7 +186,7 @@ useEffect(() => {
       mobileScrollSupport={false}
       drawShadow={false}
       maxShadowOpacity={0}
-      minWidth={300}
+      minWidth={150}
       maxWidth={1500}
       minHeight={100}
       maxHeight={500}

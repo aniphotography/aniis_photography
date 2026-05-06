@@ -221,7 +221,7 @@ const showPrevImage = (e) => {
   </div>
 
   {/* Flipbook container */}
-  <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-x-auto bg-[#1a1a1a]">
+  <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-hidden px-2 bg-[#1a1a1a]">
     <HTMLFlipBook
       width={bookSize.width}
       height={bookSize.height}
@@ -230,7 +230,7 @@ const showPrevImage = (e) => {
       mobileScrollSupport={false}
       drawShadow={false}
       maxShadowOpacity={0}
-      minWidth={280}
+      minWidth={150}
       maxWidth={1800}
       minHeight={100}
       maxHeight={600}
