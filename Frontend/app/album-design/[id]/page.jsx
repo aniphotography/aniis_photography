@@ -116,15 +116,15 @@ useEffect(() => {
 }, [])
 
 const flipbookContainerRef = useRef(null)
-const toggleFullscreen = () => {
-  if (!document.fullscreenElement) {
-    flipbookContainerRef.current?.requestFullscreen()
-    setIsFullscreen(true)
-  } else {
-    document.exitFullscreen()
-    setIsFullscreen(false)
-  }
-}
+// const toggleFullscreen = () => {
+//   if (!document.fullscreenElement) {
+//     flipbookContainerRef.current?.requestFullscreen()
+//     setIsFullscreen(true)
+//   } else {
+//     document.exitFullscreen()
+//     setIsFullscreen(false)
+//   }
+// }
 
 
 
@@ -211,16 +211,71 @@ const showPrevImage = (e) => {
 <div className="flex flex-col items-center mb-20 w-full">
   
   {/* Fullscreen button */}
-  <div className="w-full flex justify-end mb-4">
+  {/* <div className="w-full flex justify-end mb-4">
     <button
       onClick={toggleFullscreen}
       className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
-    >
+    > */}
       {/* {isFullscreen ? 'Exit Fullscreen' : '⛶ Fullscreen'} */}
+      {/* ⛶ Fullscreen
+    </button>
+  </div> */}
+ <div className="w-full max-w-7xl flex justify-end px-6 mb-4">
+    <button
+      // onClick={() => {
+      //   const el = document.querySelector('.flipbook-container')
+      //   if (!document.fullscreenElement) el?.requestFullscreen()
+      //   else document.exitFullscreen()
+      // }}
+//       onClick={() => {
+//   const el = document.querySelector('.flipbook-container')
+
+//   if (!document.fullscreenElement) {
+//     el?.requestFullscreen().then(() => {
+//       setTimeout(() => {
+//         window.dispatchEvent(new Event('resize'))
+//       }, 100) // small delay = important
+//     })
+//   } else {
+//     document.exitFullscreen()
+//   }
+// }}
+onClick={() => {
+  const el = document.querySelector('.flipbook-container')
+  const isMobile = window.innerWidth <= 768
+
+  if (!document.fullscreenElement) {
+
+    if (isMobile) {
+      el?.classList.add('fullscreen-enter')
+    }
+
+    el?.requestFullscreen().then(() => {
+      setTimeout(() => {
+        if (isMobile) {
+          el.classList.remove('fullscreen-enter')
+          el.classList.add('fullscreen-active')
+
+          // optional orientation lock
+          if (screen.orientation?.lock) {
+            screen.orientation.lock('landscape').catch(() => {})
+          }
+        }
+
+        window.dispatchEvent(new Event('resize'))
+      }, 200)
+    })
+
+  } else {
+    document.exitFullscreen()
+    el?.classList.remove('fullscreen-active')
+  }
+}}
+      className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
+    >
       ⛶ Fullscreen
     </button>
   </div>
-
   {/* Flipbook container */}
   {/* <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-hidden px-2 bg-[#1a1a1a]"> */}
   <div ref={flipbookContainerRef} className="w-full h-full flex justify-center items-center overflow-hidden px-2 bg-[#1a1a1a]">

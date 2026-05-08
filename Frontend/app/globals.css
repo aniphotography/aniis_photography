@@ -116,3 +116,31 @@ body {
 .animate-scroll {
   animation: scroll 25s linear infinite;
 }
+/* Add here */
+/* Default (desktop) → normal fullscreen, no fancy animation */
+.flipbook-container {
+  transition: none;
+}
+
+/* ✅ ONLY for mobile screens */
+@media (max-width: 768px) {
+  .flipbook-container {
+    transition: all 0.4s ease;
+  }
+
+  .fullscreen-enter {
+    transform: scale(1.2);
+    opacity: 0.8;
+  }
+
+  .fullscreen-active {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+  }
+
+  :fullscreen .flipbook-container {
+    width: 100vw;
+    height: 100vh;
+  }
+}

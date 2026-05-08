@@ -169,17 +169,48 @@ useEffect(() => {
       //   if (!document.fullscreenElement) el?.requestFullscreen()
       //   else document.exitFullscreen()
       // }}
-      onClick={() => {
+//       onClick={() => {
+//   const el = document.querySelector('.flipbook-container')
+
+//   if (!document.fullscreenElement) {
+//     el?.requestFullscreen().then(() => {
+//       setTimeout(() => {
+//         window.dispatchEvent(new Event('resize'))
+//       }, 100) // small delay = important
+//     })
+//   } else {
+//     document.exitFullscreen()
+//   }
+// }}
+onClick={() => {
   const el = document.querySelector('.flipbook-container')
+  const isMobile = window.innerWidth <= 768
 
   if (!document.fullscreenElement) {
+
+    if (isMobile) {
+      el?.classList.add('fullscreen-enter')
+    }
+
     el?.requestFullscreen().then(() => {
       setTimeout(() => {
+        if (isMobile) {
+          el.classList.remove('fullscreen-enter')
+          el.classList.add('fullscreen-active')
+
+          // optional orientation lock
+          if (screen.orientation?.lock) {
+            screen.orientation.lock('landscape').catch(() => {})
+          }
+        }
+
         window.dispatchEvent(new Event('resize'))
-      }, 100) // small delay = important
+      }, 200)
     })
+
   } else {
     document.exitFullscreen()
+    el?.classList.remove('fullscreen-active')
   }
 }}
       className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
