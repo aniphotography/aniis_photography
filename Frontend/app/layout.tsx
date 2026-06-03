@@ -17,6 +17,8 @@ const lato = Lato({
 export const metadata = {
   title: 'Anii Photography - Capturing Timeless Moments',
   description: 'Elegant Photography That Tells Your Story with Artistry and Sophistication',
+  applicationName: "Anii Photography",
+
   generator: 'v0.app',
 }
 
