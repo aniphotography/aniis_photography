@@ -24,7 +24,26 @@ export default function AlbumDesignPage() {
   const [previewLoaded, setPreviewLoaded] = useState(false)
   const [mounted, setMounted] = useState(false)
   const abortControllerRef = useRef(null)
+useEffect(() => {
+  if (!mounted || !previewLoaded) return;
 
+  const interval = setInterval(() => {
+    const book = bookRef.current;
+
+    if (!book) return;
+
+    // safest universal method for react-pageflip
+    const pageFlip = book.pageFlip?.();
+
+    if (pageFlip && pageFlip.flipNext) {
+      pageFlip.flipNext();
+    } else if (book.flipNext) {
+      book.flipNext();
+    }
+  }, 2000);
+
+  return () => clearInterval(interval);
+}, [mounted, previewLoaded]);
   useEffect(() => {
     setMounted(true)
     return () => {
