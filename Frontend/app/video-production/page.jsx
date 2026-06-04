@@ -1,3 +1,261 @@
+// 'use client'
+
+// import Navbar from '@/components/Navbar'
+// import Footer from '@/components/Footer'
+// import Link from 'next/link'
+// import { useState, useEffect } from 'react'
+// import { getMediaUrl } from '@/lib/utils'
+// const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+// export default function VideoProductionPage() {
+
+//   const [currentSlide, setCurrentSlide] = useState(0)
+//   const [projects, setProjects] = useState([])
+//   const [videoLogos, setVideoLogos] = useState([])
+//   const [loading, setLoading] = useState(true)
+// const [videoHeader, setVideoHeader] = useState(null);
+// // ✅ DEDICATED FETCH FOR HEADER BACKGROUND
+// useEffect(() => {
+//   fetch(`${API}/api/home-content`)
+//     .then(res => {
+//       if (!res.ok) throw new Error(`Header fetch failed: ${res.status}`);
+//       return res.json();
+//     })
+//     .then(data => {
+//       // Look specifically for the video production background slot
+//       const headerData = data.find(item => item.slot === 'video_production_bg');
+//       if (headerData) {
+//         setVideoHeader(headerData);
+//       }
+//     })
+//     .catch(err => console.error("Error loading video header:", err));
+// }, []);
+//   // ✅ FETCH VIDEO PROJECTS
+//   useEffect(() => {
+//     fetch(`${API}/api/collections?category=video-production`)
+//       .then(res => res.json())
+//       .then(data => {
+//         console.log("Projects:", data) // DEBUG
+//         setProjects(data)
+//         setLoading(false)
+//       })
+//       .catch(err => {
+//         console.error("Error loading video projects", err)
+//         setLoading(false)
+//       })
+//   }, [])
+
+//   // ✅ FETCH VIDEO LOGOS
+//   useEffect(() => {
+//     fetch(`${API}/api/media?tag=video_logo`)
+//       .then(res => res.json())
+//       .then(data => {
+//         console.log("Video Logos:", data) // DEBUG
+//         setVideoLogos(data)
+//       })
+//       .catch(err => console.error("Error loading video logos", err))
+//   }, [])
+
+//   // ✅ AUTO SLIDE
+//   useEffect(() => {
+//     if (projects.length === 0) return
+//     const interval = setInterval(() => {
+//       setCurrentSlide((prev) => (prev + 1) % projects.length)
+//     }, 5000)
+//     return () => clearInterval(interval)
+//   }, [projects])
+
+//   const nextSlide = () => {
+//     setCurrentSlide((prev) => (prev + 1) % projects.length)
+//   }
+
+//   const prevSlide = () => {
+//     setCurrentSlide((prev) => (prev - 1 + projects.length) % projects.length)
+//   }
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-black flex items-center justify-center text-gold">
+//         Loading...
+//       </div>
+//     )
+//   }
+// const bgImage = videoHeader?.image_path 
+//     ? (videoHeader.image_path.startsWith('http') 
+//         ? videoHeader.image_path 
+//         : `${API}${videoHeader.image_path}`) 
+//     : null;
+//   return (
+//     <main className="min-h-screen bg-[#1a1a1a] text-white">
+
+//       <Navbar />
+
+//       {/* HEADER */}
+//     <section 
+//       className="relative h-[500px] overflow-hidden bg-cover bg-center"
+//       style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
+//     >
+//       {/* Dark Cinematic Overlay */}
+//       <div className="absolute inset-0 bg-black/70" />
+      
+//       <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+//         <h1 className="text-6xl md:text-7xl font-display mb-4">
+//           <span className="text-gold italic">Video</span> Production
+//         </h1>
+//         <p className="text-gray-300 font-lato max-w-2xl text-lg tracking-[0.4em] ">
+//         Professional video production services that bring your vision to life
+//         </p>
+//       </div>
+//     </section>
+       
+
+//       {/* ✅ VIDEO LOGO SLIDER */}
+//       {/* <div className="overflow-hidden bg-black py-6">
+//         <div className="flex gap-10 animate-scroll items-center">
+//           {[...videoLogos, ...videoLogos].map((logo, idx) => (
+//             <img
+//               key={`${logo.id}-${idx}`}
+//               src={getMediaUrl(logo.image_url)}
+//               className="h-12 object-contain opacity-70 hover:opacity-100 transition"
+//             />
+//           ))}
+//         </div>
+//       </div> */}
+// {/* ✅ Updated to use videoLogos variable */}
+// <div className="relative overflow-hidden bg-black py-8">
+//   <div className="flex gap-6 animate-scroll">
+//     {videoLogos.length > 0 ? (
+//       [...videoLogos, ...videoLogos].map((logo, idx) => (
+//         <div
+//           key={`${logo.id || idx}-${idx}`}
+//           className="flex-shrink-0 w-64 h-48 overflow-hidden group"
+//         >
+//           <img
+//             src={getMediaUrl(logo.image_url)}
+//             alt="Client Logo"
+//             className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-105 opacity-70 hover:opacity-100"
+//           />
+//         </div>
+//       ))
+//     ) : (
+//       Array.from({ length: 5 }).map((_, idx) => (
+//         <div key={idx} className="flex-shrink-0 w-64 h-48 bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 text-sm">
+//           Logo slot
+//         </div>
+//       ))
+//     )}
+//   </div>
+// </div>
+
+//       {/* OUR WORKS */}
+//       <section className="py-20">
+//         <h2 className="text-3xl text-center mb-10">
+//           Our <span className="text-gold">Works</span>
+//         </h2>
+
+//         <div className="relative h-[500px] max-w-6xl mx-auto overflow-hidden">
+
+//           {projects.map((slide, idx) => (
+//             <Link
+//               href={`/video-production/${slide.id}`}
+//               key={slide.id}
+//               className={`absolute inset-0 transition-opacity duration-1000 ${
+//                 idx === currentSlide ? 'opacity-100 z-10' : 'opacity-0'
+//               }`}
+//             >
+//               <img
+//                 src={
+//                   slide.cover_image
+//                     ? getMediaUrl(slide.cover_image)
+//                     : "/placeholder.svg"
+//                 }
+//                 className="w-full h-full object-cover"
+//               />
+
+//               <div className="absolute inset-0 bg-black/40" />
+
+//               <div className="absolute bottom-10 left-10">
+//                 <h3 className="text-4xl text-gold">{slide.title}</h3>
+//                 <p className="text-sm">View Project →</p>
+//               </div>
+//             </Link>
+//           ))}
+
+//           {/* NAV BUTTONS */}
+//          <button
+//   onClick={prevSlide}
+//   className="absolute left-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
+// >
+//   <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">‹</span>
+// </button>
+
+// <button
+//   onClick={nextSlide}
+//   className="absolute right-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
+// >
+//   <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">›</span>
+// </button>
+
+//         </div>
+//       </section>
+// <section className="py-20 px-6">
+//         <div className="max-w-7xl mx-auto">
+//           <h2 className="text-4xl font-display text-center mb-12">
+//             All <span className="text-gold">Projects</span>
+//           </h2>
+
+//           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+//             {projects.length > 0 ? (
+//               projects.map((item) => (
+//                 <div
+//                   key={item.id}
+//                   onClick={() => router.push(`/video-production/${item.id}`)}
+//                   className="group cursor-pointer"
+//                 >
+//                   <div className="overflow-hidden rounded-[2rem] border border-white/10">
+//                     <img
+//                       src={
+//                         item.cover_image
+//                           ? getMediaUrl(item.cover_image)
+//                           : "/placeholder.svg"
+//                       }
+//                       className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
+//                       alt={item.title}
+//                     />
+//                   </div>
+//                   <h3 className="text-center text-2xl mt-6 text-gold">
+//                     {item.title}
+//                   </h3>
+//                 </div>
+//               ))
+//             ) : (
+//               isAdmin && (
+//                 <div
+//                   onClick={handleAddClick}
+//                   className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition md:col-span-2 lg:col-span-3"
+//                 >
+//                   <span className="text-5xl text-gold">+</span>
+//                 </div>
+//               )
+//             )}
+//           </div>
+//         </div>
+//       </section>
+//       <Footer />
+
+//       {/* ANIMATION */}
+//       <style jsx>{`
+//         @keyframes scroll {
+//           0% { transform: translateX(0); }
+//           100% { transform: translateX(-50%); }
+//         }
+//         .animate-scroll {
+//           animation: scroll 30s linear infinite;
+//         }
+//       `}</style>
+
+//     </main>
+//   )
+// }
 'use client'
 
 import Navbar from '@/components/Navbar'
@@ -5,30 +263,34 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { getMediaUrl } from '@/lib/utils'
+
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
-export default function VideoProductionPage() {
+
+export default function VideoProductionPage({ isAdmin, handleAddClick }) {
 
   const [currentSlide, setCurrentSlide] = useState(0)
   const [projects, setProjects] = useState([])
   const [videoLogos, setVideoLogos] = useState([])
   const [loading, setLoading] = useState(true)
-const [videoHeader, setVideoHeader] = useState(null);
-// ✅ DEDICATED FETCH FOR HEADER BACKGROUND
-useEffect(() => {
-  fetch(`${API}/api/home-content`)
-    .then(res => {
-      if (!res.ok) throw new Error(`Header fetch failed: ${res.status}`);
-      return res.json();
-    })
-    .then(data => {
-      // Look specifically for the video production background slot
-      const headerData = data.find(item => item.slot === 'video_production_bg');
-      if (headerData) {
-        setVideoHeader(headerData);
-      }
-    })
-    .catch(err => console.error("Error loading video header:", err));
-}, []);
+  const [videoHeader, setVideoHeader] = useState(null)
+
+  // ✅ DEDICATED FETCH FOR HEADER BACKGROUND
+  useEffect(() => {
+    fetch(`${API}/api/home-content`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Header fetch failed: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        // Look specifically for the video production background slot
+        const headerData = data.find(item => item.slot === 'video_production_bg');
+        if (headerData) {
+          setVideoHeader(headerData);
+        }
+      })
+      .catch(err => console.error("Error loading video header:", err));
+  }, []);
+
   // ✅ FETCH VIDEO PROJECTS
   useEffect(() => {
     fetch(`${API}/api/collections?category=video-production`)
@@ -79,72 +341,61 @@ useEffect(() => {
       </div>
     )
   }
-const bgImage = videoHeader?.image_path 
+
+  const bgImage = videoHeader?.image_path 
     ? (videoHeader.image_path.startsWith('http') 
         ? videoHeader.image_path 
         : `${API}${videoHeader.image_path}`) 
     : null;
+
   return (
     <main className="min-h-screen bg-[#1a1a1a] text-white">
 
       <Navbar />
 
       {/* HEADER */}
-    <section 
-      className="relative h-[500px] overflow-hidden bg-cover bg-center"
-      style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
-    >
-      {/* Dark Cinematic Overlay */}
-      <div className="absolute inset-0 bg-black/70" />
-      
-      <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
-        <h1 className="text-6xl md:text-7xl font-display mb-4">
-          <span className="text-gold italic">Video</span> Production
-        </h1>
-        <p className="text-gray-300 font-lato max-w-2xl text-lg tracking-[0.4em] ">
-        Professional video production services that bring your vision to life
-        </p>
-      </div>
-    </section>
-       
+      <section 
+        className="relative h-[500px] overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: bgImage ? `url(${bgImage})` : 'none' }}
+      >
+        {/* Dark Cinematic Overlay */}
+        <div className="absolute inset-0 bg-black/70" />
+        
+        <div className="relative z-10 h-full flex flex-col items-center justify-center text-center px-6">
+          <h1 className="text-6xl md:text-7xl font-display mb-4">
+            <span className="text-gold italic">Video</span> Production
+          </h1>
+          <p className="text-gray-300 font-lato max-w-2xl text-lg tracking-[0.4em] ">
+            Professional video production services that bring your vision to life
+          </p>
+        </div>
+      </section>
 
       {/* ✅ VIDEO LOGO SLIDER */}
-      {/* <div className="overflow-hidden bg-black py-6">
-        <div className="flex gap-10 animate-scroll items-center">
-          {[...videoLogos, ...videoLogos].map((logo, idx) => (
-            <img
-              key={`${logo.id}-${idx}`}
-              src={getMediaUrl(logo.image_url)}
-              className="h-12 object-contain opacity-70 hover:opacity-100 transition"
-            />
-          ))}
+      <div className="relative overflow-hidden bg-black py-8">
+        <div className="flex gap-6 animate-scroll">
+          {videoLogos.length > 0 ? (
+            [...videoLogos, ...videoLogos].map((logo, idx) => (
+              <div
+                key={`${logo.id || idx}-${idx}`}
+                className="flex-shrink-0 w-64 h-48 overflow-hidden group"
+              >
+                <img
+                  src={getMediaUrl(logo.image_url)}
+                  alt="Client Logo"
+                  className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-105 opacity-70 hover:opacity-100"
+                />
+              </div>
+            ))
+          ) : (
+            Array.from({ length: 5 }).map((_, idx) => (
+              <div key={idx} className="flex-shrink-0 w-64 h-48 bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 text-sm">
+                Logo slot
+              </div>
+            ))
+          )}
         </div>
-      </div> */}
-{/* ✅ Updated to use videoLogos variable */}
-<div className="relative overflow-hidden bg-black py-8">
-  <div className="flex gap-6 animate-scroll">
-    {videoLogos.length > 0 ? (
-      [...videoLogos, ...videoLogos].map((logo, idx) => (
-        <div
-          key={`${logo.id || idx}-${idx}`}
-          className="flex-shrink-0 w-64 h-48 overflow-hidden group"
-        >
-          <img
-            src={getMediaUrl(logo.image_url)}
-            alt="Client Logo"
-            className="w-full h-full object-contain p-6 transition-transform duration-300 group-hover:scale-105 opacity-70 hover:opacity-100"
-          />
-        </div>
-      ))
-    ) : (
-      Array.from({ length: 5 }).map((_, idx) => (
-        <div key={idx} className="flex-shrink-0 w-64 h-48 bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 text-sm">
-          Logo slot
-        </div>
-      ))
-    )}
-  </div>
-</div>
+      </div>
 
       {/* OUR WORKS */}
       <section className="py-20">
@@ -153,7 +404,6 @@ const bgImage = videoHeader?.image_path
         </h2>
 
         <div className="relative h-[500px] max-w-6xl mx-auto overflow-hidden">
-
           {projects.map((slide, idx) => (
             <Link
               href={`/video-production/${slide.id}`}
@@ -169,6 +419,7 @@ const bgImage = videoHeader?.image_path
                     : "/placeholder.svg"
                 }
                 className="w-full h-full object-cover"
+                alt={slide.title}
               />
 
               <div className="absolute inset-0 bg-black/40" />
@@ -181,20 +432,64 @@ const bgImage = videoHeader?.image_path
           ))}
 
           {/* NAV BUTTONS */}
-         <button
-  onClick={prevSlide}
-  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
->
-  <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">‹</span>
-</button>
+          <button
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
+          >
+            <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">‹</span>
+          </button>
 
-<button
-  onClick={nextSlide}
-  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
->
-  <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">›</span>
-</button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-20 hover:scale-110 transition-transform"
+          >
+            <span className="text-4xl md:text-6xl font-bold text-yellow-400 drop-shadow-lg">›</span>
+          </button>
+        </div>
+      </section>
 
+      {/* ALL PROJECTS GRID SECTION */}
+      <section className="py-20 px-6">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-4xl font-display text-center mb-12">
+            All <span className="text-gold">Projects</span>
+          </h2>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-12">
+            {projects.length > 0 ? (
+              projects.map((item) => (
+                <Link
+                  href={`/video-production/${item.id}`}
+                  key={item.id}
+                  className="group cursor-pointer block"
+                >
+                  <div className="overflow-hidden rounded-[2rem] border border-white/10">
+                    <img
+                      src={
+                        item.cover_image
+                          ? getMediaUrl(item.cover_image)
+                          : "/placeholder.svg"
+                      }
+                      className="w-full h-[350px] object-cover group-hover:scale-110 transition duration-700"
+                      alt={item.title}
+                    />
+                  </div>
+                  <h3 className="text-center text-2xl mt-6 text-gold">
+                    {item.title}
+                  </h3>
+                </Link>
+              ))
+            ) : (
+              isAdmin && (
+                <div
+                  onClick={handleAddClick}
+                  className="flex items-center justify-center h-[350px] border-2 border-dashed border-gold rounded-[2rem] cursor-pointer hover:bg-white/5 transition md:col-span-2 lg:col-span-3"
+                >
+                  <span className="text-5xl text-gold">+</span>
+                </div>
+              )
+            )}
+          </div>
         </div>
       </section>
 
