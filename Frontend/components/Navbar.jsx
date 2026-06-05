@@ -3,6 +3,9 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from "next/image";
+
+
 // Import icons
 import { FaYoutube, FaInstagram, FaFacebook, FaBehance } from 'react-icons/fa'
 
@@ -37,11 +40,19 @@ export default function Navbar() {
 
   return (
    <nav className="fixed top-0 left-0 right-0 z-50 bg-black/30 backdrop-blur-sm border-b border-white/10">
-  <div className="max-w-[95%] mx-auto px-2 py-4 flex items-center justify-between">
+  <div className="max-w-[95%] mx-auto px-2 py-3 flex items-center justify-between">
 
         {/* Logo */}
-        <Link href="/" className="text-2xl font-display text-gold flex-shrink-0">
-          ANII
+ <Link href="/" className="flex-shrink-0">
+  <Image
+    src="/final_logo.png"
+    alt="Anii Photography"
+    width={50}
+    height={20}
+    // className="h-10 w-auto"
+    priority
+  />
+
         </Link>
 
         {/* Desktop Menu */}

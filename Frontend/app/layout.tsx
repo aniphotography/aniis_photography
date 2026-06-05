@@ -14,14 +14,30 @@ const lato = Lato({
   weight: ['300', '400', '700']
 })
 
+// export const metadata = {
+//   title: 'Anii Photography - Capturing Timeless Moments',
+//   description: 'Elegant Photography That Tells Your Story with Artistry and Sophistication',
+//   applicationName: "Anii Photography",
+
+//   generator: 'v0.app',
+// }
 export const metadata = {
   title: 'Anii Photography - Capturing Timeless Moments',
   description: 'Elegant Photography That Tells Your Story with Artistry and Sophistication',
   applicationName: "Anii Photography",
-
   generator: 'v0.app',
+  //  icons: {
+  //   icon: "/favicon.ico",
+  // },
+  // Add this OpenGraph block 👇
+  openGraph: {
+    title: 'Anii Photography',
+    description: 'Elegant Photography That Tells Your Story with Artistry and Sophistication',
+    siteName: 'Anii Photography',
+    url: 'https://www.aniiphotography.com',
+    type: 'website',
+  },
 }
-
 export default function RootLayout({
   children,
 }: {
