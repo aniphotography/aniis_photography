@@ -45,7 +45,7 @@ export default function Navbar() {
         {/* Logo */}
  <Link href="/" className="flex-shrink-0">
   <Image
-    src="/final_logo.png"
+    src="/ANII_LOGO.png"
     alt="Anii Photography"
     width={50}
     height={20}
