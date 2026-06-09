@@ -1,6 +1,27 @@
 
 const pool = require('../config/db')
 
+const persistCollectionMedia = async ({ collectionId, files, youtubeUrl }) => {
+  if (!files) return
+
+  const fileGroups = [
+    { file: files.cover?.[0], tag: 'cover' },
+    { file: files.video?.[0], tag: 'video' },
+    { file: files.coverVideo?.[0], tag: 'cover_video' },
+  ]
+
+  for (const { file, tag } of fileGroups) {
+    const mediaUrl = file?.path || file?.secure_url || file?.url
+    if (!mediaUrl) continue
+
+    await pool.query(
+      `INSERT INTO media (collection_id, image_url, tag, youtube_url)
+       VALUES ($1, $2, $3, $4)`,
+      [collectionId, mediaUrl, tag, youtubeUrl || null]
+    )
+  }
+}
+
 /* ================= CREATE COLLECTION ================= */
 exports.createCollection = async (req, res) => {
   try {
@@ -24,6 +45,13 @@ exports.createCollection = async (req, res) => {
        RETURNING *`,
       [title, category, slug, description, date, section, cover_image, video_url, cover_video, youtube_url]
     )
+
+    await persistCollectionMedia({
+      collectionId: result.rows[0].id,
+      files: req.files,
+      youtubeUrl: youtube_url,
+    })
+
     res.status(201).json(result.rows[0])
 
   } catch (err) {

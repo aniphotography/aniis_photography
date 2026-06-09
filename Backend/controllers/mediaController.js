@@ -100,17 +100,27 @@ exports.uploadMultiple = async (req, res) => {
       )
     }
 
+    const files = Array.isArray(req.files)
+      ? req.files
+      : Object.values(req.files || {}).flat()
+
     // ✅ 2. INSERT FILES (SAFE CHECK)
-    if (req.files && Array.isArray(req.files) && req.files.length > 0) {
-      for (let file of req.files) {
+    if (files.length > 0) {
+      for (const file of files) {
+        const mediaUrl = file?.path || file?.secure_url || file?.url
+        if (!mediaUrl) continue
+
+        const inferredTag = file.mimetype?.startsWith('video')
+          ? (tag || 'video')
+          : (tag || 'image')
+
         await pool.query(
           `INSERT INTO media (collection_id, image_url, tag, youtube_url)
-            VALUES ($1,$2,$3,$4)`,
-          [collection_id || null, file.path, tag, youtube_url || null]
+           VALUES ($1,$2,$3,$4)`,
+          [collection_id, mediaUrl, inferredTag, youtube_url || null]
         )
       }
     }
-
     res.json({ message: "Uploaded successfully" })
 
   } catch (err) {
