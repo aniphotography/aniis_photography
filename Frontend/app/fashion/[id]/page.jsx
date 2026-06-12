@@ -4,10 +4,10 @@
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+// import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { getMediaUrl } from '@/lib/utils'
-
+import { useState, useEffect, useRef } from 'react'
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
 
 export default function FashionDetailPage() {
@@ -138,12 +138,11 @@ const images = allMedia.filter(m => !isVideo(m.image_url))
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {images.map((img, i) => (
               <div key={i} className="aspect-[2/3] overflow-hidden group border border-white/5">
-              <img
+<img
   src={getMediaUrl(img.image_url)}
   alt=""
   loading="eager"
-  decoding="sync"
-  fetchPriority="high"
+    decoding="sync"
   className="w-full h-full object-cover"
 />
               </div>
