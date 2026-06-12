@@ -63,14 +63,18 @@ const getEmbedUrl = (url) => {
   }
 
   const allMedia = project.images || []
-  const videos = allMedia.filter(m =>
-    m.image_url?.match(/\.(mp4|mov|avi)$/i)
-  )
+  // const videos = allMedia.filter(m =>
+  //   m.image_url?.match(/\.(mp4|mov|avi)$/i)
+  // )
 
-  const images = allMedia.filter(m =>
-    !m.image_url?.match(/\.(mp4|mov|avi)$/i)
-  )
+  // const images = allMedia.filter(m =>
+  //   !m.image_url?.match(/\.(mp4|mov|avi)$/i)
+  // )
+const isVideo = (url) =>
+  url?.match(/\.(mp4|mov|avi)$/i) || url?.includes('/video/upload/')
 
+const videos = allMedia.filter(m => isVideo(m.image_url))
+const images = allMedia.filter(m => !isVideo(m.image_url))
   return (
     <main className="min-h-screen bg-[#0a0a0a] text-white">
       <Navbar />
@@ -100,46 +104,14 @@ const getEmbedUrl = (url) => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {videos.map((video, i) => (
-  <div
+{videos.map((video, i) => (
+  <VideoCard
     key={i}
-    className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl relative cursor-pointer group"
-    onClick={() => {
+    video={video}
+    onTrailerClick={() => {
       if (video.youtube_url) setTrailerUrl(video.youtube_url)
     }}
-    onMouseEnter={e => {
-      const v = e.currentTarget.querySelector('video')
-      if (v) v.play().catch(() => {})
-    }}
-    onMouseLeave={e => {
-      const v = e.currentTarget.querySelector('video')
-      if (v) { v.pause(); v.currentTime = 0 }
-    }}
-  >
-    <video
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      className="w-full h-full object-cover pointer-events-none"
-    >
-      <source src={getMediaUrl(video.image_url)} type="video/mp4" />
-    </video>
-
-    {/* HOVER OVERLAY */}
-    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-end justify-center pb-6">
-      {video.youtube_url && (
-        // <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 px-5 py-2 bg-black/80 border border-gold text-gold text-xs uppercase tracking-widest">
-        //   <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
-        <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
-      <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-          
-        </span>
-      )}
-    </div>
-  </div>
+  />
 ))}
 
             {/* ✅ Only show AddCard if admin is logged in */}
@@ -166,11 +138,14 @@ const getEmbedUrl = (url) => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {images.map((img, i) => (
               <div key={i} className="aspect-[2/3] overflow-hidden group border border-white/5">
-                <img
-                  src={getMediaUrl(img.image_url)}
-                  alt=""
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+              <img
+  src={getMediaUrl(img.image_url)}
+  alt=""
+  loading="eager"
+  decoding="sync"
+  fetchPriority="high"
+  className="w-full h-full object-cover"
+/>
               </div>
             ))}
 
@@ -255,7 +230,76 @@ const getEmbedUrl = (url) => {
     </main>
   )
 }
+function VideoCard({ video, onTrailerClick }) {
+  const videoRef = useRef(null)
+  const containerRef = useRef(null)
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            videoRef.current?.play().catch(() => {})
+          } else {
+            if (videoRef.current) {
+              videoRef.current.pause()
+              videoRef.current.currentTime = 0
+            }
+          }
+        })
+      },
+      { threshold: 0.3 }
+    )
+    if (containerRef.current) observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [])
+
+  // Fix Cloudinary video URL
+  const getVideoUrl = (url) => {
+    if (!url) return null
+    const resolved = getMediaUrl(url)
+    if (resolved.includes('/video/upload/') && !resolved.match(/\.(mp4|webm|mov)(\?|$)/i)) {
+      return resolved + '.mp4'
+    }
+    return resolved
+  }
+
+  return (
+    <div
+      ref={containerRef}
+      className="aspect-[2/3] bg-[#111] overflow-hidden border border-white/5 shadow-2xl relative cursor-pointer group"
+      onClick={onTrailerClick}
+      onMouseEnter={() => videoRef.current?.play().catch(() => {})}
+      onMouseLeave={() => {
+        if (videoRef.current) {
+          videoRef.current.pause()
+          videoRef.current.currentTime = 0
+        }
+      }}
+    >
+      <video
+        ref={videoRef}
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        className="w-full h-full object-cover pointer-events-none"
+      >
+        <source src={getVideoUrl(video.image_url)} type="video/mp4" />
+      </video>
+
+      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-end justify-center pb-6">
+        {video.youtube_url && (
+          <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-2 text-gold text-xs uppercase tracking-widest">
+            <svg className="w-3 h-3 fill-current" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
 function AddCard({ onClick }) {
   return (
     <div
