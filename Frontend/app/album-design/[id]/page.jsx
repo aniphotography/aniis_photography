@@ -29,7 +29,7 @@ export default function AlbumDetailPage() {
   const [pages, setPages] = useState([])
   const [isFullscreen, setIsFullscreen] = useState(false)
 const [selectedImageIndex, setSelectedImageIndex] = useState(null);
-
+const [autoPlay, setAutoPlay] = useState(false);
   const bookRef = useRef(null)
   const abortControllerRef = useRef(null)
 
@@ -126,7 +126,26 @@ const flipbookContainerRef = useRef(null)
 //   }
 // }
 
+useEffect(() => {
+  if (!pages.length) return;
 
+  const interval = setInterval(() => {
+    const flipBook = bookRef.current?.pageFlip();
+
+    if (!flipBook) return;
+
+    const currentPage = flipBook.getCurrentPageIndex();
+    const totalPages = flipBook.getPageCount();
+
+    if (currentPage < totalPages - 1) {
+      flipBook.flipNext();
+    } else {
+      flipBook.flip(0); // restart from first page
+    }
+  }, 2500); // change to 5000 for 5 seconds
+
+  return () => clearInterval(interval);
+}, [pages]);
 
   if (!album) return null
 const showNextImage = (e) => {
@@ -220,7 +239,7 @@ const showPrevImage = (e) => {
       {/* ⛶ Fullscreen
     </button>
   </div> */}
- <div className="w-full max-w-7xl flex justify-end px-6 mb-4">
+ <div className="w-full max-w-7xl flex justify-end gap-3 px-6 mb-4">
     <button
       // onClick={() => {
       //   const el = document.querySelector('.flipbook-container')
@@ -278,7 +297,7 @@ onClick={() => {
   </div>
   {/* Flipbook container */}
   {/* <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-hidden px-2 bg-[#1a1a1a]"> */}
-  <div ref={flipbookContainerRef} className="w-full h-full flex justify-center items-center overflow-hidden px-2 bg-[#1a1a1a]">
+  <div ref={flipbookContainerRef} className="flipbook-container w-full h-full flex justify-center items-center overflow-hidden px-2 bg-[#1a1a1a]">
     <HTMLFlipBook
       width={bookSize.width}
       height={bookSize.height}

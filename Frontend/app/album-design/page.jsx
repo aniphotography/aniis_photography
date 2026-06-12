@@ -287,7 +287,7 @@ onClick={() => {
         {previewPages.length > 1 && (
           <img
             src={getMediaUrl(previewPages[previewPages.length - 1].image_url)}
-            className="w-full h-full object-coantain bg-black opacity-100"
+            className="w-full h-full object-contain bg-black opacity-100"
           />
         )}
        
