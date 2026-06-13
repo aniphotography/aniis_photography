@@ -117,13 +117,25 @@ export default function VideoProductionDetailPage() {
                                     if (v) { v.pause(); v.currentTime = 0 }
                                 }}
                             >
-                                <video
+                                {/* <video
                                     muted
                                     loop
                                     playsInline
                                     preload="metadata"
                                     className="w-full h-full object-cover pointer-events-none"
-                                >
+                                > */}
+                                <video
+    muted
+    loop
+    playsInline
+    autoPlay
+    preload="auto"
+    style={{ transform: 'translateZ(0)' }}
+    className="w-full h-full object-cover pointer-events-none"
+    onLoadedData={(e) => {
+        e.currentTarget.play().catch(() => {})
+    }}
+>
                                     <source src={getMediaUrl(video.image_url)} type="video/mp4" />
                                 </video>
                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300 flex items-end justify-center pb-6">

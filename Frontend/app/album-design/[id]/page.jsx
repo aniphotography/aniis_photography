@@ -32,7 +32,7 @@ const [selectedImageIndex, setSelectedImageIndex] = useState(null);
 const [autoPlay, setAutoPlay] = useState(false);
   const bookRef = useRef(null)
   const abortControllerRef = useRef(null)
-
+const [mobileFullscreen, setMobileFullscreen] = useState(false)
   /* ================= FETCH COLLECTION ================= */
 
   useEffect(() => {
@@ -259,35 +259,56 @@ const showPrevImage = (e) => {
 //     document.exitFullscreen()
 //   }
 // }}
-onClick={() => {
-  const el = document.querySelector('.flipbook-container')
-  const isMobile = window.innerWidth <= 768
+// onClick={() => {
+//   const el = document.querySelector('.flipbook-container')
+//   const isMobile = window.innerWidth <= 768
 
-  if (!document.fullscreenElement) {
+//   if (!document.fullscreenElement) {
 
-    if (isMobile) {
-      el?.classList.add('fullscreen-enter')
+//     if (isMobile) {
+//       el?.classList.add('fullscreen-enter')
+//     }
+
+//     el?.requestFullscreen().then(() => {
+//       setTimeout(() => {
+//         if (isMobile) {
+//           el.classList.remove('fullscreen-enter')
+//           el.classList.add('fullscreen-active')
+
+//           // optional orientation lock
+//           if (screen.orientation?.lock) {
+//             screen.orientation.lock('landscape').catch(() => {})
+//           }
+//         }
+
+//         window.dispatchEvent(new Event('resize'))
+//       }, 200)
+//     })
+
+//   } else {
+//     document.exitFullscreen()
+//     el?.classList.remove('fullscreen-active')
+//   }
+// }}
+onClick={async () => {
+  const el = flipbookContainerRef.current
+
+  // iPhone/iPad Safari
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+
+  if (isIOS) {
+    setMobileFullscreen(prev => !prev)
+    return
+  }
+
+  try {
+    if (!document.fullscreenElement) {
+      await el?.requestFullscreen()
+    } else {
+      await document.exitFullscreen()
     }
-
-    el?.requestFullscreen().then(() => {
-      setTimeout(() => {
-        if (isMobile) {
-          el.classList.remove('fullscreen-enter')
-          el.classList.add('fullscreen-active')
-
-          // optional orientation lock
-          if (screen.orientation?.lock) {
-            screen.orientation.lock('landscape').catch(() => {})
-          }
-        }
-
-        window.dispatchEvent(new Event('resize'))
-      }, 200)
-    })
-
-  } else {
-    document.exitFullscreen()
-    el?.classList.remove('fullscreen-active')
+  } catch (err) {
+    console.error(err)
   }
 }}
       className="px-4 py-2 border border-gold/50 text-gold text-xs uppercase tracking-widest hover:bg-gold hover:text-black transition-all"
@@ -297,7 +318,16 @@ onClick={() => {
   </div>
   {/* Flipbook container */}
   {/* <div ref={flipbookContainerRef} className="w-full flex justify-center overflow-hidden px-2 bg-[#1a1a1a]"> */}
-  <div ref={flipbookContainerRef} className="flipbook-container w-full h-full flex justify-center items-center overflow-hidden px-2 bg-[#1a1a1a]">
+  {/* <div ref={flipbookContainerRef} className="flipbook-container w-full h-full flex justify-center items-center overflow-hidden px-2 bg-[#1a1a1a]"> */}
+  <div
+  ref={flipbookContainerRef}
+  className={`flipbook-container flex justify-center items-center overflow-hidden bg-[#1a1a1a]
+  ${
+    mobileFullscreen
+      ? 'fixed inset-0 z-[9999] w-screen h-screen'
+      : 'w-full h-full px-2'
+  }`}
+>
     <HTMLFlipBook
       width={bookSize.width}
       height={bookSize.height}
