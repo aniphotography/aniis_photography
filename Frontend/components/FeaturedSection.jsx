@@ -10,16 +10,59 @@ export default function FeaturedSection() {
   const [featuredCollections, setFeaturedCollections] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    fetch(`${API}/api/collections/featured`)
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) setFeaturedCollections(data)
-      })
-      .catch(err => console.error("Featured Fetch Error:", err))
-      .finally(() => setLoading(false))
-  }, [])
+  // useEffect(() => {
+  //   fetch(`${API}/api/collections/featured`)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       if (Array.isArray(data)) setFeaturedCollections(data)
+  //     })
+  //     .catch(err => console.error("Featured Fetch Error:", err))
+  //     .finally(() => setLoading(false))
+  // }, [])
+useEffect(() => {
+  const loadFeatured = async () => {
+    try {
+      const res = await fetch(`${API}/api/collections/featured`)
+      const collections = await res.json()
 
+      const enriched = await Promise.all(
+        collections.map(async (collection) => {
+          // If cover media already exists, use it
+          if (
+            collection.cover_image ||
+            collection.cover_video ||
+            collection.video_url
+          ) {
+            return collection
+          }
+
+          try {
+            const mediaRes = await fetch(
+              `${API}/api/media?collection_id=${collection.id}`
+            )
+
+            const mediaItems = await mediaRes.json()
+
+            return {
+              ...collection,
+              fallbackMedia: mediaItems?.[0]?.image_url || null
+            }
+          } catch {
+            return collection
+          }
+        })
+      )
+
+      setFeaturedCollections(enriched)
+    } catch (err) {
+      console.error("Featured Fetch Error:", err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  loadFeatured()
+}, [])
   if (loading) return null
 
   const slots = [1, 2, 3].map(slot => {
@@ -60,13 +103,39 @@ export default function FeaturedSection() {
             )
 
             // Resolve media — prefer cover_image, fall back to video sources
-            const imageUrl = collection.cover_image ? getMediaUrl(collection.cover_image) : null
-            // Check cover_video first, then video_url (background loop)
-            const videoUrl = collection.cover_video
-              ? getMediaUrl(collection.cover_video)
-              : collection.video_url
-              ? getMediaUrl(collection.video_url)
-              : null
+            // const imageUrl = collection.cover_image ? getMediaUrl(collection.cover_image) : null
+            // // Check cover_video first, then video_url (background loop)
+            // const videoUrl = collection.cover_video
+            //   ? getMediaUrl(collection.cover_video)
+            //   : collection.video_url
+            //   ? getMediaUrl(collection.video_url)
+            //   : null
+const fallbackUrl = collection.fallbackMedia
+  ? getMediaUrl(collection.fallbackMedia)
+  : null
+
+const isVideo = (url) => {
+  if (!url) return false
+  return /\.(mp4|mov|webm|ogg)(\?|$)/i.test(url)
+}
+
+const imageUrl =
+  collection.cover_image
+    ? getMediaUrl(collection.cover_image)
+    : fallbackUrl && !isVideo(fallbackUrl)
+    ? fallbackUrl
+    : null
+
+const videoUrl =
+  collection.cover_video
+    ? getMediaUrl(collection.cover_video)
+    : collection.video_url
+    ? getMediaUrl(collection.video_url)
+    : fallbackUrl && isVideo(fallbackUrl)
+    ? fallbackUrl
+    : null
+
+
 
             const hasMedia = imageUrl || videoUrl
 

@@ -26,13 +26,50 @@ export default function AlbumsPage() {
   const [activeCategory, setActiveCategory] = useState('all')
 
   /* FETCH COLLECTIONS */
+  // useEffect(() => {
+  //   // Now ${API} will correctly point to your backend URL
+  //   fetch(`${API}/api/collections`)
+  //     .then(res => res.json())
+  //     .then(data => setAlbums(data))
+  //     .catch(err => console.error("Fetch error:", err));
+  // }, []); // Added API to dependency array for safety
   useEffect(() => {
-    // Now ${API} will correctly point to your backend URL
-    fetch(`${API}/api/collections`)
-      .then(res => res.json())
-      .then(data => setAlbums(data))
-      .catch(err => console.error("Fetch error:", err));
-  }, []); // Added API to dependency array for safety
+  const loadAlbums = async () => {
+    try {
+      const res = await fetch(`${API}/api/collections`)
+      const data = await res.json()
+
+      const enriched = await Promise.all(
+        data.map(async (album) => {
+          if (album.cover_image || album.cover_video) {
+            return album
+          }
+
+          try {
+            const mediaRes = await fetch(
+              `${API}/api/media?collection_id=${album.id}`
+            )
+
+            const mediaItems = await mediaRes.json()
+
+            return {
+              ...album,
+              fallbackMedia: mediaItems?.[0]?.image_url || null,
+            }
+          } catch {
+            return album
+          }
+        })
+      )
+
+      setAlbums(enriched)
+    } catch (err) {
+      console.error("Fetch error:", err)
+    }
+  }
+
+  loadAlbums()
+}, [])
   const filteredAlbums =
     activeCategory === 'all'
       ? albums
@@ -87,7 +124,7 @@ export default function AlbumsPage() {
               >
 
                 {/* MEDIA */}
-                {album.cover_video ? (
+                {/* {album.cover_video ? (
                   <video         src={getImageSrc(album.cover_video)}
                     muted
                     loop
@@ -109,8 +146,46 @@ export default function AlbumsPage() {
                   <div className="w-full h-64 bg-gray-800 flex items-center justify-center">
                     No Media
                   </div>
-                )}
+                )} */}
+{(() => {
+  const mediaUrl =
+    album.cover_video ||
+    album.cover_image ||
+    album.fallbackMedia
 
+  const isVideo =
+    mediaUrl &&
+    /\.(mp4|mov|webm|ogg)(\?|$)/i.test(mediaUrl)
+
+  if (!mediaUrl) {
+    return (
+      <div className="w-full h-96 bg-gray-800 flex items-center justify-center">
+        No Media
+      </div>
+    )
+  }
+
+  return isVideo ? (
+    <video
+      src={getImageSrc(mediaUrl)}
+      muted
+      loop
+      playsInline
+      onMouseEnter={e => e.target.play()}
+      onMouseLeave={e => {
+        e.target.pause()
+        e.target.currentTime = 0
+      }}
+      className="w-full h-96 object-cover group-hover:scale-110 transition duration-700"
+    />
+  ) : (
+    <img
+      src={getImageSrc(mediaUrl)}
+      alt={album.title || "album"}
+      className="w-full h-64 object-cover group-hover:scale-110 transition duration-700"
+    />
+  )
+})()}
                 <div className="absolute bottom-0 p-4">
                   <p className="text-xs text-[#d4af37]">{album.date}</p>
                   <h3>{album.title}</h3>
