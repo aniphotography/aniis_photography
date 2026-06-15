@@ -33,6 +33,8 @@ const [autoPlay, setAutoPlay] = useState(false);
   const bookRef = useRef(null)
   const abortControllerRef = useRef(null)
 const [mobileFullscreen, setMobileFullscreen] = useState(false)
+
+
   /* ================= FETCH COLLECTION ================= */
 
   useEffect(() => {
@@ -81,38 +83,30 @@ const [bookSize, setBookSize] = useState({
   width: 900,
   height: 600,
 })
-
+const [isMobile, setIsMobile] = useState(false)
 useEffect(() => {
   const updateBookSize = () => {
-
     if (window.innerWidth < 768) {
-
       // Mobile
-      const mobileWidth = window.innerWidth * 0.82
-
+      const mobileWidth = window.innerWidth * 0.90 // bumped up slightly for better visibility
+      setIsMobile(true)
       setBookSize({
         width: mobileWidth,
-        height: mobileWidth * 0.66, // keeps same desktop ratio
+        height: mobileWidth * 1.2, // Swapped to a portrait profile ratio (e.g. 4:5 or 3:4)
       })
-
     } else {
-
       // Desktop
+      setIsMobile(false)
       setBookSize({
         width: 900,
         height: 600,
       })
-
     }
   }
 
   updateBookSize()
-
   window.addEventListener('resize', updateBookSize)
-
-  return () =>
-    window.removeEventListener('resize', updateBookSize)
-
+  return () => window.removeEventListener('resize', updateBookSize)
 }, [])
 
 const flipbookContainerRef = useRef(null)
@@ -329,44 +323,45 @@ onClick={async () => {
   }`}
 >
     <HTMLFlipBook
-      width={bookSize.width}
-      height={bookSize.height}
-      size="stretch"
-      usePortrait={false}
-      mobileScrollSupport={false}
-      drawShadow={false}
-      maxShadowOpacity={0}
-      minWidth={150}
-      maxWidth={1800}
-      minHeight={100}
-      maxHeight={600}
-      showCover={true}
-      flippingTime={800}
-      ref={bookRef}
-      className="shadow-2xl"
-    >
-      {/* FRONT COVER */}
-      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
-        {pages.length > 1 && (
-          <img src={pages[1]} className="w-full h-full object-contain bg-black opacity-100" alt="Cover" />
-        )}
-      </div>
-
-      {/* INNER PAGES */}
-      {pages.slice(2, -1).map((url, index) => (
-        <div key={index} className="page h-full flex items-center justify-center bg-white overflow-hidden">
-          <img src={url} className="w-full h-full object-cover" alt={`Page ${index + 1}`} />
-        </div>
-      ))}
-
-      {/* BACK COVER */}
-      <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
-        {pages.length > 1 && (
-          <img src={pages[pages.length - 1]} className="w-full h-full object coantain bg-black opacity-100" alt="Back Cover" />
-        )}
-      </div>
-    </HTMLFlipBook>
+  width={bookSize.width}
+  height={bookSize.height}
+  size="stretch"
+  usePortrait={isMobile}               {/* True on mobile, False on desktop */}
+  showLength={isMobile ? "single" : "double"} {/* Important parameter for react-pageflip */}
+  mobileScrollSupport={true}           {/* Set to true so iOS users can swipe pages */}
+  drawShadow={false}
+  maxShadowOpacity={0}
+  minWidth={150}
+  maxWidth={1800}
+  minHeight={100}
+  maxHeight={1200}                     {/* Raised slightly to accommodate portrait heights */}
+  showCover={true}
+  flippingTime={800}
+  ref={bookRef}
+  className="shadow-2xl mx-auto"
+>
+  {/* FRONT COVER */}
+  <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
+    {pages.length > 1 && (
+      <img src={pages[1]} className="w-full h-full object-contain bg-black" alt="Cover" />
+    )}
   </div>
+
+  {/* INNER PAGES */}
+  {pages.slice(2, -1).map((url, index) => (
+    <div key={index} className="page h-full flex items-center justify-center bg-white overflow-hidden">
+      {/* Changed object-cover to object-contain so branding pages are never awkwardly cropped */}
+      <img src={url} className="w-full h-full object-contain bg-[#1a1a1a]" alt={`Page ${index + 1}`} />
+    </div>
+  ))}
+
+  {/* BACK COVER */}
+  <div className="page h-full flex items-center justify-center bg-black overflow-hidden">
+    {pages.length > 1 && (
+      <img src={pages[pages.length - 1]} className="w-full h-full object-contain bg-black" alt="Back Cover" />
+    )}
+  </div>
+</HTMLFlipBook>
 
   {/* NAV BUTTONS — now correctly below the flipbook */}
   <div className="flex gap-6 mt-10">
