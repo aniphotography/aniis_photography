@@ -14,7 +14,7 @@ exports.createContact = async (req, res) => {
     )
 
     await resend.emails.send({
-      from: 'onboarding@resend.dev',
+      from: 'noreply@aniiphotography.com',
       to: process.env.EMAIL_USER,
       subject: '📩 New Booking Enquiry',
       html: `
